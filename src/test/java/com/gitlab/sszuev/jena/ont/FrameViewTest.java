@@ -128,7 +128,7 @@ public class FrameViewTest {
 
     @Test
     public void testLDPNoinfANodirect() {
-        assertValues("", noinfA.listDeclaredProperties(false), new Object[]{noinfPa, noinfQa, noinfG, noinfQb});
+        assertValues("", noinfA.listDeclaredProperties(false), noinfPa, noinfQa, noinfG, noinfQb);
     }
 
     @Test
@@ -139,190 +139,190 @@ public class FrameViewTest {
 
     @Test
     public void testLDPNoinfADirect() {
-        assertValues("", noinfA.listDeclaredProperties(true), new Object[]{noinfPa, noinfQa, noinfG, noinfQb});
+        assertValues("", noinfA.listDeclaredProperties(true), noinfPa, noinfQa, noinfG, noinfQb);
     }
 
     @Test
     public void testLDPInfANodirect() {
-        assertValues("", infA.listDeclaredProperties(false), new Object[]{infPa, infQa, infQb, noinfG});
+        assertValues("", infA.listDeclaredProperties(false), infPa, infQa, infQb, noinfG);
     }
 
     @Test
     public void testLDPInfADirect() {
-        assertValues("", infA.listDeclaredProperties(true), new Object[]{infPa, infQa, infQb, noinfG});
+        assertValues("", infA.listDeclaredProperties(true), infPa, infQa, infQb, noinfG);
     }
 
     @Test
     public void testLDPNoinfBNodirect() {
-        assertValues("", noinfB.listDeclaredProperties(false), new Object[]{noinfPa, noinfPb, noinfQa, noinfG, noinfQb});
+        assertValues("", noinfB.listDeclaredProperties(false), noinfPa, noinfPb, noinfQa, noinfG, noinfQb);
     }
 
     @Test
     public void testLDPNoinfBDirect() {
         assertValues("", noinfB.listDeclaredProperties(true),
-                new Object[]{noinfPb});
+                noinfPb);
     }
 
     @Test
     public void testLDPInfBNodirect() {
         assertValues("", infB.listDeclaredProperties(false),
-                new Object[]{infPa, infPb, infQa, infQb, infG});
+                infPa, infPb, infQa, infQb, infG);
     }
 
     @Test
     public void testLDPInfBDirect() {
-        assertValues("", infB.listDeclaredProperties(true), new Object[]{infPb});
+        assertValues("", infB.listDeclaredProperties(true), infPb);
     }
 
     @Test
     public void testLDPNoinfCNodirect() {
         assertValues("", noinfC.listDeclaredProperties(false),
-                new Object[]{noinfPa, noinfPb, noinfPc, noinfQa, noinfG, noinfQb});
+                noinfPa, noinfPb, noinfPc, noinfQa, noinfG, noinfQb);
     }
 
     @Test
     public void testLDPNoinfCDirect() {
-        assertValues("", noinfC.listDeclaredProperties(true), new Object[]{noinfPc});
+        assertValues("", noinfC.listDeclaredProperties(true), noinfPc);
     }
 
     @Test
     public void testLDPInfCNodirect() {
         assertValues("", infC.listDeclaredProperties(false),
-                new Object[]{infPa, infPb, infPc, infQa, infQb, infG});
+                infPa, infPb, infPc, infQa, infQb, infG);
     }
 
     @Test
     public void testLDPInfCDirect() {
-        assertValues("", infC.listDeclaredProperties(true), new Object[]{infPc});
+        assertValues("", infC.listDeclaredProperties(true), infPc);
     }
 
 
     @Test
     public void testLDPNoinfAnnNodirect() {
-        assertValues("", noinfAnn.listDeclaredProperties(false), new Object[]{noinfPann, noinfG, noinfQb});
+        assertValues("", noinfAnn.listDeclaredProperties(false), noinfPann, noinfG, noinfQb);
     }
 
     @Test
     public void testLDPNoinfAnnDirect() {
-        assertValues("", noinfAnn.listDeclaredProperties(true), new Object[]{noinfPann, noinfG, noinfQb});
+        assertValues("", noinfAnn.listDeclaredProperties(true), noinfPann, noinfG, noinfQb);
     }
 
     @Test
     public void testLDPInfAnnNodirect() {
-        assertValues("", infAnn.listDeclaredProperties(false), new Object[]{noinfPann, noinfG});
+        assertValues("", infAnn.listDeclaredProperties(false), noinfPann, noinfG);
     }
 
     @Test
     public void testLDPInfAnnDirect() {
-        assertValues("", infAnn.listDeclaredProperties(true), new Object[]{noinfPann, noinfG});
+        assertValues("", infAnn.listDeclaredProperties(true), noinfPann, noinfG);
     }
 
 
     @Test
     public void testLDPNoinfUnionNodirect() {
-        assertValues("", noinfUnion1.listDeclaredProperties(false), new Object[]{noinfG, noinfQb});
-        assertValues("", noinfUnion2.listDeclaredProperties(false), new Object[]{noinfG, noinfQb});
+        assertValues("", noinfUnion1.listDeclaredProperties(false), noinfG, noinfQb);
+        assertValues("", noinfUnion2.listDeclaredProperties(false), noinfG, noinfQb);
     }
 
     @Test
     public void testLDPInfUnionNodirect() {
-        assertValues("", infUnion1.listDeclaredProperties(false), new Object[]{infPunion, infG});
-        assertValues("", infUnion2.listDeclaredProperties(false), new Object[]{infPunion, infG});
+        assertValues("", infUnion1.listDeclaredProperties(false), infPunion, infG);
+        assertValues("", infUnion2.listDeclaredProperties(false), infPunion, infG);
     }
 
     @Test
     public void testLDPNoinfIntersectNodirect() {
-        assertValues("", noinfIntersect1.listDeclaredProperties(false), new Object[]{noinfG, noinfQb});
-        assertValues("", noinfIntersect2.listDeclaredProperties(false), new Object[]{noinfG, noinfQb});
+        assertValues("", noinfIntersect1.listDeclaredProperties(false), noinfG, noinfQb);
+        assertValues("", noinfIntersect2.listDeclaredProperties(false), noinfG, noinfQb);
     }
 
     @Test
     public void testLDPInfIntersectNodirect() {
-        assertValues("", infIntersect1.listDeclaredProperties(false), new Object[]{infG});
-        assertValues("", infIntersect2.listDeclaredProperties(false), new Object[]{infG});
+        assertValues("", infIntersect1.listDeclaredProperties(false), infG);
+        assertValues("", infIntersect2.listDeclaredProperties(false), infG);
     }
 
     @Test
     public void testLDCNoinfPaNodirect() {
-        assertValues("", noinfPa.listDeclaringClasses(false), new Object[]{noinfA, noinfB, noinfC});
+        assertValues("", noinfPa.listDeclaringClasses(false), noinfA, noinfB, noinfC);
     }
 
     @Test
     public void testLDCInfPaNodirect() {
-        assertValues("", infPa.listDeclaringClasses(false), new Object[]{infA, infB, infC});
+        assertValues("", infPa.listDeclaringClasses(false), infA, infB, infC);
     }
 
     @Test
     public void testLDCNoinfPbNodirect() {
-        assertValues("", noinfPb.listDeclaringClasses(false), new Object[]{noinfB, noinfC});
+        assertValues("", noinfPb.listDeclaringClasses(false), noinfB, noinfC);
     }
 
     @Test
     public void testLDCInfPbNodirect() {
-        assertValues("", infPb.listDeclaringClasses(false), new Object[]{infC, infB});
+        assertValues("", infPb.listDeclaringClasses(false), infC, infB);
     }
 
     @Test
     public void testLDCNoinfPcNodirect() {
-        assertValues("", noinfPc.listDeclaringClasses(false), new Object[]{noinfC});
+        assertValues("", noinfPc.listDeclaringClasses(false), noinfC);
     }
 
     @Test
     public void testLDCInfPcNodirect() {
-        assertValues("", infPc.listDeclaringClasses(false), new Object[]{infC});
+        assertValues("", infPc.listDeclaringClasses(false), infC);
     }
 
     @Test
     public void testLDCNoinfPaDirect() {
-        assertValues("", noinfPa.listDeclaringClasses(true), new Object[]{noinfA});
+        assertValues("", noinfPa.listDeclaringClasses(true), noinfA);
     }
 
     @Test
     public void testLDCInfPaDirect() {
-        assertValues("", infPa.listDeclaringClasses(true), new Object[]{infA});
+        assertValues("", infPa.listDeclaringClasses(true), infA);
     }
 
     @Test
     public void testLDCNoinfPbDirect() {
-        assertValues("", noinfPb.listDeclaringClasses(true), new Object[]{noinfB});
+        assertValues("", noinfPb.listDeclaringClasses(true), noinfB);
     }
 
     @Test
     public void testLDCInfPbDirect() {
-        assertValues("", infPb.listDeclaringClasses(true), new Object[]{infB});
+        assertValues("", infPb.listDeclaringClasses(true), infB);
     }
 
     @Test
     public void testLDCNoinfPcDirect() {
-        assertValues("", noinfPc.listDeclaringClasses(true), new Object[]{noinfC});
+        assertValues("", noinfPc.listDeclaringClasses(true), noinfC);
     }
 
     @Test
     public void testLDCInfPcDirect() {
-        assertValues("", infPc.listDeclaringClasses(true), new Object[]{infC});
+        assertValues("", infPc.listDeclaringClasses(true), infC);
     }
 
     @Test
     public void testLDCNoinfGDirect() {
-        assertValues("", noinfG.listDeclaringClasses(true),
-                new Object[]{noinfA, noinfAnn, noinfUnion1, noinfUnion2, mNoInf.getOntClass(NS + "Joint"), noinfIntersect1, noinfIntersect2}, 2);
+        assertValues("", 2, noinfG.listDeclaringClasses(true),
+                noinfA, noinfAnn, noinfUnion1, noinfUnion2, mNoInf.getOntClass(NS + "Joint"), noinfIntersect1, noinfIntersect2);
     }
 
     @Test
     public void testLDCInfGDirect() {
-        assertValues("", infG.listDeclaringClasses(true), new Object[]{infA, infAnn, mNoInf.getOntClass(NS + "Joint"), noinfIntersect1, noinfIntersect2}, 1);
+        assertValues("", 1, infG.listDeclaringClasses(true), infA, infAnn, mNoInf.getOntClass(NS + "Joint"), noinfIntersect1, noinfIntersect2);
     }
 
     @Test
     public void testLDCNoinfGNodirect() {
-        assertValues("", noinfG.listDeclaringClasses(false),
-                new Object[]{noinfA, noinfB, noinfC, noinfUnion1, noinfUnion2, noinfAnn, mNoInf.getOntClass(NS + "Joint"), noinfIntersect1, noinfIntersect2}, 2);
+        assertValues("", 2, noinfG.listDeclaringClasses(false),
+                noinfA, noinfB, noinfC, noinfUnion1, noinfUnion2, noinfAnn, mNoInf.getOntClass(NS + "Joint"), noinfIntersect1, noinfIntersect2);
     }
 
     @Test
     public void testLDCInfGNodirect() {
-        assertValues("", infG.listDeclaringClasses(false),
-                new Object[]{infA, infB, infC, infAnn, noinfUnion1, noinfUnion2, mNoInf.getOntClass(NS + "Joint"), noinfIntersect1, noinfIntersect2}, 2);
+        assertValues("", 2, infG.listDeclaringClasses(false),
+                infA, infB, infC, infAnn, noinfUnion1, noinfUnion2, mNoInf.getOntClass(NS + "Joint"), noinfIntersect1, noinfIntersect2);
     }
 
 }

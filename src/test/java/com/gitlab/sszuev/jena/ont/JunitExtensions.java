@@ -11,11 +11,11 @@ import java.util.List;
 public final class JunitExtensions {
 
 
-    public static void assertValues(String testCase, ExtendedIterator<?> expected, Object[] actual) {
+    public static void assertValues(String testCase, ExtendedIterator<?> expected, Object... actual) {
         assertValues(testCase, 0, List.of(actual), expected.toList());
     }
 
-    public static void assertValues(String testCase, ExtendedIterator<?> expected, Object[] actual, int expectedAnonsCount) {
+    public static void assertValues(String testCase, int expectedAnonsCount, ExtendedIterator<?> expected, Object... actual) {
         assertValues(testCase, expectedAnonsCount, List.of(actual), expected.toList());
     }
 

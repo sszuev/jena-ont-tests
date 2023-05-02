@@ -72,7 +72,7 @@ public class ClassExpressionTest extends CommonOntTestBase {
 
                         A.addSuperClass(C);
                         assertEquals(2, A.getCardinality(prof.SUB_CLASS_OF()), "Cardinality should be 2");
-                        assertValues(testNodeName, A.listSuperClasses(), new Object[]{C, B});
+                        assertValues(testNodeName, A.listSuperClasses(), C, B);
 
                         A.setSuperClass(C);
                         assertEquals(1, A.getCardinality(prof.SUB_CLASS_OF()), "Cardinality should be 1");
@@ -99,7 +99,7 @@ public class ClassExpressionTest extends CommonOntTestBase {
 
                         A.addSubClass(C);
                         assertEquals(2, B.getCardinality(prof.SUB_CLASS_OF()) + C.getCardinality(prof.SUB_CLASS_OF()), "Cardinality should be 2");
-                        assertValues(testNodeName, A.listSubClasses(), new Object[]{C, B});
+                        assertValues(testNodeName, A.listSubClasses(), C, B);
 
                         A.setSubClass(C);
                         assertEquals(1, B.getCardinality(prof.SUB_CLASS_OF()) + C.getCardinality(prof.SUB_CLASS_OF()), "Cardinality should be 1");
@@ -126,7 +126,7 @@ public class ClassExpressionTest extends CommonOntTestBase {
 
                         A.addEquivalentClass(C);
                         assertEquals(2, A.getCardinality(prof.EQUIVALENT_CLASS()), "Cardinality should be 2");
-                        assertValues(testNodeName, A.listEquivalentClasses(), new Object[]{C, B});
+                        assertValues(testNodeName, A.listEquivalentClasses(), C, B);
 
                         A.setEquivalentClass(C);
                         assertEquals(1, A.getCardinality(prof.EQUIVALENT_CLASS()), "Cardinality should be 1");
@@ -182,7 +182,7 @@ public class ClassExpressionTest extends CommonOntTestBase {
                         A.addOneOf(b);
                         assertEquals(1, A.getCardinality(prof.ONE_OF()), "Cardinality should be 1");
                         assertEquals(2, A.getOneOf().size(), "Size should be 2");
-                        assertValues(testNodeName, A.listOneOf(), new Object[]{a, b});
+                        assertValues(testNodeName, A.listOneOf(), a, b);
 
                         A.setOneOf(m.createList(b));
                         assertEquals(1, A.getCardinality(prof.ONE_OF()), "Cardinality should be 1");
@@ -212,7 +212,7 @@ public class ClassExpressionTest extends CommonOntTestBase {
                         A.addOperand(C);
                         assertEquals(1, A.getCardinality(prof.INTERSECTION_OF()), "Cardinality should be 1");
                         assertEquals(2, A.getOperands().size(), "Size should be 2");
-                        assertValues(testNodeName, A.listOperands(), new Object[]{B, C});
+                        assertValues(testNodeName, A.listOperands(), B, C);
 
                         ClosableIterator<? extends Resource> i = A.listOperands();
                         assertTrue(i.next() instanceof OntClass, "Argument should be an OntClass");
@@ -246,7 +246,7 @@ public class ClassExpressionTest extends CommonOntTestBase {
                         A.addOperand(C);
                         assertEquals(1, A.getCardinality(prof.UNION_OF()), "Cardinality should be 1");
                         assertEquals(2, A.getOperands().size(), "Size should be 2");
-                        assertValues(testNodeName, A.listOperands(), new Object[]{B, C});
+                        assertValues(testNodeName, A.listOperands(), B, C);
 
                         ClosableIterator<? extends Resource> i = A.listOperands();
                         assertTrue(i.next() instanceof OntClass, "Argument should be an OntClass");
@@ -299,7 +299,7 @@ public class ClassExpressionTest extends CommonOntTestBase {
                         A.setOperand(B);
                         assertEquals(1, A.getCardinality(prof.COMPLEMENT_OF()), "Cardinality should be 1");
                         assertEquals(B, A.getOperand(), "Complement should be B");
-                        assertValues(testNodeName, A.listOperands(), new Object[]{B});
+                        assertValues(testNodeName, A.listOperands(), B);
 
                         A.setOperand(C);
                         assertEquals(1, A.getCardinality(prof.COMPLEMENT_OF()), "Cardinality should be 1");
@@ -741,8 +741,8 @@ public class ClassExpressionTest extends CommonOntTestBase {
                         OntClass A = m.createClass(NS + "ClassA");
                         OntClass B = m.createClass(NS + "ClassB");
 
-                        assertValues(testNodeName, A.listSuperClasses(), new Object[]{B});
-                        assertValues(testNodeName, B.listSubClasses(), new Object[]{A});
+                        assertValues(testNodeName, A.listSuperClasses(), B);
+                        assertValues(testNodeName, B.listSubClasses(), A);
                     }
                 },
                 new CommonOntTestEngine("OntClass.equivalentClass.fromFile", true, true, false) {
@@ -1200,7 +1200,7 @@ public class ClassExpressionTest extends CommonOntTestBase {
                         m.createIndividual(NS + "b1", B);
                         b0.addRDFType(A);
 
-                        assertValues(testNodeName, A.listInstances(), new Object[]{a0, a1, b0});
+                        assertValues(testNodeName, A.listInstances(), a0, a1, b0);
                     }
                 },
                 new CommonOntTestEngine("OntClass.listDefinedProperties", true, true, true) {
@@ -1220,16 +1220,16 @@ public class ClassExpressionTest extends CommonOntTestBase {
                         s.setDomain(C);
 
                         if (profileLang == ProfileLang.RDFS) {
-                            assertValues(testNodeName, A.listDeclaredProperties(), new Object[]{p, q, r});
+                            assertValues(testNodeName, A.listDeclaredProperties(), p, q, r);
                         } else {
                             Restriction r0 = m.createRestriction(r);
                             C.addSuperClass(r0);
 
-                            assertValues(testNodeName, A.listDeclaredProperties(), new Object[]{p, q, r});
+                            assertValues(testNodeName, A.listDeclaredProperties(), p, q, r);
 
-                            assertValues(testNodeName, C.listDeclaredProperties(), new Object[]{s, r});
+                            assertValues(testNodeName, C.listDeclaredProperties(), s, r);
 
-                            assertValues(testNodeName, r0.listDeclaredProperties(), new Object[]{r});
+                            assertValues(testNodeName, r0.listDeclaredProperties(), r);
                         }
                     }
                 },
@@ -1249,8 +1249,8 @@ public class ClassExpressionTest extends CommonOntTestBase {
                         s.setDomain(C);
 
                         assertValues(testNodeName, List.of(p, q, s), C.listDeclaredProperties().toList());
-                        assertValues(testNodeName, C.listDeclaredProperties(false), new Object[]{p, q, s});
-                        assertValues(testNodeName, C.listDeclaredProperties(true), new Object[]{s});
+                        assertValues(testNodeName, C.listDeclaredProperties(false), p, q, s);
+                        assertValues(testNodeName, C.listDeclaredProperties(true), s);
 
                         assertNotNull(C.listDeclaredProperties(true).next(), "declared property should be an ont prop");
                         assertNotNull(C.listDeclaredProperties(false).next(), "declared property should be an ont prop");
@@ -1282,10 +1282,10 @@ public class ClassExpressionTest extends CommonOntTestBase {
 
                         d0.addOneOf(z);
                         assertEquals(2, d0.getOneOf().size(), "datarange should be size 2");
-                        assertValues(testNodeName, d0.listOneOf(), new Object[]{y, z});
+                        assertValues(testNodeName, d0.listOneOf(), y, z);
 
                         d0.setOneOf(m.createList(x));
-                        assertValues(testNodeName, d0.listOneOf(), new Object[]{x});
+                        assertValues(testNodeName, d0.listOneOf(), x);
                     }
                 },
 
