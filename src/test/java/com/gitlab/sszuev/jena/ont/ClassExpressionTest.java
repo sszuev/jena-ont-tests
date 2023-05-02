@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ClassExpressionTest extends OntTestBase {
+public class ClassExpressionTest extends CommonOntTestBase {
 
     static Stream<Arguments> argumentsStream() {
         return testsAsArguments(getTests());
@@ -52,13 +52,13 @@ public class ClassExpressionTest extends OntTestBase {
 
     @ParameterizedTest
     @MethodSource("argumentsStream")
-    public void test(OntTestEngine test) {
+    public void test(CommonOntTestEngine test) {
         test.runTest();
     }
 
-    public static OntTestEngine[] getTests() {
-        return new OntTestEngine[]{
-                new OntTestEngine("OntClass.super-class", true, true, true) {
+    public static CommonOntTestEngine[] getTests() {
+        return new CommonOntTestEngine[]{
+                new CommonOntTestEngine("OntClass.super-class", true, true, true) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -85,7 +85,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(0, A.getCardinality(prof.SUB_CLASS_OF()), "Cardinality should be 0");
                     }
                 },
-                new OntTestEngine("OntClass.sub-class", true, true, true) {
+                new CommonOntTestEngine("OntClass.sub-class", true, true, true) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -112,7 +112,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(A.hasSubClass(C, false), "A should not have sub-class C");
                     }
                 },
-                new OntTestEngine("OntClass.equivalentClass", true, true, false) {
+                new CommonOntTestEngine("OntClass.equivalentClass", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -139,7 +139,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(0, A.getCardinality(prof.EQUIVALENT_CLASS()), "Cardinality should be 0");
                     }
                 },
-                new OntTestEngine("OntClass.disjointWith", true, false, false) {
+                new CommonOntTestEngine("OntClass.disjointWith", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -166,7 +166,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(0, A.getCardinality(prof.DISJOINT_WITH()), "Cardinality should be 0");
                     }
                 },
-                new OntTestEngine("EnumeratedClass.oneOf", true, false, false) {
+                new CommonOntTestEngine("EnumeratedClass.oneOf", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -196,7 +196,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(A.hasOneOf(b), "Should not have b as an enum value");
                     }
                 },
-                new OntTestEngine("IntersectionClass.intersectionOf", true, true, false) {
+                new CommonOntTestEngine("IntersectionClass.intersectionOf", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -230,7 +230,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(A.hasOperand(C), "Should not have C as an operand");
                     }
                 },
-                new OntTestEngine("UnionClass.unionOf", true, false, false) {
+                new CommonOntTestEngine("UnionClass.unionOf", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -264,7 +264,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(A.hasOperand(C), "Should not have C as an operand");
                     }
                 },
-                new OntTestEngine("ComplementClass.complementOf", true, false, false) {
+                new CommonOntTestEngine("ComplementClass.complementOf", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -312,7 +312,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(A.hasOperand(C), "Should not have C as an operand");
                     }
                 },
-                new OntTestEngine("Restriction.onProperty", true, true, false) {
+                new CommonOntTestEngine("Restriction.onProperty", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -340,7 +340,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(A.onProperty(q), "Should not have q as on property");
                     }
                 },
-                new OntTestEngine("AllValuesFromRestriction.allValuesFrom", true, true, false) {
+                new CommonOntTestEngine("AllValuesFromRestriction.allValuesFrom", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -368,7 +368,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(0, A.getCardinality(prof.ALL_VALUES_FROM()), "cardinality should be 0 ");
                     }
                 },
-                new OntTestEngine("AllValuesFromRestriction.allValuesFrom.datatype", true, true, false) {
+                new CommonOntTestEngine("AllValuesFromRestriction.allValuesFrom.datatype", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -394,7 +394,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(0, A.getCardinality(prof.ALL_VALUES_FROM()), "cardinality should be 0 ");
                     }
                 },
-                new OntTestEngine("AllValuesFromRestriction.allValuesFrom.literal", true, true, false) {
+                new CommonOntTestEngine("AllValuesFromRestriction.allValuesFrom.literal", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -408,7 +408,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(1, A.getCardinality(prof.ALL_VALUES_FROM()), "cardinality should be 1 ");
                     }
                 },
-                new OntTestEngine("AllValuesFromRestriction.allValuesFrom.datarange", true, false, false) {
+                new CommonOntTestEngine("AllValuesFromRestriction.allValuesFrom.datarange", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -431,7 +431,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(0, A.getCardinality(prof.ALL_VALUES_FROM()), "cardinality should be 0 ");
                     }
                 },
-                new OntTestEngine("HasValueRestriction.hasValue", true, false, false) {
+                new CommonOntTestEngine("HasValueRestriction.hasValue", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -463,7 +463,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(0, A.getCardinality(prof.HAS_VALUE()), "cardinality should be 0 ");
                     }
                 },
-                new OntTestEngine("SomeValuesFromRestriction.someValuesFrom", true, true, false) {
+                new CommonOntTestEngine("SomeValuesFromRestriction.someValuesFrom", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -491,7 +491,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(0, A.getCardinality(prof.SOME_VALUES_FROM()), "cardinality should be 0 ");
                     }
                 },
-                new OntTestEngine("SomeValuesFromRestriction.SomeValuesFrom.datatype", true, true, false) {
+                new CommonOntTestEngine("SomeValuesFromRestriction.SomeValuesFrom.datatype", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -517,7 +517,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(0, A.getCardinality(prof.SOME_VALUES_FROM()), "cardinality should be 0 ");
                     }
                 },
-                new OntTestEngine("SomeValuesFromRestriction.SomeValuesFrom.literal", true, true, false) {
+                new CommonOntTestEngine("SomeValuesFromRestriction.SomeValuesFrom.literal", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -531,7 +531,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(1, A.getCardinality(prof.SOME_VALUES_FROM()), "cardinality should be 1 ");
                     }
                 },
-                new OntTestEngine("SomeValuesFromRestriction.SomeValuesFrom.datarange", true, false, false) {
+                new CommonOntTestEngine("SomeValuesFromRestriction.SomeValuesFrom.datarange", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -554,7 +554,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(0, A.getCardinality(prof.SOME_VALUES_FROM()), "cardinality should be 0 ");
                     }
                 },
-                new OntTestEngine("CardinalityRestriction.cardinality", true, true, false) {
+                new CommonOntTestEngine("CardinalityRestriction.cardinality", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -581,7 +581,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(0, A.getCardinality(prof.CARDINALITY()), "cardinality should be 0 ");
                     }
                 },
-                new OntTestEngine("MinCardinalityRestriction.minCardinality", true, true, false) {
+                new CommonOntTestEngine("MinCardinalityRestriction.minCardinality", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -608,7 +608,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(0, A.getCardinality(prof.MIN_CARDINALITY()), "cardinality should be 0 ");
                     }
                 },
-                new OntTestEngine("MaxCardinalityRestriction.maxCardinality", true, true, false) {
+                new CommonOntTestEngine("MaxCardinalityRestriction.maxCardinality", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Profile prof = m.getProfile();
@@ -635,7 +635,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(0, A.getCardinality(prof.MAX_CARDINALITY()), "cardinality should be 0 ");
                     }
                 },
-                new OntTestEngine("QualifiedRestriction.hasClassQ", false, false, false) {
+                new CommonOntTestEngine("QualifiedRestriction.hasClassQ", false, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntProperty p = m.createObjectProperty(NS + "p");
@@ -660,7 +660,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(m.getResource(NS + nameA).canAs(QualifiedRestriction.class), "Should not be a qualified restriction");
                     }
                 },
-                new OntTestEngine("CardinalityQRestriction.cardinality", false, false, false) {
+                new CommonOntTestEngine("CardinalityQRestriction.cardinality", false, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntProperty p = m.createObjectProperty(NS + "p");
@@ -683,7 +683,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(m.getResource(NS + "A").canAs(CardinalityQRestriction.class), "Should not be a qualified cardinality restriction");
                     }
                 },
-                new OntTestEngine("MinCardinalityQRestriction.minCardinality", false, false, false) {
+                new CommonOntTestEngine("MinCardinalityQRestriction.minCardinality", false, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntProperty p = m.createObjectProperty(NS + "p");
@@ -706,7 +706,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(m.getResource(NS + "A").canAs(MinCardinalityQRestriction.class), "Should not be a qualified min cardinality restriction");
                     }
                 },
-                new OntTestEngine("MaxCardinalityQRestriction.maxCardinality", false, false, false) {
+                new CommonOntTestEngine("MaxCardinalityQRestriction.maxCardinality", false, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntProperty p = m.createObjectProperty(NS + "p");
@@ -731,7 +731,7 @@ public class ClassExpressionTest extends OntTestBase {
                 },
 
                 // from file
-                new OntTestEngine("OntClass.subclass.fromFile", true, true, true) {
+                new CommonOntTestEngine("OntClass.subclass.fromFile", true, true, true) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         String lang = profileLang != ProfileLang.RDFS ? "owl" : "rdfs";
@@ -745,7 +745,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertValues(testNodeName, B.listSubClasses(), new Object[]{A});
                     }
                 },
-                new OntTestEngine("OntClass.equivalentClass.fromFile", true, true, false) {
+                new CommonOntTestEngine("OntClass.equivalentClass.fromFile", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         String lang = profileLang != ProfileLang.RDFS ? "owl" : "rdfs";
@@ -758,7 +758,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertTrue(A.hasEquivalentClass(C), "A should be equivalent to C");
                     }
                 },
-                new OntTestEngine("OntClass.disjoint.fromFile", true, false, false) {
+                new CommonOntTestEngine("OntClass.disjoint.fromFile", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         String lang = profileLang != ProfileLang.RDFS ? "owl" : "rdfs";
@@ -773,7 +773,7 @@ public class ClassExpressionTest extends OntTestBase {
                 },
 
                 // type testing
-                new OntTestEngine("OntClass.isEnumeratedClass", true, false, false) {
+                new CommonOntTestEngine("OntClass.isEnumeratedClass", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass b = m.createClass(NS + "B");
@@ -788,7 +788,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isRestriction(), "restriction test not correct");
                     }
                 },
-                new OntTestEngine("OntClass.isIntersectionClass", true, true, false) {
+                new CommonOntTestEngine("OntClass.isIntersectionClass", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass b = m.createClass(NS + "B");
@@ -802,7 +802,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isRestriction(), "restriction test not correct");
                     }
                 },
-                new OntTestEngine("OntClass.isUnionClass", true, false, false) {
+                new CommonOntTestEngine("OntClass.isUnionClass", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass b = m.createClass(NS + "B");
@@ -816,7 +816,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isRestriction(), "restriction test not correct");
                     }
                 },
-                new OntTestEngine("OntClass.isComplementClass", true, false, false) {
+                new CommonOntTestEngine("OntClass.isComplementClass", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass b = m.createClass(NS + "B");
@@ -829,7 +829,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isRestriction(), "restriction test not correct");
                     }
                 },
-                new OntTestEngine("OntClass.isRestriction", true, true, false) {
+                new CommonOntTestEngine("OntClass.isRestriction", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass a = m.createRestriction(null);
@@ -843,7 +843,7 @@ public class ClassExpressionTest extends OntTestBase {
                 },
 
                 // conversion
-                new OntTestEngine("OntClass.toEnumeratedClass", true, false, false) {
+                new CommonOntTestEngine("OntClass.toEnumeratedClass", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass a = m.createClass(NS + "A");
@@ -866,7 +866,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isRestriction(), "restriction test not correct");
                     }
                 },
-                new OntTestEngine("OntClass.toIntersectionClass", true, true, false) {
+                new CommonOntTestEngine("OntClass.toIntersectionClass", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass a = m.createClass(NS + "A");
@@ -888,7 +888,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isRestriction(), "restriction test not correct");
                     }
                 },
-                new OntTestEngine("OntClass.toUnionClass", true, false, false) {
+                new CommonOntTestEngine("OntClass.toUnionClass", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass a = m.createClass(NS + "A");
@@ -910,7 +910,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isRestriction(), "restriction test not correct");
                     }
                 },
-                new OntTestEngine("OntClass.toComplementClass", true, false, false) {
+                new CommonOntTestEngine("OntClass.toComplementClass", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass a = m.createClass(NS + "A");
@@ -931,7 +931,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isRestriction(), "restriction test not correct");
                     }
                 },
-                new OntTestEngine("OntClass.toRestriction", true, true, false) {
+                new CommonOntTestEngine("OntClass.toRestriction", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass a = m.createClass(NS + "A");
@@ -955,7 +955,7 @@ public class ClassExpressionTest extends OntTestBase {
 
 
                 // restriction type testing
-                new OntTestEngine("Restriction.isAllValuesFrom", true, true, false) {
+                new CommonOntTestEngine("Restriction.isAllValuesFrom", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass b = m.createClass(NS + "B");
@@ -970,7 +970,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isMaxCardinalityRestriction(), "max cardinality test not correct");
                     }
                 },
-                new OntTestEngine("Restriction.isSomeValuesFrom", true, true, false) {
+                new CommonOntTestEngine("Restriction.isSomeValuesFrom", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass b = m.createClass(NS + "B");
@@ -985,7 +985,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isMaxCardinalityRestriction(), "max cardinality test not correct");
                     }
                 },
-                new OntTestEngine("Restriction.isHasValue", true, false, false) {
+                new CommonOntTestEngine("Restriction.isHasValue", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass b = m.createClass(NS + "B");
@@ -1001,7 +1001,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isMaxCardinalityRestriction(), "max cardinality test not correct");
                     }
                 },
-                new OntTestEngine("Restriction.isCardinality", true, true, false) {
+                new CommonOntTestEngine("Restriction.isCardinality", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         ObjectProperty p = m.createObjectProperty(NS + "p");
@@ -1015,7 +1015,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isMaxCardinalityRestriction(), "max cardinality test not correct");
                     }
                 },
-                new OntTestEngine("Restriction.isMinCardinality", true, true, false) {
+                new CommonOntTestEngine("Restriction.isMinCardinality", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         ObjectProperty p = m.createObjectProperty(NS + "p");
@@ -1029,7 +1029,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isMaxCardinalityRestriction(), "max cardinality test not correct");
                     }
                 },
-                new OntTestEngine("Restriction.isMaxCardinality", true, true, false) {
+                new CommonOntTestEngine("Restriction.isMaxCardinality", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         ObjectProperty p = m.createObjectProperty(NS + "p");
@@ -1045,7 +1045,7 @@ public class ClassExpressionTest extends OntTestBase {
                 },
 
                 // restriction conversions
-                new OntTestEngine("Restriction.convertToAllValuesFrom", true, true, false) {
+                new CommonOntTestEngine("Restriction.convertToAllValuesFrom", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         ObjectProperty p = m.createObjectProperty(NS + "p");
@@ -1069,7 +1069,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isMaxCardinalityRestriction(), "max cardinality test not correct");
                     }
                 },
-                new OntTestEngine("Restriction.convertToSomeValuesFrom", true, true, false) {
+                new CommonOntTestEngine("Restriction.convertToSomeValuesFrom", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         ObjectProperty p = m.createObjectProperty(NS + "p");
@@ -1093,7 +1093,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isMaxCardinalityRestriction(), "max cardinality test not correct");
                     }
                 },
-                new OntTestEngine("Restriction.convertToHasValue", true, false, false) {
+                new CommonOntTestEngine("Restriction.convertToHasValue", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         ObjectProperty p = m.createObjectProperty(NS + "p");
@@ -1118,7 +1118,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isMaxCardinalityRestriction(), "max cardinality test not correct");
                     }
                 },
-                new OntTestEngine("Restriction.convertCardinality", true, true, false) {
+                new CommonOntTestEngine("Restriction.convertCardinality", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         ObjectProperty p = m.createObjectProperty(NS + "p");
@@ -1141,7 +1141,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isMaxCardinalityRestriction(), "max cardinality test not correct");
                     }
                 },
-                new OntTestEngine("Restriction.convertMinCardinality", true, true, false) {
+                new CommonOntTestEngine("Restriction.convertMinCardinality", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         ObjectProperty p = m.createObjectProperty(NS + "p");
@@ -1164,7 +1164,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertFalse(a.isMaxCardinalityRestriction(), "max cardinality test not correct");
                     }
                 },
-                new OntTestEngine("Restriction.convertMaxCardinality", true, true, false) {
+                new CommonOntTestEngine("Restriction.convertMaxCardinality", true, true, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         ObjectProperty p = m.createObjectProperty(NS + "p");
@@ -1187,7 +1187,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertTrue(a.isMaxCardinalityRestriction(), "max cardinality test not correct");
                     }
                 },
-                new OntTestEngine("OntClass.listInstances", true, true, true) {
+                new CommonOntTestEngine("OntClass.listInstances", true, true, true) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass A = m.createClass(NS + "A");
@@ -1203,7 +1203,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertValues(testNodeName, A.listInstances(), new Object[]{a0, a1, b0});
                     }
                 },
-                new OntTestEngine("OntClass.listDefinedProperties", true, true, true) {
+                new CommonOntTestEngine("OntClass.listDefinedProperties", true, true, true) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass A = m.createClass(NS + "A");
@@ -1233,7 +1233,7 @@ public class ClassExpressionTest extends OntTestBase {
                         }
                     }
                 },
-                new OntTestEngine("OntClass.listDefinedProperties.notAll", true, true, true) {
+                new CommonOntTestEngine("OntClass.listDefinedProperties.notAll", true, true, true) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass A = m.createClass(NS + "A");
@@ -1256,7 +1256,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertNotNull(C.listDeclaredProperties(false).next(), "declared property should be an ont prop");
                     }
                 },
-                new OntTestEngine("DataRange.oneOf", true, false, false) {
+                new CommonOntTestEngine("DataRange.oneOf", true, false, false) {
                     @Override
                     public void performTest(OntModel m, ProfileLang profileLang) {
                         Literal x = m.createTypedLiteral(42);
@@ -1291,7 +1291,7 @@ public class ClassExpressionTest extends OntTestBase {
 
                 // Removal
 
-                new OntTestEngine("Remove intersection", true, true, false) {
+                new CommonOntTestEngine("Remove intersection", true, true, false) {
                     @Override
                     protected void performTest(OntModel m, ProfileLang profileLang) {
                         String ns = "http://example.com/foo#";
@@ -1307,7 +1307,7 @@ public class ClassExpressionTest extends OntTestBase {
                         assertEquals(old, m.size());
                     }
                 },
-                new OntTestEngine("Remove union", true, false, false) {
+                new CommonOntTestEngine("Remove union", true, false, false) {
                     @Override
                     protected void performTest(OntModel m, ProfileLang profileLang) {
                         String ns = "http://example.com/foo#";

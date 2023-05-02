@@ -15,6 +15,10 @@ public final class JunitExtensions {
         assertValues(testCase, 0, List.of(actual), expected.toList());
     }
 
+    public static void assertValues(String testCase, ExtendedIterator<?> expected, Object[] actual, int expectedAnonsCount) {
+        assertValues(testCase, expectedAnonsCount, List.of(actual), expected.toList());
+    }
+
     public static void assertValues(String testCase, Collection<?> expected, Collection<?> actual) {
         assertValues(testCase, 0, expected, actual);
     }
@@ -31,7 +35,9 @@ public final class JunitExtensions {
         for (Object ev : expected) {
             Assertions.assertTrue(expected.contains(ev), ":: " + testCase + " test failed to find expected value: " + ev);
         }
-        Assertions.assertEquals(expected.size(), actual.size(), ":: " + testCase + " test; collections sizes are different");
+        if (expectedAnonsCount == 0) {
+            Assertions.assertEquals(expected.size(), actual.size(), ":: " + testCase + " test; collections sizes are different");
+        }
         Assertions.assertEquals(expectedAnonsCount, actualAnonsCount, ":: " + testCase + " test did not find the right number of anon");
     }
 

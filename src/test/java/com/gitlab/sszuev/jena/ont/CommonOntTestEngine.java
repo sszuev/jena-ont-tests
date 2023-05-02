@@ -6,7 +6,7 @@ import org.apache.jena.ontology.ProfileException;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.jupiter.api.Assertions;
 
-public abstract class OntTestEngine {
+abstract class CommonOntTestEngine {
 
     public static final String BASE = "http://jena.hpl.hp.com/testing/ontology";
     public static final String NS = BASE + "#";
@@ -16,7 +16,7 @@ public abstract class OntTestEngine {
     protected boolean isInRDFS;
     protected String testNodeName;
 
-    public OntTestEngine(String testName, boolean isInOWL, boolean isInOWLLite, boolean isInRDFS) {
+    public CommonOntTestEngine(String testName, boolean isInOWL, boolean isInOWLLite, boolean isInRDFS) {
         this.testNodeName = testName;
         this.isInOWL = isInOWL;
         this.isInOWLLite = isInOWLLite;

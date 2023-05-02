@@ -20,7 +20,7 @@ public class AllDifferentTest {
         new AllDifferentTestData().runTest();
     }
 
-    static class AllDifferentTestData extends OntTestEngine {
+    static class AllDifferentTestData extends CommonOntTestEngine {
 
         public AllDifferentTestData() {
             super("AllDifferent.distinctMembers", true, true, false);
