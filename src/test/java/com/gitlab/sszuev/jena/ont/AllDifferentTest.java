@@ -1,5 +1,6 @@
 package com.gitlab.sszuev.jena.ont;
 
+import com.gitlab.sszuev.jena.ont.common.CommonOntTestEngine;
 import org.apache.jena.ontology.AllDifferent;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntResource;
@@ -8,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static com.gitlab.sszuev.jena.ont.JunitExtensions.assertValues;
+import static com.gitlab.sszuev.jena.ont.testutils.JunitExtensions.assertValues;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -27,7 +28,7 @@ public class AllDifferentTest {
         }
 
         @Override
-        protected void performTest(OntModel m, ProfileLang profileLang) {
+        public void performTest(OntModel m, ProfileLang profileLang) {
             Profile prof = m.getProfile();
             AllDifferent a = m.createAllDifferent();
             OntResource b = m.getResource(NS + "b").as(OntResource.class);

@@ -1,4 +1,4 @@
-package com.gitlab.sszuev.jena.ont;
+package com.gitlab.sszuev.jena.ont.common;
 
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
@@ -6,7 +6,7 @@ import org.apache.jena.ontology.ProfileException;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.jupiter.api.Assertions;
 
-abstract class CommonOntTestEngine implements EngineWithName {
+public abstract class CommonOntTestEngine implements EngineWithName {
 
     public static final String BASE = "http://jena.hpl.hp.com/testing/ontology";
     public static final String NS = BASE + "#";
@@ -23,7 +23,7 @@ abstract class CommonOntTestEngine implements EngineWithName {
         this.isInRDFS = isInRDFS;
     }
 
-    protected abstract void performTest(OntModel m, ProfileLang profileLang) throws Exception;
+    public abstract void performTest(OntModel m, ProfileLang profileLang) throws Exception;
 
     public void runTest() {
         try {
@@ -54,7 +54,7 @@ abstract class CommonOntTestEngine implements EngineWithName {
         return testNodeName;
     }
 
-    enum ProfileLang {
+    public enum ProfileLang {
         OWL,
         OWL_LITE,
         RDFS,

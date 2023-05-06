@@ -1,4 +1,4 @@
-package com.gitlab.sszuev.jena.ont;
+package com.gitlab.sszuev.jena.ont.testutils;
 
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.List;
 
 public final class JunitExtensions {
-
 
     public static void assertValues(String testCase, ExtendedIterator<?> expected, Object... actual) {
         assertValues(testCase, 0, List.of(actual), expected.toList());

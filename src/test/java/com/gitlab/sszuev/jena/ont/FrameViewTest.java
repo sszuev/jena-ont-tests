@@ -12,8 +12,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.gitlab.sszuev.jena.ont.CommonOntTestEngine.NS;
-import static com.gitlab.sszuev.jena.ont.JunitExtensions.assertValues;
+import static com.gitlab.sszuev.jena.ont.common.CommonOntTestEngine.NS;
+import static com.gitlab.sszuev.jena.ont.testutils.JunitExtensions.assertValues;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

@@ -1,5 +1,7 @@
 package com.gitlab.sszuev.jena.ont;
 
+import com.gitlab.sszuev.jena.ont.common.CommonOntTestBase;
+import com.gitlab.sszuev.jena.ont.common.CommonOntTestEngine;
 import org.apache.jena.IOTestUtils;
 import org.apache.jena.ontology.AllValuesFromRestriction;
 import org.apache.jena.ontology.CardinalityQRestriction;
@@ -40,7 +42,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.gitlab.sszuev.jena.ont.JunitExtensions.assertValues;
+import static com.gitlab.sszuev.jena.ont.testutils.JunitExtensions.assertValues;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -1293,7 +1295,7 @@ public class ClassExpressionTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("Remove intersection", true, true, false) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         String ns = "http://example.com/foo#";
                         OntClass a = m.createClass(ns + "A");
                         OntClass b = m.createClass(ns + "B");
@@ -1309,7 +1311,7 @@ public class ClassExpressionTest extends CommonOntTestBase {
                 },
                 new CommonOntTestEngine("Remove union", true, false, false) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         String ns = "http://example.com/foo#";
                         OntClass a = m.createClass(ns + "A");
                         OntClass b = m.createClass(ns + "B");

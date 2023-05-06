@@ -1,5 +1,7 @@
 package com.gitlab.sszuev.jena.ont;
 
+import com.gitlab.sszuev.jena.ont.common.CommonOntTestBase;
+import com.gitlab.sszuev.jena.ont.common.CommonOntTestEngine;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
@@ -19,7 +21,7 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-import static com.gitlab.sszuev.jena.ont.JunitExtensions.assertValues;
+import static com.gitlab.sszuev.jena.ont.testutils.JunitExtensions.assertValues;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -72,7 +74,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("Individual.hasOntClass", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass A = m.createClass(NS + "A");
                         OntClass B = m.createClass(NS + "B");
                         Individual x = m.createIndividual(A);
@@ -84,7 +86,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("Individual.hasOntClass direct", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass A = m.createClass(NS + "A");
                         OntClass B = m.createClass(NS + "B");
                         A.addSubClass(B);
@@ -103,7 +105,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("Individual.hasOntClass string", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass A = m.createClass(NS + "A");
 
                         Individual x = m.createIndividual(A);
@@ -114,7 +116,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("Individual.getOntClass", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass A = m.createClass(NS + "A");
                         Individual x = m.createIndividual(A);
 
@@ -124,7 +126,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("Individual.getOntClass direct", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass A = m.createClass(NS + "A");
                         OntClass B = m.createClass(NS + "B");
                         A.addSubClass(B);
@@ -139,7 +141,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("Individual.listOntClasses", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass A = m.createClass(NS + "A");
                         OntClass B = m.createClass(NS + "B");
                         A.addSubClass(B);
@@ -158,7 +160,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("Individual.listOntClasses direct", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass A = m.createClass(NS + "A");
                         OntClass B = m.createClass(NS + "B");
                         A.addSubClass(B);
@@ -177,7 +179,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("Individual.addOntClass", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass A = m.createClass(NS + "A");
                         OntClass B = m.createClass(NS + "B");
                         A.addSubClass(B);
@@ -199,7 +201,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("Individual.setOntClass", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass A = m.createClass(NS + "A");
                         OntClass B = m.createClass(NS + "B");
                         A.addSubClass(B);
@@ -221,7 +223,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("Individual.removeOntClass", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass A = m.createClass(NS + "A");
                         OntClass B = m.createClass(NS + "B");
 
@@ -243,7 +245,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("Individual.canAs", true, true, false) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         OntClass A = m.createClass(NS + "A");
                         Resource r = m.createResource(NS + "r");
                         Resource s = m.createResource(NS + "s");
@@ -261,7 +263,7 @@ public class IndividualTest extends CommonOntTestBase {
                 /* Test case for SF bug 945436 - a xml:lang='' in the dataset causes string index exception in getLabel() */
                 new CommonOntTestEngine("Individual.canAs", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         String SOURCE =
                                 "<?xml version='1.0'?>" +
                                         "<!DOCTYPE owl [" +
@@ -289,7 +291,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("OntResource.isIndividual 1", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         OntModel defModel = ModelFactory.createOntologyModel();
                         OntClass c = defModel.createClass("http://example.com/test#A");
                         Individual i = c.createIndividual();
@@ -298,7 +300,7 @@ public class IndividualTest extends CommonOntTestBase {
                 },
                 new CommonOntTestEngine("OntResource.isIndividual 1", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         String NS = "http://jena.hpl.hp.com/example#";
                         m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 
@@ -313,7 +315,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("OntResource.isIndividual 1", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         String NS = "http://jena.hpl.hp.com/example#";
                         m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF);
 
@@ -329,7 +331,7 @@ public class IndividualTest extends CommonOntTestBase {
                 /* Edge case - suppose we imagine that user has materialised results of offline inference */
                 new CommonOntTestEngine("OntResource.isIndividual 1", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         String NS = "http://jena.hpl.hp.com/example#";
                         m = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM);
 
@@ -345,7 +347,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("OntResource.isIndividual 1", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         String NS = "http://jena.hpl.hp.com/example#";
                         m = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM);
 
@@ -361,7 +363,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("OntResource.isIndividual 1", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         String NS = "http://jena.hpl.hp.com/example#";
                         m = ModelFactory.createOntologyModel(OntModelSpec.RDFS_MEM);
 
@@ -378,7 +380,7 @@ public class IndividualTest extends CommonOntTestBase {
                 /* But we do allow punning */
                 new CommonOntTestEngine("OntResource.isIndividual 1", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         String NS = "http://jena.hpl.hp.com/example#";
                         m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 
@@ -393,7 +395,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                 new CommonOntTestEngine("OntResource.isIndividual 1", true, true, true) {
                     @Override
-                    protected void performTest(OntModel m, ProfileLang profileLang) {
+                    public void performTest(OntModel m, ProfileLang profileLang) {
                         String NS = "http://jena.hpl.hp.com/example#";
                         m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF);
 
