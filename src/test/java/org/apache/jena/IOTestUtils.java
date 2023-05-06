@@ -1,5 +1,9 @@
 package org.apache.jena;
 
+import org.apache.jena.rdf.model.Model;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
@@ -27,8 +31,9 @@ public final class IOTestUtils {
         return res.toUri().toString();
     }
 
-    public static void main(String ... args) {
-        String n = "file:testing/ontology/owl/list-syntax/test.rdf";
-        System.out.println(normalize(n));
+    public static void readResourceModel(Model m, String path) throws IOException {
+        try (InputStream in = IOTestUtils.class.getResourceAsStream(path)) {
+            m.read(in, null);
+        }
     }
 }

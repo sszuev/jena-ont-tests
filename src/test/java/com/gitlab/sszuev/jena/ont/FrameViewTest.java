@@ -12,6 +12,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static com.gitlab.sszuev.jena.ont.CommonOntTestEngine.NS;
 import static com.gitlab.sszuev.jena.ont.JunitExtensions.assertValues;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -64,15 +66,15 @@ public class FrameViewTest {
     private OntClass noinfIntersect2;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws IOException {
         OntDocumentManager.getInstance().reset();
         OntDocumentManager.getInstance().clearCache();
 
         mNoInf = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        mNoInf.read(IOTestUtils.normalize("file:testing/ontology/owl/list-syntax/test-ldp.rdf"));
+        IOTestUtils.readResourceModel(mNoInf, "/jena/test-ldp.rdf");
 
         mInf = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF);
-        mInf.read(IOTestUtils.normalize("file:testing/ontology/owl/list-syntax/test-ldp.rdf"));
+        IOTestUtils.readResourceModel(mInf, "/jena/test-ldp.rdf");
 
         infA = mInf.getOntClass(NS + "A");
         infB = mInf.getOntClass(NS + "B");

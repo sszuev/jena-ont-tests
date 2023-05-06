@@ -25,6 +25,7 @@ import org.apache.jena.ontology.Restriction;
 import org.apache.jena.ontology.SomeValuesFromRestriction;
 import org.apache.jena.ontology.UnionClass;
 import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFList;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.iterator.ClosableIterator;
@@ -35,6 +36,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -54,6 +56,11 @@ public class ClassExpressionTest extends CommonOntTestBase {
     @MethodSource("argumentsStream")
     public void test(CommonOntTestEngine test) {
         test.runTest();
+    }
+
+    private static void readTestModel(Model m, CommonOntTestEngine.ProfileLang profileLang) throws IOException {
+        IOTestUtils.readResourceModel(m,
+                CommonOntTestEngine.ProfileLang.RDFS == profileLang ? "/jena/ces-test-rdfs.rdf" : "/jena/ces-test-owl.rdf");
     }
 
     public static CommonOntTestEngine[] getTests() {
@@ -733,10 +740,8 @@ public class ClassExpressionTest extends CommonOntTestBase {
                 // from file
                 new CommonOntTestEngine("OntClass.subclass.fromFile", true, true, true) {
                     @Override
-                    public void performTest(OntModel m, ProfileLang profileLang) {
-                        String lang = profileLang != ProfileLang.RDFS ? "owl" : "rdfs";
-                        String fileName = IOTestUtils.normalize("file:testing/ontology/" + lang + "/ClassExpression/test.rdf");
-                        m.read(fileName);
+                    public void performTest(OntModel m, ProfileLang profileLang) throws IOException {
+                        readTestModel(m, profileLang);
 
                         OntClass A = m.createClass(NS + "ClassA");
                         OntClass B = m.createClass(NS + "ClassB");
@@ -747,10 +752,8 @@ public class ClassExpressionTest extends CommonOntTestBase {
                 },
                 new CommonOntTestEngine("OntClass.equivalentClass.fromFile", true, true, false) {
                     @Override
-                    public void performTest(OntModel m, ProfileLang profileLang) {
-                        String lang = profileLang != ProfileLang.RDFS ? "owl" : "rdfs";
-                        String fileName = IOTestUtils.normalize("file:testing/ontology/" + lang + "/ClassExpression/test.rdf");
-                        m.read(fileName);
+                    public void performTest(OntModel m, ProfileLang profileLang) throws IOException {
+                        readTestModel(m, profileLang);
 
                         OntClass A = m.createClass(NS + "ClassA");
                         OntClass C = m.createClass(NS + "ClassC");
@@ -760,11 +763,8 @@ public class ClassExpressionTest extends CommonOntTestBase {
                 },
                 new CommonOntTestEngine("OntClass.disjoint.fromFile", true, false, false) {
                     @Override
-                    public void performTest(OntModel m, ProfileLang profileLang) {
-                        String lang = profileLang != ProfileLang.RDFS ? "owl" : "rdfs";
-                        String fileName = IOTestUtils.normalize("file:testing/ontology/" + lang + "/ClassExpression/test.rdf");
-                        m.read(fileName);
-
+                    public void performTest(OntModel m, ProfileLang profileLang) throws IOException {
+                        readTestModel(m, profileLang);
                         OntClass A = m.createClass(NS + "ClassA");
                         OntClass D = m.createClass(NS + "ClassD");
 
