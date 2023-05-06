@@ -6,7 +6,7 @@ import org.apache.jena.ontology.ProfileException;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.jupiter.api.Assertions;
 
-abstract class CommonOntTestEngine {
+abstract class CommonOntTestEngine implements EngineWithName {
 
     public static final String BASE = "http://jena.hpl.hp.com/testing/ontology";
     public static final String NS = BASE + "#";
@@ -47,6 +47,11 @@ abstract class CommonOntTestEngine {
         }
         Assertions.assertEquals(inModel, !hasProfileException,
                 ":: " + testNodeName + " was " + (inModel ? "" : "not") + " expected in model " + m.getProfile().getLabel());
+    }
+
+    @Override
+    public String getName() {
+        return testNodeName;
     }
 
     enum ProfileLang {

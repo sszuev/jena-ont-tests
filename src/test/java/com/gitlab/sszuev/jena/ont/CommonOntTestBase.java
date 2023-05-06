@@ -15,7 +15,7 @@ abstract class CommonOntTestBase {
         OntDocumentManager.getInstance().reset(true);
     }
 
-    static Stream<Arguments> testsAsArguments(CommonOntTestEngine[] tests) {
-        return Arrays.stream(tests).map(x -> Arguments.of(Named.of(x.testNodeName, x)));
+    static Stream<Arguments> testsAsArguments(EngineWithName[] tests) {
+        return Arrays.stream(tests).map(x -> Arguments.of(Named.of(x.getName(), x)));
     }
 }

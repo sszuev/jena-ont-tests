@@ -2,7 +2,6 @@ package org.apache.jena;
 
 import org.apache.jena.rdf.model.Model;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,9 +30,11 @@ public final class IOTestUtils {
         return res.toUri().toString();
     }
 
-    public static void readResourceModel(Model m, String path) throws IOException {
+    public static void readResourceModel(Model m, String path)  {
         try (InputStream in = IOTestUtils.class.getResourceAsStream(path)) {
             m.read(in, null);
+        } catch (Exception e) {
+            throw new IllegalStateException("Can't read " + path, e);
         }
     }
 }

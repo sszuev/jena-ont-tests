@@ -58,9 +58,9 @@ public class ClassExpressionTest extends CommonOntTestBase {
         test.runTest();
     }
 
-    private static void readTestModel(Model m, CommonOntTestEngine.ProfileLang profileLang) throws IOException {
+    private static void readTestModel(Model m, CommonOntTestEngine.ProfileLang profileLang) {
         IOTestUtils.readResourceModel(m,
-                CommonOntTestEngine.ProfileLang.RDFS == profileLang ? "/jena/ces-test-rdfs.rdf" : "/jena/ces-test-owl.rdf");
+                CommonOntTestEngine.ProfileLang.RDFS == profileLang ? "/jena/class-exceptions-test-rdfs.rdf" : "/jena/class-exceptions-test-owl.rdf");
     }
 
     public static CommonOntTestEngine[] getTests() {
