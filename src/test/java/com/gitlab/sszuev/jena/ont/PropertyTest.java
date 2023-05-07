@@ -59,7 +59,7 @@ public class PropertyTest extends CommonOntTestBase {
 
                         p.addSuperProperty(r);
                         Assertions.assertEquals(2, p.getCardinality(prof.SUB_PROPERTY_OF()), "Cardinality should be 2");
-                        JunitExtensions.assertValues( testNodeName,p.listSuperProperties(), q, r);
+                        JunitExtensions.assertValues(testNodeName, p.listSuperProperties(), q, r);
 
                         p.setSuperProperty(r);
                         Assertions.assertEquals(1, p.getCardinality(prof.SUB_PROPERTY_OF()), "Cardinality should be 1");
@@ -88,10 +88,10 @@ public class PropertyTest extends CommonOntTestBase {
                         Assertions.assertEquals(q, p.getSubProperty(), "p have sub-prop q");
 
                         p.addSubProperty(r);
-                        Assertions.assertEquals(2, q.getCardinality(prof.SUB_PROPERTY_OF()) + r.getCardinality(prof.SUB_PROPERTY_OF()), "Cardinality should be 2");                        
-                        JunitExtensions.assertValues( testNodeName,p.listSubProperties(), q, r);
-                        JunitExtensions.assertValues( testNodeName,q.listSuperProperties(), p);
-                        JunitExtensions.assertValues( testNodeName,r.listSuperProperties(), p);
+                        Assertions.assertEquals(2, q.getCardinality(prof.SUB_PROPERTY_OF()) + r.getCardinality(prof.SUB_PROPERTY_OF()), "Cardinality should be 2");
+                        JunitExtensions.assertValues(testNodeName, p.listSubProperties(), q, r);
+                        JunitExtensions.assertValues(testNodeName, q.listSuperProperties(), p);
+                        JunitExtensions.assertValues(testNodeName, r.listSuperProperties(), p);
 
                         p.setSubProperty(r);
                         Assertions.assertEquals(1, q.getCardinality(prof.SUB_PROPERTY_OF()) + r.getCardinality(prof.SUB_PROPERTY_OF()), "Cardinality should be 1");
@@ -117,7 +117,7 @@ public class PropertyTest extends CommonOntTestBase {
 
                         p.addDomain(b);
                         Assertions.assertEquals(2, p.getCardinality(prof.DOMAIN()), "Cardinality should be 2");
-                        JunitExtensions.assertValues( testNodeName,p.listDomain(), a, b);
+                        JunitExtensions.assertValues(testNodeName, p.listDomain(), a, b);
 
                         p.setDomain(b);
                         Assertions.assertEquals(1, p.getCardinality(prof.DOMAIN()), "Cardinality should be 1");
@@ -143,7 +143,7 @@ public class PropertyTest extends CommonOntTestBase {
 
                         p.addRange(b);
                         Assertions.assertEquals(2, p.getCardinality(prof.RANGE()), "Cardinality should be 2");
-                        JunitExtensions.assertValues( testNodeName,p.listRange(), a, b);
+                        JunitExtensions.assertValues(testNodeName, p.listRange(), a, b);
 
                         p.setRange(b);
                         Assertions.assertEquals(1, p.getCardinality(prof.RANGE()), "Cardinality should be 1");
@@ -169,7 +169,7 @@ public class PropertyTest extends CommonOntTestBase {
 
                         p.addEquivalentProperty(r);
                         Assertions.assertEquals(2, p.getCardinality(prof.EQUIVALENT_PROPERTY()), "Cardinality should be 2");
-                        JunitExtensions.assertValues( testNodeName,p.listEquivalentProperties(), q, r);
+                        JunitExtensions.assertValues(testNodeName, p.listEquivalentProperties(), q, r);
 
                         p.setEquivalentProperty(r);
                         Assertions.assertEquals(1, p.getCardinality(prof.EQUIVALENT_PROPERTY()), "Cardinality should be 1");
@@ -200,7 +200,7 @@ public class PropertyTest extends CommonOntTestBase {
 
                         p.addInverseOf(r);
                         Assertions.assertEquals(2, p.getCardinality(prof.INVERSE_OF()), "Cardinality should be 2");
-                        JunitExtensions.assertValues( testNodeName,p.listInverseOf(), q, r);
+                        JunitExtensions.assertValues(testNodeName, p.listInverseOf(), q, r);
 
                         p.setInverseOf(r);
                         Assertions.assertEquals(1, p.getCardinality(prof.INVERSE_OF()), "Cardinality should be 1");
@@ -220,8 +220,8 @@ public class PropertyTest extends CommonOntTestBase {
                         OntProperty p = m.getProperty(NS, "p").as(OntProperty.class);
                         OntProperty q = m.getProperty(NS, "q").as(OntProperty.class);
 
-                        JunitExtensions.assertValues( testNodeName,p.listSuperProperties(), q);
-                        JunitExtensions.assertValues( testNodeName,q.listSubProperties(), p);
+                        JunitExtensions.assertValues(testNodeName, p.listSuperProperties(), q);
+                        JunitExtensions.assertValues(testNodeName, q.listSubProperties(), p);
                     }
                 },
                 new CommonOntTestEngine("OntProperty.domain.fromFile", true, true, true) {
@@ -558,7 +558,7 @@ public class PropertyTest extends CommonOntTestBase {
                         Assertions.assertEquals(q, p.getInverse(), "inverse of p ");
 
                         r.addInverseOf(p);
-                        JunitExtensions.assertValues( testNodeName,p.listInverse(), q, r);
+                        JunitExtensions.assertValues(testNodeName, p.listInverse(), q, r);
                     }
                 },
                 new CommonOntTestEngine("OntProperty.listReferringRestrictions", true, true, false) {
