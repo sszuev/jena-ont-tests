@@ -6,6 +6,7 @@ import org.apache.jena.util.iterator.ExtendedIterator;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 public final class JunitExtensions {
@@ -38,6 +39,15 @@ public final class JunitExtensions {
             Assertions.assertEquals(expected.size(), actual.size(), ":: " + testCase + " test; collections sizes are different");
         }
         Assertions.assertEquals(expectedAnonsCount, actualAnonsCount, ":: " + testCase + " test did not find the right number of anon");
+    }
+
+    public static boolean iteratorContains(Iterator<?> it, Object target ) {
+        while (it.hasNext()) {
+            if (it.next().equals( target )) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean isAnonValue(Object node) {
