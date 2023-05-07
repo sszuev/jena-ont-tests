@@ -649,8 +649,8 @@ public class ListSyntaxCategoriesTest extends CommonOntTestBase {
 
         public void runTest() {
             OntModel m = ModelFactory.createOntologyModel(spec, null);
-            m.getDocumentManager().addAltEntry("http://www.w3.org/2002/07/owl", IOTestUtils.normalize("file:jena/owl-builtins.rdf"));
-            m.getDocumentManager().addAltEntry("http://www.w3.org/2000/01/rdf-schema", IOTestUtils.normalize("file:jena/rdfs-builtins.rdf"));
+            m.getDocumentManager().addAltEntry("http://www.w3.org/2002/07/owl", IOTestUtils.normalize("file:jena/builtins-owl.rdf"));
+            m.getDocumentManager().addAltEntry("http://www.w3.org/2000/01/rdf-schema", IOTestUtils.normalize("file:jena/builtins-rdfs.rdf"));
 
             if (testResourcePath != null) {
                 IOTestUtils.readResourceModel(m, testResourcePath);
