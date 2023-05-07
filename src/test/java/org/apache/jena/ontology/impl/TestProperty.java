@@ -24,8 +24,8 @@ package org.apache.jena.ontology.impl;
 // Imports
 ///////////////
 
+import com.gitlab.sszuev.jena.ont.testutils.IOTestUtils;
 import junit.framework.TestSuite;
-import org.apache.jena.IOTestUtils;
 import org.apache.jena.ontology.ObjectProperty;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;

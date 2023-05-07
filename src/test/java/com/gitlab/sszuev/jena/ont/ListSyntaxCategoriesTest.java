@@ -2,7 +2,7 @@ package com.gitlab.sszuev.jena.ont;
 
 import com.gitlab.sszuev.jena.ont.common.CommonOntTestBase;
 import com.gitlab.sszuev.jena.ont.common.EngineWithName;
-import org.apache.jena.IOTestUtils;
+import com.gitlab.sszuev.jena.ont.testutils.IOTestUtils;
 import org.apache.jena.ontology.AllDifferent;
 import org.apache.jena.ontology.AnnotationProperty;
 import org.apache.jena.ontology.FunctionalProperty;

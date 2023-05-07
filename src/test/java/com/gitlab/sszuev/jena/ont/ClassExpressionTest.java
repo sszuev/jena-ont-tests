@@ -2,7 +2,7 @@ package com.gitlab.sszuev.jena.ont;
 
 import com.gitlab.sszuev.jena.ont.common.CommonOntTestBase;
 import com.gitlab.sszuev.jena.ont.common.CommonOntTestEngine;
-import org.apache.jena.IOTestUtils;
+import com.gitlab.sszuev.jena.ont.testutils.IOTestUtils;
 import org.apache.jena.ontology.AllValuesFromRestriction;
 import org.apache.jena.ontology.CardinalityQRestriction;
 import org.apache.jena.ontology.CardinalityRestriction;

@@ -25,8 +25,8 @@ package org.apache.jena.ontology.impl;
 // Imports
 ///////////////
 
+import com.gitlab.sszuev.jena.ont.testutils.IOTestUtils;
 import junit.framework.TestSuite;
-import org.apache.jena.IOTestUtils;
 import org.apache.jena.ontology.AllValuesFromRestriction;
 import org.apache.jena.ontology.CardinalityQRestriction;
 import org.apache.jena.ontology.CardinalityRestriction;

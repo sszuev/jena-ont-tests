@@ -1,4 +1,4 @@
-package org.apache.jena;
+package com.gitlab.sszuev.jena.ont.testutils;
 
 import org.apache.jena.rdf.model.Model;
 
@@ -32,7 +32,7 @@ public final class IOTestUtils {
 
     public static void readResourceModel(Model m, String path)  {
         try (InputStream in = IOTestUtils.class.getResourceAsStream(path)) {
-            m.read(in, null);
+            m.read(in, normalize(path));
         } catch (Exception e) {
             throw new IllegalStateException("Can't read " + path, e);
         }

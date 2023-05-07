@@ -1,6 +1,6 @@
 package com.gitlab.sszuev.jena.ont;
 
-import org.apache.jena.IOTestUtils;
+import com.gitlab.sszuev.jena.ont.testutils.IOTestUtils;
 import org.apache.jena.ontology.AnnotationProperty;
 import org.apache.jena.ontology.ObjectProperty;
 import org.apache.jena.ontology.OntClass;
