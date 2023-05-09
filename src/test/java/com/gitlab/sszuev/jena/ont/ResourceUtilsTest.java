@@ -39,11 +39,15 @@ public class ResourceUtilsTest {
         List<Resource> bcd = Arrays.asList(b, c, d);
         List<Resource> cd = Arrays.asList(c, d);
 
-        Assertions.assertEquals(1, ResourceUtils.maximalLowerElements(abcd, RDFS.subClassOf, true).size(), "Wrong number of remaining resources");
-        Assertions.assertEquals(a, ResourceUtils.maximalLowerElements(abcd, RDFS.subClassOf, true).iterator().next(), "Result should be a");
-        Assertions.assertEquals(2, ResourceUtils.maximalLowerElements(bcd, RDFS.subClassOf, true).size(), "Wrong number of remaining resources");
-        Assertions.assertEquals(1, ResourceUtils.maximalLowerElements(cd, RDFS.subClassOf, true).size(), "Wrong number of remaining resources");
-        Assertions.assertEquals(c, ResourceUtils.maximalLowerElements(cd, RDFS.subClassOf, true).iterator().next(), "Result should be a");
+        List<Resource> abcdExpected = ResourceUtils.maximalLowerElements(abcd, RDFS.subClassOf, true); // a
+        List<Resource> bcdExpected = ResourceUtils.maximalLowerElements(bcd, RDFS.subClassOf, true); // b, c
+        List<Resource> cdExpected = ResourceUtils.maximalLowerElements(cd, RDFS.subClassOf, true); // c
+
+        Assertions.assertEquals(1, abcdExpected.size(), "Wrong number of remaining resources");
+        Assertions.assertEquals(a, abcdExpected.iterator().next(), "Result should be a");
+        Assertions.assertEquals(2, bcdExpected.size(), "Wrong number of remaining resources");
+        Assertions.assertEquals(1, cdExpected.size(), "Wrong number of remaining resources");
+        Assertions.assertEquals(c, cdExpected.iterator().next(), "Result should be a");
     }
 
     @Test
