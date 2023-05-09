@@ -239,16 +239,32 @@ public class ClassTest {
     @Test
     public void testListSubClasses4() {
         // no inference
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        OntClass a = m.createClass(NS + "A");
-        a.addSubClass(a);
+        OntModel m1 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+        OntClass a1 = m1.createClass(NS + "A");
+        a1.addSubClass(a1);
 
-        Assertions.assertTrue(a.listSubClasses(true).toList().isEmpty());
-        Assertions.assertTrue(a.listSuperClasses(true).toList().isEmpty());
+        Assertions.assertTrue(a1.listSubClasses(true).toList().isEmpty());
+        Assertions.assertTrue(a1.listSubClasses(false).toList().isEmpty());
+
+        // inference 1
+        OntModel m2 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
+        OntClass a2 = m2.createClass(NS + "A");
+        a2.addSubClass(a2);
+
+        Assertions.assertTrue(a2.listSubClasses(true).toList().isEmpty());
+        Assertions.assertTrue(a2.listSubClasses(false).toList().isEmpty());
+
+        // inference 2
+        OntModel m3 = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RULE_INF);
+        OntClass a3 = m3.createClass(NS + "A");
+        a3.addSubClass(a3);
+
+        Assertions.assertEquals(Set.of(), a3.listSubClasses(true).toSet());
+        Assertions.assertEquals(Set.of(), a3.listSubClasses(false).toSet());
     }
 
     @Test
-    public void testListSubClasses5() {
+    public void testListSubClasses6() {
         //     A
         //   /  / \
         //  /  B   C
@@ -344,7 +360,7 @@ public class ClassTest {
     }
 
     @Test
-    public void testListSubClasses6() {
+    public void testListSubClasses7() {
         //     A
         //   /  / \
         //  /  B   C
@@ -355,7 +371,7 @@ public class ClassTest {
         //       / \
         //      L   M
 
-        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF));
+        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RULE_INF));
 
         Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -439,6 +455,38 @@ public class ClassTest {
         Assertions.assertEquals(Set.of(), indirectM);
     }
 
+    @Test
+    public void testListSubClasses8() {
+        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RULE_INF);
+        OntClass A = m.createClass(NS + "A");
+        OntClass B = m.createClass(NS + "B");
+        OntClass C = m.createClass(NS + "C");
+        A.addSubClass(B);
+        B.addEquivalentClass(C);
+
+        Set<String> directA = A.listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> directB = B.listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> directC = C.listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> indirectA = A.listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = B.listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = C.listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA); // B, C
+        System.out.println("DIRECT-B::" + directB); // ()
+        System.out.println("DIRECT-C::" + directC); // ()
+        System.out.println("INDIRECT-A::" + indirectA); // B, C
+        System.out.println("INDIRECT-B::" + indirectB); // C
+        System.out.println("INDIRECT-C::" + indirectC); // B
+
+        Assertions.assertEquals(Set.of("C", "B"), directA);
+        Assertions.assertEquals(Set.of(), directB);
+        Assertions.assertEquals(Set.of(), directC);
+
+        Assertions.assertEquals(Set.of("B", "C"), indirectA);
+        Assertions.assertEquals(Set.of("C"), indirectB);
+        Assertions.assertEquals(Set.of("B"), indirectC);
+    }
 
     @Test
     public void testListSuperClasses0() {
@@ -497,6 +545,33 @@ public class ClassTest {
         C.addSuperClass(B);
 
         JunitExtensions.assertValues("", A.listSuperClasses(true), B, C);
+    }
+
+    @Test
+    public void testListSuperClasses4() {
+        // no inference
+        OntModel m1 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+        OntClass a1 = m1.createClass(NS + "A");
+        a1.addSubClass(a1);
+
+        Assertions.assertTrue(a1.listSuperClasses(true).toList().isEmpty());
+        Assertions.assertTrue(a1.listSuperClasses(false).toList().isEmpty());
+
+        // inference 1
+        OntModel m2 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
+        OntClass a2 = m2.createClass(NS + "A");
+        a2.addSubClass(a2);
+
+        Assertions.assertTrue(a2.listSuperClasses(true).toList().isEmpty());
+        Assertions.assertTrue(a2.listSuperClasses(false).toList().isEmpty());
+
+        // inference 2
+        OntModel m3 = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RULE_INF);
+        OntClass a3 = m3.createClass(NS + "A");
+        a3.addSubClass(a3);
+
+        Assertions.assertEquals(Set.of(OWL.Thing), a3.listSuperClasses(true).toSet());
+        Assertions.assertEquals(Set.of(OWL.Thing, RDFS.Resource), a3.listSuperClasses(false).toSet());
     }
 
     @Test
