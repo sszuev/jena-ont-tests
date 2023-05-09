@@ -13,6 +13,8 @@ import org.apache.jena.vocabulary.RDFS;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+
 public class ClassTest {
     private static final String NS = "http://example.com/test#";
 
@@ -176,9 +178,42 @@ public class ClassTest {
     }
 
     @Test
+    public void testListSubClasses3() {
+        // no inference
+        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM);
+        OntClass a = m.createClass(NS + "A");
+        OntClass b = m.createClass(NS + "B");
+        OntClass c = m.createClass(NS + "C");
+        OntClass d = m.createClass(NS + "D");
+        a.addSubClass(b);
+        a.addSubClass(c);
+        c.addSubClass(d);
+
+        Assertions.assertEquals(Set.of(b, c), a.listSubClasses().toSet());
+        Assertions.assertEquals(Set.of(b, c), a.listSubClasses(true).toSet());
+        Assertions.assertEquals(Set.of(b, c), a.listSubClasses(false).toSet());
+
+        a.addSubClass(d);
+        Assertions.assertEquals(Set.of(b, c, d), a.listSubClasses().toSet());
+        Assertions.assertEquals(Set.of(b, c), a.listSubClasses(true).toSet());
+        Assertions.assertEquals(Set.of(b, c, d), a.listSubClasses(false).toSet());
+    }
+
+    @Test
+    public void testListSubClasses4() {
+        // no inference
+        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+        OntClass a = m.createClass(NS + "A");
+        a.addSubClass(a);
+
+        Assertions.assertTrue(a.listSubClasses(true).toList().isEmpty());
+        Assertions.assertTrue(a.listSuperClasses(true).toList().isEmpty());
+    }
+
+    @Test
     public void testListSuperClasses0() {
         // no inference
-        OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM);
+        OntModel m = createABCDEFModel(OntModelSpec.OWL_DL_MEM);
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
         OntClass c = m.getOntClass(NS + "C");
@@ -381,7 +416,10 @@ public class ClassTest {
     }
 
     protected OntModel createABCDEFModel(OntModelSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec);
+        return createABCDEFModel(ModelFactory.createOntologyModel(spec));
+    }
+
+    protected OntModel createABCDEFModel(OntModel m) {
         OntClass a = m.createClass(NS + "A");
         OntClass b = m.createClass(NS + "B");
         OntClass c = m.createClass(NS + "C");
@@ -403,5 +441,4 @@ public class ClassTest {
         c.addSubClass(f);
         return m;
     }
-
 }
