@@ -128,6 +128,43 @@ public class ClassTest {
     }
 
     @Test
+    public void testIsHierarchyRoot10() {
+        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+        OntClass c1 = m.createClass(":C1");
+        OntClass c2 = m.createClass(":C2");
+        OntClass c3 = m.createClass(":C3");
+        OntClass c4 = m.createClass(":C4");
+        OntClass c5 = m.createClass(":C5");
+        OntClass c6 = m.createClass(":C6");
+        OntClass c7 = m.createClass(":C7");
+        OntClass c8 = m.createClass(":C8");
+        OntClass c9 = m.createClass(":C9");
+        OntClass c10 = OWL.Thing.inModel(m).as(OntClass.class);
+        OntClass c11 = OWL.Nothing.inModel(m).as(OntClass.class);
+
+        c1.addSuperClass(c2);
+        c2.addSuperClass(c3);
+        c3.addSuperClass(c4);
+        c5.addSuperClass(c6);
+        c6.addSuperClass(c10);
+        c7.addSuperClass(c8);
+        c8.addSuperClass(c9);
+        c9.addSuperClass(c7);
+
+        Assertions.assertFalse(c1.isHierarchyRoot());   // false
+        Assertions.assertFalse(c2.isHierarchyRoot());   // false
+        Assertions.assertFalse(c3.isHierarchyRoot());   // false
+        Assertions.assertTrue(c4.isHierarchyRoot());    // true
+        Assertions.assertFalse(c5.isHierarchyRoot());   // false
+        Assertions.assertTrue(c6.isHierarchyRoot());    // true
+        Assertions.assertFalse(c7.isHierarchyRoot());   // false
+        Assertions.assertFalse(c8.isHierarchyRoot());   // false
+        Assertions.assertFalse(c9.isHierarchyRoot());   // false
+        Assertions.assertTrue(c10.isHierarchyRoot());   // true
+        Assertions.assertFalse(c11.isHierarchyRoot());  // false
+    }
+
+    @Test
     public void testListSubClasses0() {
         // no inference
         OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM);
@@ -318,7 +355,7 @@ public class ClassTest {
         //       / \
         //      L   M
 
-        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RULE_INF));
+        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF));
 
         Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
