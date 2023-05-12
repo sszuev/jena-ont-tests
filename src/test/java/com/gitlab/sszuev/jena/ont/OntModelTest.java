@@ -1050,7 +1050,7 @@ public class OntModelTest extends CommonOntTestBase {
      * AddSubModel variant 2: base = inf, import = no inf
      */
     @Test
-    public void testaddSubModel1() {
+    public void testAddSubModel1() {
         OntDocumentManager.getInstance().setProcessImports(false);
         OntDocumentManager.getInstance().addAltEntry("http://www.w3.org/TR/2003/CR-owl-guide-20030818/wine",
                 IOTestUtils.normalize("file:jena/ont-model-test-wine.owl"));
@@ -1073,7 +1073,7 @@ public class OntModelTest extends CommonOntTestBase {
      * Variant 3: base = no inf, import = inf
      */
     @Test
-    public void testaddSubModel3() {
+    public void testAddSubModel3() {
         OntModel m0 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
         OntModel m1 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
 
@@ -1092,7 +1092,7 @@ public class OntModelTest extends CommonOntTestBase {
      * Variant 4: base = inf, import = inf
      */
     @Test
-    public void testaddSubModel4() {
+    public void testAddSubModel4() {
         OntModel m0 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
         OntModel m1 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
 

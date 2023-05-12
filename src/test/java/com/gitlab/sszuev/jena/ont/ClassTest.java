@@ -7,6 +7,7 @@ import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
@@ -368,29 +369,29 @@ public class ClassTest {
         Set<String> directM = m.getOntClass(NS + "M").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectM = m.getOntClass(NS + "M").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        System.out.println("DIRECT-A::" + directA); // C, B
-        System.out.println("DIRECT-B::" + directB); // E, D
-        System.out.println("DIRECT-C::" + directC); // F, E
-        System.out.println("DIRECT-D::" + directD); // H, G
-        System.out.println("DIRECT-E::" + directE); // ()
-        System.out.println("DIRECT-F::" + directF); // ()
-        System.out.println("DIRECT-G::" + directG); // ()
-        System.out.println("DIRECT-H::" + directH); // ()
-        System.out.println("DIRECT-K::" + directK); // M, L
-        System.out.println("DIRECT-L::" + directL); // ()
-        System.out.println("DIRECT-M::" + directM); // ()
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("DIRECT-D::" + directD);
+        System.out.println("DIRECT-E::" + directE);
+        System.out.println("DIRECT-F::" + directF);
+        System.out.println("DIRECT-G::" + directG);
+        System.out.println("DIRECT-H::" + directH);
+        System.out.println("DIRECT-K::" + directK);
+        System.out.println("DIRECT-L::" + directL);
+        System.out.println("DIRECT-M::" + directM);
 
-        System.out.println("INDIRECT-A::" + indirectA); // C, B, D
-        System.out.println("INDIRECT-B::" + indirectB); // E, D
-        System.out.println("INDIRECT-C::" + indirectC); // F, E
-        System.out.println("INDIRECT-D::" + indirectD); // H, G
-        System.out.println("INDIRECT-E::" + indirectE); // ()
-        System.out.println("INDIRECT-F::" + indirectF); // ()
-        System.out.println("INDIRECT-G::" + indirectG); // ()
-        System.out.println("INDIRECT-H::" + indirectH); // ()
-        System.out.println("INDIRECT-K::" + indirectK); // M, L, H
-        System.out.println("INDIRECT-L::" + indirectL); // ()
-        System.out.println("INDIRECT-M::" + indirectM); // ()
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+        System.out.println("INDIRECT-D::" + indirectD);
+        System.out.println("INDIRECT-E::" + indirectE);
+        System.out.println("INDIRECT-F::" + indirectF);
+        System.out.println("INDIRECT-G::" + indirectG);
+        System.out.println("INDIRECT-H::" + indirectH);
+        System.out.println("INDIRECT-K::" + indirectK);
+        System.out.println("INDIRECT-L::" + indirectL);
+        System.out.println("INDIRECT-M::" + indirectM);
 
         Assertions.assertEquals(Set.of("C", "B"), directA);
         Assertions.assertEquals(Set.of("E", "D"), directB);
@@ -464,29 +465,29 @@ public class ClassTest {
         Set<String> directM = m.getOntClass(NS + "M").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectM = m.getOntClass(NS + "M").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        System.out.println("DIRECT-A::" + directA); // B, C
-        System.out.println("DIRECT-B::" + directB); // D, E
-        System.out.println("DIRECT-C::" + directC); // E, F
-        System.out.println("DIRECT-D::" + directD); // G, H, K
-        System.out.println("DIRECT-E::" + directE); // ()
-        System.out.println("DIRECT-F::" + directF); // ()
-        System.out.println("DIRECT-G::" + directG); // ()
-        System.out.println("DIRECT-H::" + directH); // L, M
-        System.out.println("DIRECT-K::" + directK); // L, M
-        System.out.println("DIRECT-L::" + directL); // ()
-        System.out.println("DIRECT-M::" + directM); // ()
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("DIRECT-D::" + directD);
+        System.out.println("DIRECT-E::" + directE);
+        System.out.println("DIRECT-F::" + directF);
+        System.out.println("DIRECT-G::" + directG);
+        System.out.println("DIRECT-H::" + directH);
+        System.out.println("DIRECT-K::" + directK);
+        System.out.println("DIRECT-L::" + directL);
+        System.out.println("DIRECT-M::" + directM);
 
-        System.out.println("INDIRECT-A::" + indirectA); // B, C, D, E, F, G, H, K, L, M
-        System.out.println("INDIRECT-B::" + indirectB); // D, E, G, H, K, L, M
-        System.out.println("INDIRECT-C::" + indirectC); // E, F
-        System.out.println("INDIRECT-D::" + indirectD); // G, H, K, L, M
-        System.out.println("INDIRECT-E::" + indirectE); // ()
-        System.out.println("INDIRECT-F::" + indirectF); // ()
-        System.out.println("INDIRECT-G::" + indirectG); // ()
-        System.out.println("INDIRECT-H::" + indirectH); // L, M
-        System.out.println("INDIRECT-K::" + indirectK); // H, L, M
-        System.out.println("INDIRECT-L::" + indirectL); // ()
-        System.out.println("INDIRECT-M::" + indirectM); // ()
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+        System.out.println("INDIRECT-D::" + indirectD);
+        System.out.println("INDIRECT-E::" + indirectE);
+        System.out.println("INDIRECT-F::" + indirectF);
+        System.out.println("INDIRECT-G::" + indirectG);
+        System.out.println("INDIRECT-H::" + indirectH);
+        System.out.println("INDIRECT-K::" + indirectK);
+        System.out.println("INDIRECT-L::" + indirectL);
+        System.out.println("INDIRECT-M::" + indirectM);
 
         Assertions.assertEquals(Set.of("C", "B"), directA);
         Assertions.assertEquals(Set.of("E", "D"), directB);
@@ -537,14 +538,14 @@ public class ClassTest {
         Set<String> indirectC = C.listSubClasses(false).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectD = D.listSubClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        System.out.println("DIRECT-A::" + directA); // B, C, D
-        System.out.println("DIRECT-B::" + directB); // ()
-        System.out.println("DIRECT-C::" + directC); // ()
-        System.out.println("DIRECT-D::" + directD); // ()
-        System.out.println("INDIRECT-A::" + indirectA); // B, C, D
-        System.out.println("INDIRECT-B::" + indirectB); // C, D
-        System.out.println("INDIRECT-C::" + indirectC); // B, D
-        System.out.println("INDIRECT-D::" + indirectD); // B, C
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("DIRECT-D::" + directD);
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+        System.out.println("INDIRECT-D::" + indirectD);
 
         Assertions.assertEquals(Set.of("C", "B", "D"), directA);
         Assertions.assertEquals(Set.of(), directB);
@@ -590,6 +591,37 @@ public class ClassTest {
         Assertions.assertEquals(Set.of(), indirectB);
         Assertions.assertEquals(Set.of(), indirectC);
         Assertions.assertEquals(Set.of(), indirectD);
+    }
+
+    @Test
+    public void testListSubClasses10() {
+        // B = C
+        //  \ |
+        //    A
+        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
+        OntClass A = m.createClass(NS + "A");
+        OntClass B = m.createClass(NS + "B");
+        OntClass C = m.createClass(NS + "C");
+        A.addSuperClass(B);
+        A.addSuperClass(C);
+        B.addSuperClass(C);
+        C.addSuperClass(B);
+
+        Set<String> directA = A.listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> directB = B.listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> directC = C.listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> indirectA = A.listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = B.listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = C.listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Assertions.assertEquals(Set.of(), directA);
+        Assertions.assertEquals(Set.of("A"), directB);
+        Assertions.assertEquals(Set.of("A"), directC);
+
+        Assertions.assertEquals(Set.of(), indirectA);
+        Assertions.assertEquals(Set.of("A", "C"), indirectB);
+        Assertions.assertEquals(Set.of("A", "B"), indirectC);
     }
 
     @Test
@@ -725,6 +757,140 @@ public class ClassTest {
     }
 
     @Test
+    public void testListSuperClasses6() {
+        //     A
+        //   /  / \
+        //  /  B   C
+        //  | / \ / \
+        //  D   E   F
+        // / \
+        // G  H = K
+        //       / \
+        //      L   M
+
+        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RDFS_INF));
+
+        Set<String> directA = m.getOntClass(NS + "A").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = m.getOntClass(NS + "A").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directB = m.getOntClass(NS + "B").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = m.getOntClass(NS + "B").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = m.getOntClass(NS + "C").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = m.getOntClass(NS + "C").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directD = m.getOntClass(NS + "D").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = m.getOntClass(NS + "D").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directE = m.getOntClass(NS + "E").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = m.getOntClass(NS + "E").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directF = m.getOntClass(NS + "F").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectF = m.getOntClass(NS + "F").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directG = m.getOntClass(NS + "G").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectG = m.getOntClass(NS + "G").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directH = m.getOntClass(NS + "H").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectH = m.getOntClass(NS + "H").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directK = m.getOntClass(NS + "K").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectK = m.getOntClass(NS + "K").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directL = m.getOntClass(NS + "L").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectL = m.getOntClass(NS + "L").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directM = m.getOntClass(NS + "M").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectM = m.getOntClass(NS + "M").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("DIRECT-D::" + directD);
+        System.out.println("DIRECT-E::" + directE);
+        System.out.println("DIRECT-F::" + directF);
+        System.out.println("DIRECT-G::" + directG);
+        System.out.println("DIRECT-H::" + directH);
+        System.out.println("DIRECT-K::" + directK);
+        System.out.println("DIRECT-L::" + directL);
+        System.out.println("DIRECT-M::" + directM);
+
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+        System.out.println("INDIRECT-D::" + indirectD);
+        System.out.println("INDIRECT-E::" + indirectE);
+        System.out.println("INDIRECT-F::" + indirectF);
+        System.out.println("INDIRECT-G::" + indirectG);
+        System.out.println("INDIRECT-H::" + indirectH);
+        System.out.println("INDIRECT-K::" + indirectK);
+        System.out.println("INDIRECT-L::" + indirectL);
+        System.out.println("INDIRECT-M::" + indirectM);
+
+        Assertions.assertEquals(Set.of(), directA);
+        Assertions.assertEquals(Set.of("A"), directB);
+        Assertions.assertEquals(Set.of("A"), directC);
+        Assertions.assertEquals(Set.of("B"), directD);
+        Assertions.assertEquals(Set.of("B", "C"), directE);
+        Assertions.assertEquals(Set.of("C"), directF);
+        Assertions.assertEquals(Set.of("D"), directG);
+        Assertions.assertEquals(Set.of("D"), directH);
+        Assertions.assertEquals(Set.of("D"), directK);
+        Assertions.assertEquals(Set.of("H", "K"), directL);
+        Assertions.assertEquals(Set.of("H", "K"), directM);
+
+        Assertions.assertEquals(Set.of(), indirectA);
+        Assertions.assertEquals(Set.of("A"), indirectB);
+        Assertions.assertEquals(Set.of("A"), indirectC);
+        Assertions.assertEquals(Set.of("A", "B"), indirectD);
+        Assertions.assertEquals(Set.of("A", "B", "C"), indirectE);
+        Assertions.assertEquals(Set.of("A", "C"), indirectF);
+        Assertions.assertEquals(Set.of("A", "B", "D"), indirectG);
+        Assertions.assertEquals(Set.of("D"), indirectH);
+        Assertions.assertEquals(Set.of("A", "B", "D", "H"), indirectK);
+        Assertions.assertEquals(Set.of("A", "B", "D", "H", "K"), indirectL);
+        Assertions.assertEquals(Set.of("A", "B", "D", "H", "K"), indirectM);
+    }
+
+    @Test
+    public void testListSuperClasses7() {
+        //     D
+        //    | \
+        // B  |  C
+        //  \ | /
+        //    A
+        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
+        OntClass A = m.createClass(NS + "A");
+        OntClass B = m.createClass(NS + "B");
+        OntClass C = m.createClass(NS + "C");
+        OntClass D = m.createClass(NS + "D");
+        C.addSubClass(A);
+        B.addSubClass(A);
+        D.addSubClass(C);
+        D.addSubClass(A);
+
+        Set<String> directA = A.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> directB = B.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> directC = C.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> directD = D.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> indirectA = A.listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = B.listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = C.listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = D.listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Assertions.assertEquals(Set.of("B", "C"), directA);
+        Assertions.assertEquals(Set.of(), directB);
+        Assertions.assertEquals(Set.of("D"), directC);
+        Assertions.assertEquals(Set.of(), directD);
+
+        Assertions.assertEquals(Set.of("B", "C", "D"), indirectA);
+        Assertions.assertEquals(Set.of(), indirectB);
+        Assertions.assertEquals(Set.of("D"), indirectC);
+        Assertions.assertEquals(Set.of(), indirectD);
+    }
+
+    @Test
     public void testListInstances0() {
         // no inference
         OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM);
@@ -785,6 +951,170 @@ public class ClassTest {
 
         JunitExtensions.assertValues("", a.listInstances(true), ia);
         JunitExtensions.assertValues("", b.listInstances(true), ib);
+    }
+
+    @Test
+    public void testListInstances3() {
+        // no inference
+        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF));
+        m.listStatements(null, RDF.type, OWL.Class)
+                .mapWith(Statement::getSubject)
+                .mapWith(x -> x.as(OntClass.class))
+                .toList()
+                .forEach(x -> x.createIndividual(NS + "i" + x.getLocalName()));
+
+        Set<String> directA = m.getOntClass(NS + "A").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = m.getOntClass(NS + "A").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directB = m.getOntClass(NS + "B").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = m.getOntClass(NS + "B").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = m.getOntClass(NS + "C").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = m.getOntClass(NS + "C").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directD = m.getOntClass(NS + "D").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = m.getOntClass(NS + "D").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directE = m.getOntClass(NS + "E").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = m.getOntClass(NS + "E").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directF = m.getOntClass(NS + "F").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectF = m.getOntClass(NS + "F").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directG = m.getOntClass(NS + "G").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectG = m.getOntClass(NS + "G").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directH = m.getOntClass(NS + "H").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectH = m.getOntClass(NS + "H").listInstances(true).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directK = m.getOntClass(NS + "K").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectK = m.getOntClass(NS + "K").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directL = m.getOntClass(NS + "L").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectL = m.getOntClass(NS + "L").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directM = m.getOntClass(NS + "M").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectM = m.getOntClass(NS + "M").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Assertions.assertEquals(Set.of("iA"), directA);
+        Assertions.assertEquals(Set.of("iB"), directB);
+        Assertions.assertEquals(Set.of("iC"), directC);
+        Assertions.assertEquals(Set.of("iD"), directD);
+        Assertions.assertEquals(Set.of("iE"), directE);
+        Assertions.assertEquals(Set.of("iF"), directF);
+        Assertions.assertEquals(Set.of("iG"), directG);
+        Assertions.assertEquals(Set.of("iK", "iH"), directH);
+        Assertions.assertEquals(Set.of("iK", "iH"), directK);
+        Assertions.assertEquals(Set.of("iL"), directL);
+        Assertions.assertEquals(Set.of("iM"), directM);
+
+        Assertions.assertEquals(Set.of("iA", "iB", "iC", "iD", "iE", "iF", "iG", "iH", "iK", "iL", "iM"), indirectA);
+        Assertions.assertEquals(Set.of("iB", "iD", "iE", "iG", "iH", "iK", "iL", "iM"), indirectB);
+        Assertions.assertEquals(Set.of("iC", "iE", "iF"), indirectC);
+        Assertions.assertEquals(Set.of("iD", "iG", "iH", "iK", "iL", "iM"), indirectD);
+        Assertions.assertEquals(Set.of("iE"), indirectE);
+        Assertions.assertEquals(Set.of("iF"), indirectF);
+        Assertions.assertEquals(Set.of("iG"), indirectG);
+        Assertions.assertEquals(Set.of("iK", "iH"), indirectH);
+        Assertions.assertEquals(Set.of("iH", "iK", "iL", "iM"), indirectK);
+        Assertions.assertEquals(Set.of("iL"), indirectL);
+        Assertions.assertEquals(Set.of("iM"), indirectM);
+    }
+
+    @Test
+    public void testListInstances4() {
+        // B = C
+        //  \ |
+        //    A
+        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
+        OntClass A = m.createClass(NS + "A");
+        OntClass B = m.createClass(NS + "B");
+        OntClass C = m.createClass(NS + "C");
+        A.addSuperClass(B);
+        A.addSuperClass(C);
+        B.addSuperClass(C);
+        C.addSuperClass(B);
+        m.listStatements(null, RDF.type, OWL.Class)
+                .mapWith(Statement::getSubject)
+                .mapWith(x -> x.as(OntClass.class))
+                .toList()
+                .forEach(x -> x.createIndividual(NS + "i" + x.getLocalName()));
+
+        Set<String> directA = m.getOntClass(NS + "A").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = m.getOntClass(NS + "A").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directB = m.getOntClass(NS + "B").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = m.getOntClass(NS + "B").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = m.getOntClass(NS + "C").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = m.getOntClass(NS + "C").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+
+        Assertions.assertEquals(Set.of("iA"), directA);
+        Assertions.assertEquals(Set.of("iB", "iC"), directB);
+        Assertions.assertEquals(Set.of("iB", "iC"), directC);
+        Assertions.assertEquals(Set.of("iA"), indirectA);
+        Assertions.assertEquals(Set.of("iA", "iB", "iC"), indirectB);
+        Assertions.assertEquals(Set.of("iA", "iB", "iC"), indirectC);
+    }
+
+    @Test
+    public void testListInstances5() {
+        //     D
+        //    | \
+        // B  |  C
+        //  \ | /
+        //    A
+        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
+        OntClass A = m.createClass(NS + "A");
+        OntClass B = m.createClass(NS + "B");
+        OntClass C = m.createClass(NS + "C");
+        OntClass D = m.createClass(NS + "D");
+        C.addSubClass(A);
+        B.addSubClass(A);
+        D.addSubClass(C);
+        D.addSubClass(A);
+        m.listStatements(null, RDF.type, OWL.Class)
+                .mapWith(Statement::getSubject)
+                .mapWith(x -> x.as(OntClass.class))
+                .toList()
+                .forEach(x -> x.createIndividual(NS + "i" + x.getLocalName()));
+
+        Set<String> directA = m.getOntClass(NS + "A").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = m.getOntClass(NS + "A").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directB = m.getOntClass(NS + "B").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = m.getOntClass(NS + "B").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = m.getOntClass(NS + "C").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = m.getOntClass(NS + "C").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directD = m.getOntClass(NS + "D").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = m.getOntClass(NS + "D").listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("DIRECT-D::" + directD);
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+        System.out.println("INDIRECT-D::" + indirectD);
+
+        Assertions.assertEquals(Set.of("iA"), directA);
+        Assertions.assertEquals(Set.of("iB"), directB);
+        Assertions.assertEquals(Set.of("iC"), directC);
+        Assertions.assertEquals(Set.of("iD"), directD);
+        Assertions.assertEquals(Set.of("iA"), indirectA);
+        Assertions.assertEquals(Set.of("iA", "iB"), indirectB);
+        Assertions.assertEquals(Set.of("iA", "iC"), indirectC);
+        Assertions.assertEquals(Set.of("iA", "iC", "iD"), indirectD);
     }
 
     @Test
