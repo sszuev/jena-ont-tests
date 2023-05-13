@@ -955,7 +955,16 @@ public class ClassTest {
 
     @Test
     public void testListInstances3() {
-        // no inference
+        //     A
+        //   /  / \
+        //  /  B   C
+        //  | / \ / \
+        //  D   E   F
+        // / \
+        // G  H = K
+        //       / \
+        //      L   M
+
         OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF));
         m.listStatements(null, RDF.type, OWL.Class)
                 .mapWith(Statement::getSubject)
@@ -1118,6 +1127,70 @@ public class ClassTest {
     }
 
     @Test
+    public void testListInstances6() {
+        //      A
+        //     / \
+        //    B   C
+        //   / \ / \
+        //  D   E   F
+        OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM_RDFS_INF);
+        OntClass a = m.getOntClass(NS + "A");
+        OntClass b = m.getOntClass(NS + "B");
+        OntClass c = m.getOntClass(NS + "C");
+        OntClass d = m.getOntClass(NS + "D");
+        OntClass e = m.getOntClass(NS + "E");
+        OntClass f = m.getOntClass(NS + "F");
+
+        a.createIndividual(NS + "iA");
+        b.createIndividual(NS + "iB");
+        c.createIndividual(NS + "iC");
+        d.createIndividual(NS + "iD");
+        e.createIndividual(NS + "iE");
+
+        Set<String> directA = a.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = a.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directB = b.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = b.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = c.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = c.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directD = d.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = d.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directE = e.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = e.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directF = f.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectF = f.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("DIRECT-D::" + directD);
+        System.out.println("DIRECT-E::" + directE);
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+        System.out.println("INDIRECT-D::" + indirectD);
+        System.out.println("INDIRECT-E::" + indirectE);
+
+        Assertions.assertEquals(Set.of("iA"), directA);
+        Assertions.assertEquals(Set.of("iB"), directB);
+        Assertions.assertEquals(Set.of("iC"), directC);
+        Assertions.assertEquals(Set.of("iD"), directD);
+        Assertions.assertEquals(Set.of("iE"), directE);
+        Assertions.assertEquals(Set.of(), directF);
+        Assertions.assertEquals(Set.of("iA", "iB", "iC", "iD", "iE"), indirectA);
+        Assertions.assertEquals(Set.of("iB", "iD", "iE"), indirectB);
+        Assertions.assertEquals(Set.of("iE", "iC"), indirectC);
+        Assertions.assertEquals(Set.of("iD"), indirectD);
+        Assertions.assertEquals(Set.of("iE"), indirectE);
+        Assertions.assertEquals(Set.of(), indirectF);
+    }
+
+    @Test
     public void testDropIndividual() {
         OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM);
         OntClass a = m.getOntClass(NS + "A");
@@ -1174,6 +1247,14 @@ public class ClassTest {
     @Test
     public void testDatatypeIsClassOwlRDFS() {
         OntModel m = ModelFactory.createOntologyModel(OntModelSpec.RDFS_MEM);
+        Resource c = m.createResource();
+        c.addProperty(RDF.type, RDFS.Datatype);
+        Assertions.assertTrue(c.canAs(OntClass.class));
+    }
+
+    @Test
+    public void testDatatypeIsClassOwlRDFSInf() {
+        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
         Resource c = m.createResource();
         c.addProperty(RDF.type, RDFS.Datatype);
         Assertions.assertTrue(c.canAs(OntClass.class));

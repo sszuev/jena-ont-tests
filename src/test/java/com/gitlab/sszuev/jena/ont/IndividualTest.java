@@ -2,6 +2,7 @@ package com.gitlab.sszuev.jena.ont;
 
 import com.gitlab.sszuev.jena.ont.common.CommonOntTestBase;
 import com.gitlab.sszuev.jena.ont.common.CommonOntTestEngine;
+import com.gitlab.sszuev.jena.ont.testutils.JunitExtensions;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
@@ -10,28 +11,110 @@ import org.apache.jena.ontology.Profile;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.StringReader;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.stream.Stream;
-
-import static com.gitlab.sszuev.jena.ont.testutils.JunitExtensions.assertValues;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IndividualTest extends CommonOntTestBase {
 
-    static Stream<Arguments> argumentsStream() {
+    private static Stream<Arguments> argumentsStream() {
         return testsAsArguments(getTests());
+    }
+
+    @Test
+    public void testListOntClasses1() {
+        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
+        OntClass a = m.createClass(CommonOntTestEngine.NS + "A");
+        OntClass b = m.createClass(CommonOntTestEngine.NS + "B");
+        OntClass c = m.createClass(CommonOntTestEngine.NS + "C");
+        OntClass d = m.createClass(CommonOntTestEngine.NS + "D");
+        OntClass e = m.createClass(CommonOntTestEngine.NS + "E");
+        OntClass f = m.createClass(CommonOntTestEngine.NS + "F");
+        OntClass g = m.createClass(CommonOntTestEngine.NS + "G");
+
+        //      A   G
+        //     / \   \
+        //    B   C = F
+        //   / \ /
+        //  D   E
+
+        a.addSubClass(b);
+        a.addSubClass(c);
+        b.addSubClass(d);
+        b.addSubClass(e);
+        c.addSubClass(e);
+        c.addSubClass(f);
+        f.addSubClass(c);
+        f.addSuperClass(g);
+
+        m.listStatements(null, RDF.type, OWL.Class)
+                .mapWith(Statement::getSubject)
+                .mapWith(x -> x.as(OntClass.class))
+                .toList()
+                .forEach(x -> x.createIndividual(CommonOntTestEngine.NS + "i" + x.getLocalName()));
+
+        Set<String> directA = m.getIndividual(CommonOntTestEngine.NS + "iA").listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = m.getIndividual(CommonOntTestEngine.NS + "iA").listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directB = m.getIndividual(CommonOntTestEngine.NS + "iB").listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = m.getIndividual(CommonOntTestEngine.NS + "iB").listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = m.getIndividual(CommonOntTestEngine.NS + "iC").listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = m.getIndividual(CommonOntTestEngine.NS + "iC").listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directD = m.getIndividual(CommonOntTestEngine.NS + "iD").listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = m.getIndividual(CommonOntTestEngine.NS + "iD").listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directE = m.getIndividual(CommonOntTestEngine.NS + "iE").listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = m.getIndividual(CommonOntTestEngine.NS + "iE").listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directF = m.getIndividual(CommonOntTestEngine.NS + "iF").listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectF = m.getIndividual(CommonOntTestEngine.NS + "iF").listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directG = m.getIndividual(CommonOntTestEngine.NS + "iG").listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectG = m.getIndividual(CommonOntTestEngine.NS + "iG").listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-iA::" + directA);
+        System.out.println("DIRECT-iB::" + directB);
+        System.out.println("DIRECT-iC::" + directC);
+        System.out.println("DIRECT-iD::" + directD);
+        System.out.println("DIRECT-iE::" + directE);
+        System.out.println("DIRECT-iF::" + directF);
+        System.out.println("DIRECT-iG::" + directG);
+        System.out.println("INDIRECT-iA::" + indirectA);
+        System.out.println("INDIRECT-iB::" + indirectB);
+        System.out.println("INDIRECT-iC::" + indirectC);
+        System.out.println("INDIRECT-iD::" + indirectD);
+        System.out.println("INDIRECT-iE::" + indirectE);
+        System.out.println("INDIRECT-iF::" + indirectF);
+        System.out.println("INDIRECT-iG::" + indirectG);
+
+        Assertions.assertEquals(Set.of("A"), directA);
+        Assertions.assertEquals(Set.of("B"), directB);
+        Assertions.assertEquals(Set.of("C", "F"), directC);
+        Assertions.assertEquals(Set.of("D"), directD);
+        Assertions.assertEquals(Set.of("E"), directE);
+        Assertions.assertEquals(Set.of("C", "F"), directF);
+        Assertions.assertEquals(Set.of("G"), directG);
+
+        Assertions.assertEquals(Set.of("A"), indirectA);
+        Assertions.assertEquals(Set.of("A", "B"), indirectB);
+        Assertions.assertEquals(Set.of("A", "C", "F", "G"), indirectC);
+        Assertions.assertEquals(Set.of("A", "B", "D"), indirectD);
+        Assertions.assertEquals(Set.of("A", "B", "C", "E", "F", "G"), indirectE);
+        Assertions.assertEquals(Set.of("A", "C", "F", "G"), indirectF);
+        Assertions.assertEquals(Set.of("G"), indirectG);
     }
 
     @ParameterizedTest
@@ -53,22 +136,22 @@ public class IndividualTest extends CommonOntTestBase {
                         Individual z = m.createIndividual(A);
 
                         x.addSameAs(y);
-                        assertEquals(1, x.getCardinality(prof.SAME_AS()), "Cardinality should be 1");
-                        assertEquals(y, x.getSameAs(), "x should be the same as y");
-                        assertTrue(x.isSameAs(y), "x should be the same as y");
+                        Assertions.assertEquals(1, x.getCardinality(prof.SAME_AS()), "Cardinality should be 1");
+                        Assertions.assertEquals(y, x.getSameAs(), "x should be the same as y");
+                        Assertions.assertTrue(x.isSameAs(y), "x should be the same as y");
 
                         x.addSameAs(z);
-                        assertEquals(2, x.getCardinality(prof.SAME_AS()), "Cardinality should be 2");
-                        assertValues(testNodeName, x.listSameAs(), z, y);
+                        Assertions.assertEquals(2, x.getCardinality(prof.SAME_AS()), "Cardinality should be 2");
+                        JunitExtensions.assertValues(testNodeName, x.listSameAs(), z, y);
 
                         x.setSameAs(z);
-                        assertEquals(1, x.getCardinality(prof.SAME_AS()), "Cardinality should be 1");
-                        assertEquals(z, x.getSameAs(), "x should be same indiv. as z");
+                        Assertions.assertEquals(1, x.getCardinality(prof.SAME_AS()), "Cardinality should be 1");
+                        Assertions.assertEquals(z, x.getSameAs(), "x should be same indiv. as z");
 
                         x.removeSameAs(y);
-                        assertEquals(1, x.getCardinality(prof.SAME_AS()), "Cardinality should be 1");
+                        Assertions.assertEquals(1, x.getCardinality(prof.SAME_AS()), "Cardinality should be 1");
                         x.removeSameAs(z);
-                        assertEquals(0, x.getCardinality(prof.SAME_AS()), "Cardinality should be 0");
+                        Assertions.assertEquals(0, x.getCardinality(prof.SAME_AS()), "Cardinality should be 0");
                     }
                 },
 
@@ -79,8 +162,8 @@ public class IndividualTest extends CommonOntTestBase {
                         OntClass B = m.createClass(NS + "B");
                         Individual x = m.createIndividual(A);
 
-                        assertTrue(x.hasOntClass(A));
-                        assertFalse(x.hasOntClass(B));
+                        Assertions.assertTrue(x.hasOntClass(A));
+                        Assertions.assertFalse(x.hasOntClass(B));
                     }
                 },
 
@@ -94,11 +177,11 @@ public class IndividualTest extends CommonOntTestBase {
                         Individual x = m.createIndividual(A);
                         x.addRDFType(B);
 
-                        assertTrue(x.hasOntClass(A, false));
-                        assertTrue(x.hasOntClass(B, false));
+                        Assertions.assertTrue(x.hasOntClass(A, false));
+                        Assertions.assertTrue(x.hasOntClass(B, false));
 
-                        assertTrue(x.hasOntClass(A, false));
-                        assertTrue(x.hasOntClass(B, true));
+                        Assertions.assertTrue(x.hasOntClass(A, false));
+                        Assertions.assertTrue(x.hasOntClass(B, true));
 
                     }
                 },
@@ -110,7 +193,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                         Individual x = m.createIndividual(A);
 
-                        assertTrue(x.hasOntClass(NS + "A"));
+                        Assertions.assertTrue(x.hasOntClass(NS + "A"));
                     }
                 },
 
@@ -120,7 +203,7 @@ public class IndividualTest extends CommonOntTestBase {
                         OntClass A = m.createClass(NS + "A");
                         Individual x = m.createIndividual(A);
 
-                        assertEquals(A, x.getOntClass());
+                        Assertions.assertEquals(A, x.getOntClass());
                     }
                 },
 
@@ -135,7 +218,7 @@ public class IndividualTest extends CommonOntTestBase {
                         x.addRDFType(B);
 
                         // should never get A since it's not a direct class
-                        assertEquals(B, x.getOntClass(true));
+                        Assertions.assertEquals(B, x.getOntClass(true));
                     }
                 },
 
@@ -149,11 +232,11 @@ public class IndividualTest extends CommonOntTestBase {
                         Individual x = m.createIndividual(A);
                         x.addRDFType(B);
 
-                        assertValues(testNodeName, x.listOntClasses(false), A, B);
+                        JunitExtensions.assertValues(testNodeName, x.listOntClasses(false), A, B);
 
                         // now check the return types
                         for (Iterator<OntClass> i = x.listOntClasses(false); i.hasNext(); ) {
-                            assertNotNull(i.next());
+                            Assertions.assertNotNull(i.next());
                         }
                     }
                 },
@@ -168,11 +251,11 @@ public class IndividualTest extends CommonOntTestBase {
                         Individual x = m.createIndividual(A);
                         x.addRDFType(B);
 
-                        assertValues(testNodeName, x.listOntClasses(true), B);
+                        JunitExtensions.assertValues(testNodeName, x.listOntClasses(true), B);
 
                         // now check the return types
                         for (Iterator<OntClass> i = x.listOntClasses(true); i.hasNext(); ) {
-                            assertNotNull(i.next());
+                            Assertions.assertNotNull(i.next());
                         }
                     }
                 },
@@ -186,15 +269,15 @@ public class IndividualTest extends CommonOntTestBase {
 
                         Individual x = m.createIndividual(A);
 
-                        assertValues(testNodeName, x.listOntClasses(false), A);
+                        JunitExtensions.assertValues(testNodeName, x.listOntClasses(false), A);
 
                         // add a class
                         x.addOntClass(B);
 
                         // test again
-                        assertValues(testNodeName, x.listOntClasses(false), A, B);
+                        JunitExtensions.assertValues(testNodeName, x.listOntClasses(false), A, B);
                         for (Iterator<OntClass> i = x.listOntClasses(false); i.hasNext(); ) {
-                            assertNotNull(i.next());
+                            Assertions.assertNotNull(i.next());
                         }
                     }
                 },
@@ -208,15 +291,15 @@ public class IndividualTest extends CommonOntTestBase {
 
                         Individual x = m.createIndividual(A);
 
-                        assertValues(testNodeName, x.listOntClasses(false), A);
+                        JunitExtensions.assertValues(testNodeName, x.listOntClasses(false), A);
 
                         // replace the class
                         x.setOntClass(B);
 
                         // test again
-                        assertValues(testNodeName, x.listOntClasses(false), B);
+                        JunitExtensions.assertValues(testNodeName, x.listOntClasses(false), B);
                         for (Iterator<OntClass> i = x.listOntClasses(false); i.hasNext(); ) {
-                            assertNotNull(i.next());
+                            Assertions.assertNotNull(i.next());
                         }
                     }
                 },
@@ -230,16 +313,16 @@ public class IndividualTest extends CommonOntTestBase {
                         Individual x = m.createIndividual(A);
                         x.addOntClass(B);
 
-                        assertValues(testNodeName, x.listOntClasses(false), A, B);
+                        JunitExtensions.assertValues(testNodeName, x.listOntClasses(false), A, B);
 
                         x.removeOntClass(A);
-                        assertValues(testNodeName, x.listOntClasses(false), B);
+                        JunitExtensions.assertValues(testNodeName, x.listOntClasses(false), B);
 
                         x.removeOntClass(A);
-                        assertValues(testNodeName, x.listOntClasses(false), B);
+                        JunitExtensions.assertValues(testNodeName, x.listOntClasses(false), B);
 
                         x.removeOntClass(B);
-                        assertValues(testNodeName, x.listOntClasses(false));
+                        JunitExtensions.assertValues(testNodeName, x.listOntClasses(false));
                     }
                 },
 
@@ -251,12 +334,12 @@ public class IndividualTest extends CommonOntTestBase {
                         Resource s = m.createResource(NS + "s");
 
                         m.add(r, RDF.type, A);
-                        assertTrue(r.canAs(Individual.class));
-                        assertTrue(s.canAs(Individual.class)); // does not have to have an rdf:type to be an Individual
+                        Assertions.assertTrue(r.canAs(Individual.class));
+                        Assertions.assertTrue(s.canAs(Individual.class)); // does not have to have an rdf:type to be an Individual
 
                         Property p = m.createDatatypeProperty(NS + "p");
                         m.add(r, p, m.createTypedLiteral(42));
-                        assertFalse(r.getProperty(p).getObject().canAs(Individual.class));
+                        Assertions.assertFalse(r.getProperty(p).getObject().canAs(Individual.class));
                     }
                 },
 
@@ -283,9 +366,9 @@ public class IndividualTest extends CommonOntTestBase {
                                         "</rdf:RDF>";
                         m.read(new StringReader(SOURCE), null);
                         Individual x = m.getIndividual("http://jena.hpl.hp.com/test#x");
-                        assertEquals("a_label", x.getLabel(null), "Label on resource x");
-                        assertEquals("a_label", x.getLabel(""), "Label on resource x");
-                        assertSame(null, x.getLabel("fr"), "fr label on resource x");
+                        Assertions.assertEquals("a_label", x.getLabel(null), "Label on resource x");
+                        Assertions.assertEquals("a_label", x.getLabel(""), "Label on resource x");
+                        Assertions.assertSame(null, x.getLabel("fr"), "fr label on resource x");
                     }
                 },
 
@@ -295,7 +378,7 @@ public class IndividualTest extends CommonOntTestBase {
                         OntModel defModel = ModelFactory.createOntologyModel();
                         OntClass c = defModel.createClass("http://example.com/test#A");
                         Individual i = c.createIndividual();
-                        assertTrue(i.isIndividual(), "i should be an individual");
+                        Assertions.assertTrue(i.isIndividual(), "i should be an individual");
                     }
                 },
                 new CommonOntTestEngine("OntResource.isIndividual 1", true, true, true) {
@@ -308,7 +391,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                         for (Iterator<OntClass> it = m.listClasses(); it.hasNext(); ) {
                             OntClass ontClass = it.next();
-                            assertFalse(ontClass.isIndividual(), ontClass.getLocalName() + "should not be an individual");
+                            Assertions.assertFalse(ontClass.isIndividual(), ontClass.getLocalName() + "should not be an individual");
                         }
                     }
                 },
@@ -323,7 +406,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                         for (Iterator<OntClass> it = m.listClasses(); it.hasNext(); ) {
                             OntClass ontClass = it.next();
-                            assertFalse(ontClass.isIndividual(), ontClass.getLocalName() + "should not be an individual");
+                            Assertions.assertFalse(ontClass.isIndividual(), ontClass.getLocalName() + "should not be an individual");
                         }
                     }
                 },
@@ -340,7 +423,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                         for (Iterator<OntClass> it = m.listClasses(); it.hasNext(); ) {
                             OntClass ontClass = it.next();
-                            assertFalse(ontClass.isIndividual(), ontClass.getLocalName() + " should not be an individual");
+                            Assertions.assertFalse(ontClass.isIndividual(), ontClass.getLocalName() + " should not be an individual");
                         }
                     }
                 },
@@ -356,7 +439,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                         for (Iterator<OntClass> it = m.listClasses(); it.hasNext(); ) {
                             OntClass ontClass = it.next();
-                            assertFalse(ontClass.isIndividual(), ontClass.getLocalName() + " should not be an individual");
+                            Assertions.assertFalse(ontClass.isIndividual(), ontClass.getLocalName() + " should not be an individual");
                         }
                     }
                 },
@@ -372,7 +455,7 @@ public class IndividualTest extends CommonOntTestBase {
 
                         for (Iterator<OntClass> it = m.listClasses(); it.hasNext(); ) {
                             OntClass ontClass = it.next();
-                            assertFalse(ontClass.isIndividual(), ontClass.getLocalName() + " should not be an individual");
+                            Assertions.assertFalse(ontClass.isIndividual(), ontClass.getLocalName() + " should not be an individual");
                         }
                     }
                 },
@@ -388,8 +471,8 @@ public class IndividualTest extends CommonOntTestBase {
                         OntClass c2 = m.createClass(NS + "C2");
                         m.add(punned, RDF.type, c2); // punned is a class and instance of c2
 
-                        assertFalse(c2.isIndividual(), "should not be an individual");
-                        assertTrue(punned.isIndividual(), "should be an individual");
+                        Assertions.assertFalse(c2.isIndividual(), "should not be an individual");
+                        Assertions.assertTrue(punned.isIndividual(), "should be an individual");
                     }
                 },
 
@@ -403,8 +486,8 @@ public class IndividualTest extends CommonOntTestBase {
                         OntClass c2 = m.createClass(NS + "C2");
                         m.add(punned, RDF.type, c2); // punned is a class and and instance of c2
 
-                        assertFalse(c2.isIndividual(), "should not be an individual");
-                        assertTrue(punned.isIndividual(), "should be an individual");
+                        Assertions.assertFalse(c2.isIndividual(), "should not be an individual");
+                        Assertions.assertTrue(punned.isIndividual(), "should be an individual");
                     }
                 }
 
