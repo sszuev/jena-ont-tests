@@ -1,6 +1,7 @@
 package com.gitlab.sszuev.jena.ont;
 
 import com.gitlab.sszuev.jena.ont.testutils.JunitExtensions;
+import com.gitlab.sszuev.jena.ont.testutils.Spec;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
@@ -13,33 +14,50 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.Set;
 
 public class ClassTest {
     private static final String NS = "http://example.com/test#";
 
-    @Test
-    public void testSuperClassNE() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "RDFS_MEM",
+            "OWL_LITE_MEM",
+            "OWL_DL_MEM",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_TRANS_INF",
+    })
+    public void testSuperClassNE(Spec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass a = m.createClass(NS + "A");
-
         Assertions.assertNull(a.getSuperClass());
         Assertions.assertFalse(a.hasSuperClass());
     }
 
-    @Test
-    public void testSubClassNE() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "RDFS_MEM",
+            "OWL_LITE_MEM",
+            "OWL_DL_MEM",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_TRANS_INF",
+    })
+    public void testSubClassNE(Spec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass a = m.createClass(NS + "A");
-
         Assertions.assertNull(a.getSubClass());
         Assertions.assertFalse(a.hasSubClass());
     }
 
-    @Test
-    public void testCreateIndividual() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+    @ParameterizedTest
+    @EnumSource
+    public void testCreateIndividual(Spec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass a = m.createClass(NS + "A");
         Individual i = a.createIndividual(NS + "i");
         Assertions.assertTrue(i.hasRDFType(a));
@@ -48,9 +66,10 @@ public class ClassTest {
         Assertions.assertTrue(j.hasRDFType(a));
     }
 
-    @Test
-    public void testIsHierarchyRoot0() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+    @ParameterizedTest
+    @EnumSource
+    public void testIsHierarchyRoot1(Spec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass a = m.createClass(NS + "A");
         OntClass b = m.createClass(NS + "B");
         a.addSubClass(b);
@@ -58,79 +77,14 @@ public class ClassTest {
         Assertions.assertFalse(b.isHierarchyRoot());
     }
 
-    @Test
-    public void testIsHierarchyRoot1() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RULE_INF);
-        OntClass a = m.createClass(NS + "A");
-        OntClass b = m.createClass(NS + "B");
-        a.addSubClass(b);
-        Assertions.assertTrue(a.isHierarchyRoot());
-        Assertions.assertFalse(b.isHierarchyRoot());
-    }
-
-    @Test
-    public void testIsHierarchyRoot2() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
-        OntClass a = m.createClass(NS + "A");
-        OntClass b = m.createClass(NS + "B");
-        a.addSubClass(b);
-        Assertions.assertTrue(a.isHierarchyRoot());
-        Assertions.assertFalse(b.isHierarchyRoot());
-    }
-
-    @Test
-    public void testIsHierarchyRoot3() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_TRANS_INF);
-        OntClass a = m.createClass(NS + "A");
-        OntClass b = m.createClass(NS + "B");
-        a.addSubClass(b);
-        Assertions.assertTrue(a.isHierarchyRoot());
-        Assertions.assertFalse(b.isHierarchyRoot());
-    }
-
-    @Test
-    public void testIsHierarchyRoot4() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM);
-        OntClass a = m.createClass(NS + "A");
-        OntClass b = m.createClass(NS + "B");
-        a.addSubClass(b);
-        Assertions.assertTrue(a.isHierarchyRoot());
-        Assertions.assertFalse(b.isHierarchyRoot());
-    }
-
-    @Test
-    public void testIsHierarchyRoot5() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_LITE_MEM);
-        OntClass a = m.createClass(NS + "A");
-        OntClass b = m.createClass(NS + "B");
-        a.addSubClass(b);
-        Assertions.assertTrue(a.isHierarchyRoot());
-        Assertions.assertFalse(b.isHierarchyRoot());
-    }
-
-    @Test
-    public void testIsHierarchyRoot8() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.RDFS_MEM);
-        OntClass a = m.createClass(NS + "A");
-        OntClass b = m.createClass(NS + "B");
-        a.addSubClass(b);
-        Assertions.assertTrue(a.isHierarchyRoot());
-        Assertions.assertFalse(b.isHierarchyRoot());
-    }
-
-    @Test
-    public void testIsHierarchyRoot9() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.RDFS_MEM_RDFS_INF);
-        OntClass a = m.createClass(NS + "A");
-        OntClass b = m.createClass(NS + "B");
-        a.addSubClass(b);
-        Assertions.assertTrue(a.isHierarchyRoot());
-        Assertions.assertFalse(b.isHierarchyRoot());
-    }
-
-    @Test
-    public void testIsHierarchyRoot10() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_DL_MEM",
+            "OWL_MEM_TRANS_INF",
+    })
+    public void testIsHierarchyRoot2(Spec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass c1 = m.createClass(":C1");
         OntClass c2 = m.createClass(":C2");
         OntClass c3 = m.createClass(":C3");
@@ -165,9 +119,13 @@ public class ClassTest {
         Assertions.assertFalse(c11.isHierarchyRoot());  // false
     }
 
-    @Test
-    public void testIsHierarchyRoot11() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RDFS_INF);
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+    })
+    public void testIsHierarchyRoot11(Spec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass c1 = m.createClass(":C1");
         OntClass c2 = m.createClass(":C2");
         OntClass c3 = m.createClass(":C3");
@@ -202,10 +160,11 @@ public class ClassTest {
         Assertions.assertFalse(c11.isHierarchyRoot());
     }
 
-    @Test
-    public void testListSubClasses0() {
+    @ParameterizedTest
+    @EnumSource(names = {"OWL_MEM", "RDFS_MEM", "OWL_LITE_MEM", "OWL_DL_MEM"})
+    public void testListSubClasses0(Spec spec) {
         // no inference
-        OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM);
+        OntModel m = createABCDEFModel(spec.spec);
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
         OntClass c = m.getOntClass(NS + "C");
@@ -218,10 +177,16 @@ public class ClassTest {
         JunitExtensions.assertValues("", b.listSubClasses(true), d, e);
     }
 
-    @Test
-    public void testListSubClasses1() {
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_TRANS_INF",
+            "RDFS_MEM_RDFS_INF",
+    })
+    public void testListSubClasses1(Spec spec) {
         // rule inference
-        OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM_RULE_INF);
+        OntModel m = createABCDEFModel(spec.spec);
 
         Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -258,7 +223,6 @@ public class ClassTest {
 
     @Test
     public void testListSubClasses2() {
-        // micro rule inference
         OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF);
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
@@ -273,10 +237,11 @@ public class ClassTest {
         JunitExtensions.assertValues("", b.listSubClasses(true), d, e);
     }
 
-    @Test
-    public void testListSubClasses3() {
+    @ParameterizedTest
+    @EnumSource(names = {"OWL_MEM", "RDFS_MEM", "OWL_LITE_MEM", "OWL_DL_MEM"})
+    public void testListSubClasses3(Spec spec) {
         // no inference
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM);
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass a = m.createClass(NS + "A");
         OntClass b = m.createClass(NS + "B");
         OntClass c = m.createClass(NS + "C");
@@ -322,8 +287,9 @@ public class ClassTest {
         Assertions.assertEquals(Set.of(), a3.listSubClasses(false).toSet());
     }
 
-    @Test
-    public void testListSubClasses6() {
+    @ParameterizedTest
+    @EnumSource(names = {"OWL_MEM", "RDFS_MEM", "OWL_LITE_MEM", "OWL_DL_MEM"})
+    public void testListSubClasses6(Spec spec) {
         //     A
         //   /  / \
         //  /  B   C
@@ -334,7 +300,7 @@ public class ClassTest {
         //       / \
         //      L   M
 
-        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM));
+        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(spec.spec));
 
         Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -418,8 +384,9 @@ public class ClassTest {
         Assertions.assertEquals(Set.of(), indirectM);
     }
 
-    @Test
-    public void testListSubClasses7() {
+    @ParameterizedTest
+    @EnumSource(names = {"OWL_MEM_RULE_INF", "OWL_MEM_RDFS_INF", "RDFS_MEM_RDFS_INF"})
+    public void testListSubClasses7(Spec spec) {
         //     A
         //   /  / \
         //  /  B   C
@@ -430,7 +397,7 @@ public class ClassTest {
         //       / \
         //      L   M
 
-        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RDFS_INF));
+        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(spec.spec));
 
         Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -514,12 +481,13 @@ public class ClassTest {
         Assertions.assertEquals(Set.of(), indirectM);
     }
 
-    @Test
-    public void testListSubClasses8() {
+    @ParameterizedTest
+    @EnumSource(names = {"OWL_MEM_RULE_INF", "OWL_DL_MEM_RULE_INF"})
+    public void testListSubClasses8(Spec spec) {
         //     A
         //     |
         // D = B = C
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RULE_INF);
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -558,12 +526,13 @@ public class ClassTest {
         Assertions.assertEquals(Set.of("B", "C"), indirectD);
     }
 
-    @Test
-    public void testListSubClasses9() {
+    @ParameterizedTest
+    @EnumSource(names = {"OWL_MEM", "OWL_LITE_MEM", "OWL_MEM_RDFS_INF", "OWL_MEM_TRANS_INF"})
+    public void testListSubClasses9(Spec spec) {
         //     A
         //     |
         // D = B = C
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RDFS_INF);
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -593,12 +562,23 @@ public class ClassTest {
         Assertions.assertEquals(Set.of(), indirectD);
     }
 
-    @Test
-    public void testListSubClasses10() {
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "RDFS_MEM",
+            "OWL_LITE_MEM",
+            "OWL_DL_MEM",
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "RDFS_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF"
+    }
+    )
+    public void testListSubClasses10(Spec spec) {
         // B = C
         //  \ |
         //    A
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -624,10 +604,11 @@ public class ClassTest {
         Assertions.assertEquals(Set.of("A", "B"), indirectC);
     }
 
-    @Test
-    public void testListSuperClasses0() {
+    @ParameterizedTest
+    @EnumSource(names = {"OWL_MEM", "RDFS_MEM", "OWL_LITE_MEM", "OWL_DL_MEM"})
+    public void testListSuperClasses0(Spec spec) {
         // no inference
-        OntModel m = createABCDEFModel(OntModelSpec.OWL_DL_MEM);
+        OntModel m = createABCDEFModel(spec.spec);
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
         OntClass c = m.getOntClass(NS + "C");
@@ -639,10 +620,14 @@ public class ClassTest {
         JunitExtensions.assertValues("", b.listSuperClasses(true), a);
     }
 
-    @Test
-    public void testListSuperClasses1() {
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_DL_MEM_RULE_INF"
+    })
+    public void testListSuperClasses1(Spec spec) {
         // rule inference
-        OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM_RULE_INF);
+        OntModel m = createABCDEFModel(spec.spec);
         OntClass A = m.getOntClass(NS + "A");
         OntClass B = m.getOntClass(NS + "B");
         OntClass C = m.getOntClass(NS + "C");
@@ -684,9 +669,10 @@ public class ClassTest {
         JunitExtensions.assertValues("", b.listSuperClasses(true), a);
     }
 
-    @Test
-    public void testListSuperClasses3() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+    @ParameterizedTest
+    @EnumSource
+    public void testListSuperClasses3(Spec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -698,12 +684,19 @@ public class ClassTest {
         JunitExtensions.assertValues("", A.listSuperClasses(true), B, C);
     }
 
-    @Test
-    public void testListSuperClasses4() {
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "RDFS_MEM",
+            "OWL_LITE_MEM",
+            "OWL_DL_MEM",
+            "OWL_MEM_RDFS_INF",
+    })
+    public void testListSuperClasses4(Spec spec) {
         // B = C
         //  \ |
         //    A
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -852,14 +845,22 @@ public class ClassTest {
         Assertions.assertEquals(Set.of("A", "B", "D", "H", "K"), indirectM);
     }
 
-    @Test
-    public void testListSuperClasses7() {
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "RDFS_MEM",
+            "OWL_LITE_MEM",
+            "OWL_DL_MEM",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_TRANS_INF",
+    })
+    public void testListSuperClasses7(Spec spec) {
         //     D
         //    | \
         // B  |  C
         //  \ | /
         //    A
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -890,10 +891,17 @@ public class ClassTest {
         Assertions.assertEquals(Set.of(), indirectD);
     }
 
-    @Test
-    public void testListInstances0() {
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "RDFS_MEM",
+            "OWL_LITE_MEM",
+            "OWL_DL_MEM",
+            "OWL_MEM_TRANS_INF",
+    })
+    public void testListInstances0(Spec spec) {
         // no inference
-        OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM);
+        OntModel m = createABCDEFModel(spec.spec);
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
 
@@ -907,10 +915,16 @@ public class ClassTest {
         JunitExtensions.assertValues("", b.listInstances(true), ib);
     }
 
-    @Test
-    public void testListInstances1() {
-        // no inference
-        OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM_RULE_INF);
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "RDFS_MEM_RDFS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_DL_MEM_RULE_INF"
+    })
+    public void testListInstances1(Spec spec) {
+        OntModel m = createABCDEFModel(spec.spec);
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
         OntClass c = m.getOntClass(NS + "C");
@@ -930,10 +944,16 @@ public class ClassTest {
         JunitExtensions.assertValues("", b.listInstances(true), ib);
     }
 
-    @Test
-    public void testListInstances2() {
-        // no inference
-        OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF);
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "RDFS_MEM_RDFS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_DL_MEM_RULE_INF"
+    })
+    public void testListInstances2(Spec spec) {
+        OntModel m = createABCDEFModel(spec.spec);
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
         OntClass c = m.getOntClass(NS + "C");
@@ -953,8 +973,12 @@ public class ClassTest {
         JunitExtensions.assertValues("", b.listInstances(true), ib);
     }
 
-    @Test
-    public void testListInstances3() {
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+    })
+    public void testListInstances3(Spec spec) {
         //     A
         //   /  / \
         //  /  B   C
@@ -965,13 +989,12 @@ public class ClassTest {
         //       / \
         //      L   M
 
-        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF));
+        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(spec.spec));
         m.listStatements(null, RDF.type, OWL.Class)
                 .mapWith(Statement::getSubject)
                 .mapWith(x -> x.as(OntClass.class))
                 .toList()
                 .forEach(x -> x.createIndividual(NS + "i" + x.getLocalName()));
-
         Set<String> directA = m.getOntClass(NS + "A").listInstances(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listInstances(false).mapWith(Resource::getLocalName).toSet();
 
@@ -1030,12 +1053,16 @@ public class ClassTest {
         Assertions.assertEquals(Set.of("iM"), indirectM);
     }
 
-    @Test
-    public void testListInstances4() {
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+    })
+    public void testListInstances4(Spec spec) {
         // B = C
         //  \ |
         //    A
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -1073,14 +1100,18 @@ public class ClassTest {
         Assertions.assertEquals(Set.of("iA", "iB", "iC"), indirectC);
     }
 
-    @Test
-    public void testListInstances5() {
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+    })
+    public void testListInstances5(Spec spec) {
         //     D
         //    | \
         // B  |  C
         //  \ | /
         //    A
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -1126,14 +1157,21 @@ public class ClassTest {
         Assertions.assertEquals(Set.of("iA", "iC", "iD"), indirectD);
     }
 
-    @Test
-    public void testListInstances6() {
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "RDFS_MEM_RDFS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_DL_MEM_RULE_INF"
+    })
+    public void testListInstances6(Spec spec) {
         //      A
         //     / \
         //    B   C
         //   / \ / \
         //  D   E   F
-        OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM_RDFS_INF);
+        OntModel m = createABCDEFModel(spec.spec);
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
         OntClass c = m.getOntClass(NS + "C");
@@ -1190,9 +1228,16 @@ public class ClassTest {
         Assertions.assertEquals(Set.of(), indirectF);
     }
 
-    @Test
-    public void testDropIndividual() {
-        OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM);
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "RDFS_MEM",
+            "OWL_LITE_MEM",
+            "OWL_DL_MEM",
+            "OWL_MEM_TRANS_INF",
+    })
+    public void testDropIndividual(Spec spec) {
+        OntModel m = createABCDEFModel(spec.spec);
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
         Individual ia = a.createIndividual(NS + "iA");
@@ -1220,49 +1265,38 @@ public class ClassTest {
         Assertions.assertFalse(ia.hasOntClass(b));
     }
 
-    @Test
-    public void testDatatypeIsClassOwlFull() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "RDFS_MEM",
+            "OWL_LITE_MEM",
+            "OWL_DL_MEM",
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_TRANS_INF",
+            "RDFS_MEM_RDFS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_DL_MEM_RULE_INF"
+    })
+    public void testDatatypeIsClass(Spec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
         Resource c = m.createResource();
         c.addProperty(RDF.type, RDFS.Datatype);
         Assertions.assertTrue(c.canAs(OntClass.class));
     }
 
-    @Test
-    public void testDatatypeIsClassOwlDL() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM);
-        Resource c = m.createResource();
-        c.addProperty(RDF.type, RDFS.Datatype);
-        Assertions.assertTrue(c.canAs(OntClass.class));
-    }
-
-    @Test
-    public void testDatatypeIsClassOwlLite() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_LITE_MEM);
-        Resource c = m.createResource();
-        c.addProperty(RDF.type, RDFS.Datatype);
-        Assertions.assertTrue(c.canAs(OntClass.class));
-    }
-
-    @Test
-    public void testDatatypeIsClassOwlRDFS() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.RDFS_MEM);
-        Resource c = m.createResource();
-        c.addProperty(RDF.type, RDFS.Datatype);
-        Assertions.assertTrue(c.canAs(OntClass.class));
-    }
-
-    @Test
-    public void testDatatypeIsClassOwlRDFSInf() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
-        Resource c = m.createResource();
-        c.addProperty(RDF.type, RDFS.Datatype);
-        Assertions.assertTrue(c.canAs(OntClass.class));
-    }
-
-    @Test
-    public void testOwlThingNothingClass() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_DL_MEM",
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_TRANS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_DL_MEM_RULE_INF"
+    })
+    public void testOwlThingNothingClass(Spec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
 
         Resource r = OWL.Thing.inModel(m);
         OntClass thingClass = r.as(OntClass.class);
@@ -1351,4 +1385,5 @@ public class ClassTest {
         K.addSubClass(M);
         return m;
     }
+
 }
