@@ -4,11 +4,13 @@ import com.gitlab.sszuev.jena.ont.common.CommonOntTestBase;
 import com.gitlab.sszuev.jena.ont.testutils.IOTestUtils;
 import com.gitlab.sszuev.jena.ont.testutils.JunitExtensions;
 import com.gitlab.sszuev.jena.ont.testutils.ModelTestUtils;
+import com.gitlab.sszuev.jena.ont.testutils.Spec;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.ontology.AnnotationProperty;
 import org.apache.jena.ontology.DataRange;
 import org.apache.jena.ontology.DatatypeProperty;
 import org.apache.jena.ontology.HasValueRestriction;
+import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.ObjectProperty;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntDocumentManager;
@@ -32,6 +34,8 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -70,6 +74,26 @@ public class OntModelTest extends CommonOntTestBase {
             "    <rdfs:range rdf:resource=\"http://www.hp.com/test#C\"/>" +
             "  </owl:ObjectProperty>" +
             "</rdf:RDF>";
+
+
+    @ParameterizedTest
+    @EnumSource(Spec.class)
+    public void testListIndividuals(Spec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+
+        m.createResource("x", m.createResource("X"));
+        m.createResource().addProperty(RDF.type, m.createResource("Y"));
+
+        OntClass clazz = m.createClass("Q");
+        clazz.createIndividual("q");
+        clazz.createIndividual();
+
+        m.write(System.out, "ttl");
+        List<Individual> individuals = m.listIndividuals().toList();
+
+        int expectedNumOfIndividuals = spec == Spec.RDFS_MEM_RDFS_INF ? 4 : 2;
+        Assertions.assertEquals(expectedNumOfIndividuals, individuals.size());
+    }
 
     /**
      * Test writing the base model to an output stream
