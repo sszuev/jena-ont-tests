@@ -1,7 +1,7 @@
 package com.gitlab.sszuev.jena.ont;
 
 import com.gitlab.sszuev.jena.ont.testutils.JunitExtensions;
-import com.gitlab.sszuev.jena.ont.testutils.Spec;
+import com.gitlab.sszuev.jena.ont.testutils.TestSpec;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
@@ -25,13 +25,18 @@ public class ClassTest {
     @ParameterizedTest
     @EnumSource(names = {
             "OWL_MEM",
-            "RDFS_MEM",
-            "OWL_LITE_MEM",
-            "OWL_DL_MEM",
             "OWL_MEM_RDFS_INF",
             "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_TRANS_INF",
     })
-    public void testSuperClassNE(Spec spec) {
+    public void testSuperClassNE(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass a = m.createClass(NS + "A");
         Assertions.assertNull(a.getSuperClass());
@@ -41,13 +46,18 @@ public class ClassTest {
     @ParameterizedTest
     @EnumSource(names = {
             "OWL_MEM",
-            "RDFS_MEM",
-            "OWL_LITE_MEM",
-            "OWL_DL_MEM",
             "OWL_MEM_RDFS_INF",
             "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_TRANS_INF",
     })
-    public void testSubClassNE(Spec spec) {
+    public void testSubClassNE(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass a = m.createClass(NS + "A");
         Assertions.assertNull(a.getSubClass());
@@ -56,7 +66,7 @@ public class ClassTest {
 
     @ParameterizedTest
     @EnumSource
-    public void testCreateIndividual(Spec spec) {
+    public void testCreateIndividual(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass a = m.createClass(NS + "A");
         Individual i = a.createIndividual(NS + "i");
@@ -68,7 +78,7 @@ public class ClassTest {
 
     @ParameterizedTest
     @EnumSource
-    public void testIsHierarchyRoot1(Spec spec) {
+    public void testIsHierarchyRoot1(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass a = m.createClass(NS + "A");
         OntClass b = m.createClass(NS + "B");
@@ -80,10 +90,11 @@ public class ClassTest {
     @ParameterizedTest
     @EnumSource(names = {
             "OWL_MEM",
-            "OWL_DL_MEM",
             "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_TRANS_INF",
     })
-    public void testIsHierarchyRoot2(Spec spec) {
+    public void testIsHierarchyRoot2(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass c1 = m.createClass(":C1");
         OntClass c2 = m.createClass(":C2");
@@ -123,8 +134,12 @@ public class ClassTest {
     @EnumSource(names = {
             "OWL_MEM_RULE_INF",
             "OWL_MEM_RDFS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
     })
-    public void testIsHierarchyRoot11(Spec spec) {
+    public void testIsHierarchyRoot11(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass c1 = m.createClass(":C1");
         OntClass c2 = m.createClass(":C2");
@@ -161,8 +176,14 @@ public class ClassTest {
     }
 
     @ParameterizedTest
-    @EnumSource(names = {"OWL_MEM", "RDFS_MEM", "OWL_LITE_MEM", "OWL_DL_MEM"})
-    public void testListSubClasses0(Spec spec) {
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_DL_MEM",
+            "OWL_LITE_MEM",
+            "RDFS_MEM",
+    }
+    )
+    public void testListSubClasses0(TestSpec spec) {
         // no inference
         OntModel m = createABCDEFModel(spec.spec);
         OntClass a = m.getOntClass(NS + "A");
@@ -182,9 +203,17 @@ public class ClassTest {
             "OWL_MEM_RULE_INF",
             "OWL_MEM_RDFS_INF",
             "OWL_MEM_TRANS_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "OWL_LITE_MEM_TRANS_INF",
             "RDFS_MEM_RDFS_INF",
+            "RDFS_MEM_TRANS_INF",
     })
-    public void testListSubClasses1(Spec spec) {
+    public void testListSubClasses1(TestSpec spec) {
         // rule inference
         OntModel m = createABCDEFModel(spec.spec);
 
@@ -238,8 +267,13 @@ public class ClassTest {
     }
 
     @ParameterizedTest
-    @EnumSource(names = {"OWL_MEM", "RDFS_MEM", "OWL_LITE_MEM", "OWL_DL_MEM"})
-    public void testListSubClasses3(Spec spec) {
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_DL_MEM",
+            "OWL_LITE_MEM",
+            "RDFS_MEM",
+    })
+    public void testListSubClasses3(TestSpec spec) {
         // no inference
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass a = m.createClass(NS + "A");
@@ -288,8 +322,13 @@ public class ClassTest {
     }
 
     @ParameterizedTest
-    @EnumSource(names = {"OWL_MEM", "RDFS_MEM", "OWL_LITE_MEM", "OWL_DL_MEM"})
-    public void testListSubClasses6(Spec spec) {
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_DL_MEM",
+            "OWL_LITE_MEM",
+            "RDFS_MEM",
+    })
+    public void testListSubClasses6(TestSpec spec) {
         //     A
         //   /  / \
         //  /  B   C
@@ -385,8 +424,17 @@ public class ClassTest {
     }
 
     @ParameterizedTest
-    @EnumSource(names = {"OWL_MEM_RULE_INF", "OWL_MEM_RDFS_INF", "RDFS_MEM_RDFS_INF"})
-    public void testListSubClasses7(Spec spec) {
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "RDFS_MEM_RDFS_INF",
+    })
+    public void testListSubClasses7(TestSpec spec) {
         //     A
         //   /  / \
         //  /  B   C
@@ -482,8 +530,13 @@ public class ClassTest {
     }
 
     @ParameterizedTest
-    @EnumSource(names = {"OWL_MEM_RULE_INF", "OWL_DL_MEM_RULE_INF"})
-    public void testListSubClasses8(Spec spec) {
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_LITE_MEM_RULES_INF",
+    })
+    public void testListSubClasses8(TestSpec spec) {
         //     A
         //     |
         // D = B = C
@@ -527,8 +580,18 @@ public class ClassTest {
     }
 
     @ParameterizedTest
-    @EnumSource(names = {"OWL_MEM", "OWL_LITE_MEM", "OWL_MEM_RDFS_INF", "OWL_MEM_TRANS_INF"})
-    public void testListSubClasses9(Spec spec) {
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_TRANS_INF",
+    })
+    public void testListSubClasses9(TestSpec spec) {
         //     A
         //     |
         // D = B = C
@@ -565,16 +628,19 @@ public class ClassTest {
     @ParameterizedTest
     @EnumSource(names = {
             "OWL_MEM",
-            "RDFS_MEM",
-            "OWL_LITE_MEM",
-            "OWL_DL_MEM",
             "OWL_MEM_RULE_INF",
             "OWL_MEM_RDFS_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "RDFS_MEM",
             "RDFS_MEM_RDFS_INF",
-            "OWL_DL_MEM_RULE_INF"
-    }
-    )
-    public void testListSubClasses10(Spec spec) {
+    })
+    public void testListSubClasses10(TestSpec spec) {
         // B = C
         //  \ |
         //    A
@@ -605,8 +671,13 @@ public class ClassTest {
     }
 
     @ParameterizedTest
-    @EnumSource(names = {"OWL_MEM", "RDFS_MEM", "OWL_LITE_MEM", "OWL_DL_MEM"})
-    public void testListSuperClasses0(Spec spec) {
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_DL_MEM",
+            "OWL_LITE_MEM",
+            "RDFS_MEM",
+    })
+    public void testListSuperClasses0(TestSpec spec) {
         //      A
         //     / \
         //    B   C
@@ -662,9 +733,11 @@ public class ClassTest {
     @ParameterizedTest
     @EnumSource(names = {
             "OWL_MEM_RULE_INF",
-            "OWL_DL_MEM_RULE_INF"
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_LITE_MEM_RULES_INF",
     })
-    public void testListSuperClasses1(Spec spec) {
+    public void testListSuperClasses1(TestSpec spec) {
         // rule inference
         OntModel m = createABCDEFModel(spec.spec);
         OntClass A = m.getOntClass(NS + "A");
@@ -695,7 +768,6 @@ public class ClassTest {
 
     @Test
     public void testListSuperClasses2() {
-        // micro rule inference
         OntModel m = createABCDEFModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF);
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
@@ -710,7 +782,7 @@ public class ClassTest {
 
     @ParameterizedTest
     @EnumSource
-    public void testListSuperClasses3(Spec spec) {
+    public void testListSuperClasses3(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
@@ -726,12 +798,14 @@ public class ClassTest {
     @ParameterizedTest
     @EnumSource(names = {
             "OWL_MEM",
-            "RDFS_MEM",
-            "OWL_LITE_MEM",
-            "OWL_DL_MEM",
             "OWL_MEM_RDFS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_RDFS_INF",
+            "RDFS_MEM",
     })
-    public void testListSuperClasses4(Spec spec) {
+    public void testListSuperClasses4(TestSpec spec) {
         // B = C
         //  \ |
         //    A
@@ -788,8 +862,13 @@ public class ClassTest {
         Assertions.assertEquals(Set.of(OWL.Thing, RDFS.Resource), a3.listSuperClasses(false).toSet());
     }
 
-    @Test
-    public void testListSuperClasses6() {
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RDFS_INF",
+    })
+    public void testListSuperClasses6(TestSpec spec) {
         //     A
         //   /  / \
         //  /  B   C
@@ -800,7 +879,7 @@ public class ClassTest {
         //       / \
         //      L   M
 
-        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RDFS_INF));
+        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(spec.spec));
 
         Set<String> directA = m.getOntClass(NS + "A").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -887,13 +966,18 @@ public class ClassTest {
     @ParameterizedTest
     @EnumSource(names = {
             "OWL_MEM",
-            "RDFS_MEM",
-            "OWL_LITE_MEM",
-            "OWL_DL_MEM",
             "OWL_MEM_RDFS_INF",
             "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_TRANS_INF",
     })
-    public void testListSuperClasses7(Spec spec) {
+    public void testListSuperClasses7(TestSpec spec) {
         //     D
         //    | \
         // B  |  C
@@ -933,13 +1017,38 @@ public class ClassTest {
     @ParameterizedTest
     @EnumSource(names = {
             "OWL_MEM",
-            "RDFS_MEM",
-            "OWL_LITE_MEM",
-            "OWL_DL_MEM",
+            "OWL_MEM_RDFS_INF",
             "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_TRANS_INF",
     })
-    public void testListInstances0(Spec spec) {
-        // no inference
+    public void testListSuperClasses8(TestSpec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntClass A = m.createClass(NS + "A");
+        A.addSuperClass(A);
+
+        Assertions.assertTrue(A.listSuperClasses(true).toList().isEmpty());
+        Assertions.assertTrue(A.listSuperClasses(false).toList().isEmpty());
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_TRANS_INF",
+    })
+    public void testListInstances0(TestSpec spec) {
         OntModel m = createABCDEFModel(spec.spec);
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
@@ -958,11 +1067,15 @@ public class ClassTest {
     @EnumSource(names = {
             "OWL_MEM_RULE_INF",
             "OWL_MEM_RDFS_INF",
-            "RDFS_MEM_RDFS_INF",
             "OWL_MEM_MICRO_RULE_INF",
-            "OWL_DL_MEM_RULE_INF"
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "RDFS_MEM_RDFS_INF",
     })
-    public void testListInstances1(Spec spec) {
+    public void testListInstances1(TestSpec spec) {
         OntModel m = createABCDEFModel(spec.spec);
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
@@ -987,11 +1100,15 @@ public class ClassTest {
     @EnumSource(names = {
             "OWL_MEM_RULE_INF",
             "OWL_MEM_RDFS_INF",
-            "RDFS_MEM_RDFS_INF",
             "OWL_MEM_MICRO_RULE_INF",
-            "OWL_DL_MEM_RULE_INF"
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "RDFS_MEM_RDFS_INF",
     })
-    public void testListInstances2(Spec spec) {
+    public void testListInstances2(TestSpec spec) {
         OntModel m = createABCDEFModel(spec.spec);
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
@@ -1016,8 +1133,11 @@ public class ClassTest {
     @EnumSource(names = {
             "OWL_MEM_RULE_INF",
             "OWL_MEM_RDFS_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RDFS_INF",
     })
-    public void testListInstances3(Spec spec) {
+    public void testListInstances3(TestSpec spec) {
         //     A
         //   /  / \
         //  /  B   C
@@ -1096,8 +1216,11 @@ public class ClassTest {
     @EnumSource(names = {
             "OWL_MEM_RULE_INF",
             "OWL_MEM_RDFS_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RDFS_INF",
     })
-    public void testListInstances4(Spec spec) {
+    public void testListInstances4(TestSpec spec) {
         // B = C
         //  \ |
         //    A
@@ -1143,8 +1266,11 @@ public class ClassTest {
     @EnumSource(names = {
             "OWL_MEM_RULE_INF",
             "OWL_MEM_RDFS_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RDFS_INF",
     })
-    public void testListInstances5(Spec spec) {
+    public void testListInstances5(TestSpec spec) {
         //     D
         //    | \
         // B  |  C
@@ -1200,11 +1326,15 @@ public class ClassTest {
     @EnumSource(names = {
             "OWL_MEM_RULE_INF",
             "OWL_MEM_RDFS_INF",
-            "RDFS_MEM_RDFS_INF",
             "OWL_MEM_MICRO_RULE_INF",
-            "OWL_DL_MEM_RULE_INF"
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "RDFS_MEM_RDFS_INF",
     })
-    public void testListInstances6(Spec spec) {
+    public void testListInstances6(TestSpec spec) {
         //      A
         //     / \
         //    B   C
@@ -1270,12 +1400,15 @@ public class ClassTest {
     @ParameterizedTest
     @EnumSource(names = {
             "OWL_MEM",
-            "RDFS_MEM",
-            "OWL_LITE_MEM",
-            "OWL_DL_MEM",
             "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_TRANS_INF",
     })
-    public void testDropIndividual(Spec spec) {
+    public void testDropIndividual(TestSpec spec) {
         OntModel m = createABCDEFModel(spec.spec);
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
@@ -1305,19 +1438,20 @@ public class ClassTest {
     }
 
     @ParameterizedTest
-    @EnumSource(names = {
-            "OWL_MEM",
-            "RDFS_MEM",
-            "OWL_LITE_MEM",
-            "OWL_DL_MEM",
-            "OWL_MEM_RULE_INF",
-            "OWL_MEM_RDFS_INF",
-            "OWL_MEM_TRANS_INF",
-            "RDFS_MEM_RDFS_INF",
-            "OWL_MEM_MICRO_RULE_INF",
-            "OWL_DL_MEM_RULE_INF"
-    })
-    public void testDatatypeIsClass(Spec spec) {
+    @EnumSource
+//            (names = {
+//            "OWL_MEM",
+//            "RDFS_MEM",
+//            "OWL_LITE_MEM",
+//            "OWL_DL_MEM",
+//            "OWL_MEM_RULE_INF",
+//            "OWL_MEM_RDFS_INF",
+//            "OWL_MEM_TRANS_INF",
+//            "RDFS_MEM_RDFS_INF",
+//            "OWL_MEM_MICRO_RULE_INF",
+//            "OWL_DL_MEM_RULE_INF"
+//    })
+    public void testDatatypeIsClass(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
         Resource c = m.createResource();
         c.addProperty(RDF.type, RDFS.Datatype);
@@ -1327,14 +1461,18 @@ public class ClassTest {
     @ParameterizedTest
     @EnumSource(names = {
             "OWL_MEM",
-            "OWL_DL_MEM",
             "OWL_MEM_RULE_INF",
             "OWL_MEM_RDFS_INF",
             "OWL_MEM_TRANS_INF",
             "OWL_MEM_MICRO_RULE_INF",
-            "OWL_DL_MEM_RULE_INF"
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM_RULES_INF",
     })
-    public void testOwlThingNothingClass(Spec spec) {
+    public void testOwlThingNothingClass(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
 
         Resource r = OWL.Thing.inModel(m);
@@ -1423,16 +1561,5 @@ public class ClassTest {
         K.addSubClass(L);
         K.addSubClass(M);
         return m;
-    }
-
-    @ParameterizedTest
-    @EnumSource(names = {"OWL_MEM", "OWL_MEM_RDFS_INF"})
-    public void testListSuperClassesX(Spec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
-        OntClass A = m.createClass(NS + "A");
-        A.addSuperClass(A);
-
-        Assertions.assertTrue(A.listSuperClasses(true).toList().isEmpty());
-        Assertions.assertTrue(A.listSuperClasses(false).toList().isEmpty());
     }
 }

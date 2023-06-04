@@ -4,7 +4,7 @@ import com.gitlab.sszuev.jena.ont.common.CommonOntTestBase;
 import com.gitlab.sszuev.jena.ont.testutils.IOTestUtils;
 import com.gitlab.sszuev.jena.ont.testutils.JunitExtensions;
 import com.gitlab.sszuev.jena.ont.testutils.ModelTestUtils;
-import com.gitlab.sszuev.jena.ont.testutils.Spec;
+import com.gitlab.sszuev.jena.ont.testutils.TestSpec;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.ontology.AnnotationProperty;
 import org.apache.jena.ontology.DataRange;
@@ -77,8 +77,8 @@ public class OntModelTest extends CommonOntTestBase {
 
 
     @ParameterizedTest
-    @EnumSource(Spec.class)
-    public void testListIndividuals(Spec spec) {
+    @EnumSource(TestSpec.class)
+    public void testListIndividuals(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
 
         m.createResource("x", m.createResource("X"));
@@ -91,7 +91,7 @@ public class OntModelTest extends CommonOntTestBase {
         m.write(System.out, "ttl");
         List<Individual> individuals = m.listIndividuals().toList();
 
-        int expectedNumOfIndividuals = spec == Spec.RDFS_MEM_RDFS_INF ? 4 : 2;
+        int expectedNumOfIndividuals = spec == TestSpec.RDFS_MEM_RDFS_INF ? 4 : 2;
         Assertions.assertEquals(expectedNumOfIndividuals, individuals.size());
     }
 
