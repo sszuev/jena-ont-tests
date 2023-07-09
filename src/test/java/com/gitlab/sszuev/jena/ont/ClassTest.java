@@ -192,10 +192,57 @@ public class ClassTest {
         OntClass d = m.getOntClass(NS + "D");
         OntClass e = m.getOntClass(NS + "E");
 
+        Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = m.getOntClass(NS + "A").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directB = m.getOntClass(NS + "B").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = m.getOntClass(NS + "B").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = m.getOntClass(NS + "C").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = m.getOntClass(NS + "C").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directD = m.getOntClass(NS + "D").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = m.getOntClass(NS + "D").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directE = m.getOntClass(NS + "E").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = m.getOntClass(NS + "E").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directF = m.getOntClass(NS + "F").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectF = m.getOntClass(NS + "F").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("DIRECT-D::" + directD);
+        System.out.println("DIRECT-E::" + directE);
+        System.out.println("DIRECT-F::" + directF);
+
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+        System.out.println("INDIRECT-D::" + indirectD);
+        System.out.println("INDIRECT-E::" + indirectE);
+        System.out.println("INDIRECT-F::" + indirectF);
+
         JunitExtensions.assertValues("", a.listSubClasses(), b, c);
         JunitExtensions.assertValues("", a.listSubClasses(false), b, c);
         JunitExtensions.assertValues("", a.listSubClasses(true), b, c);
         JunitExtensions.assertValues("", b.listSubClasses(true), d, e);
+
+        Assertions.assertEquals(Set.of("C", "B"), directA);
+        Assertions.assertEquals(Set.of("D", "E"), directB);
+        Assertions.assertEquals(Set.of("F", "E"), directC);
+        Assertions.assertEquals(Set.of(), directD);
+        Assertions.assertEquals(Set.of(), directE);
+        Assertions.assertEquals(Set.of(), directF);
+
+        Assertions.assertEquals(Set.of("C", "B"), indirectA);
+        Assertions.assertEquals(Set.of("E", "D"), indirectB);
+        Assertions.assertEquals(Set.of("F", "E"), indirectC);
+        Assertions.assertEquals(Set.of(), indirectD);
+        Assertions.assertEquals(Set.of(), indirectE);
+        Assertions.assertEquals(Set.of(), indirectF);
     }
 
     @ParameterizedTest
@@ -273,7 +320,7 @@ public class ClassTest {
             "OWL_LITE_MEM",
             "RDFS_MEM",
     })
-    public void testListSubClasses3(TestSpec spec) {
+    public void testListSubClasses2(TestSpec spec) {
         // no inference
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass a = m.createClass(NS + "A");
@@ -677,7 +724,7 @@ public class ClassTest {
             "OWL_LITE_MEM",
             "RDFS_MEM",
     })
-    public void testListSuperClasses0(TestSpec spec) {
+    public void testListSuperClasses3NoInf(TestSpec spec) {
         //      A
         //     / \
         //    B   C
