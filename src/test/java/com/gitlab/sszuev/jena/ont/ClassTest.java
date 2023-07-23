@@ -94,7 +94,7 @@ public class ClassTest {
             "OWL_LITE_MEM_RULES_INF",
             "OWL_LITE_MEM_TRANS_INF",
     })
-    public void testIsHierarchyRoot_1(TestSpec spec) {
+    public void testIsHierarchyRoot1(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
         Assertions.assertTrue(m.getOntClass(OWL2.Thing.getURI()).isHierarchyRoot());
     }
@@ -112,14 +112,23 @@ public class ClassTest {
             "OWL_DL_MEM_RULE_INF",
             "OWL_DL_MEM_TRANS_INF",
     })
-    public void testIsHierarchyRoot_2(TestSpec spec) {
+    public void testIsHierarchyRoot2(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
-        Assertions.assertFalse(m.getOntClass(OWL2.Nothing.getURI()).isHierarchyRoot());
+        Assertions.assertFalse(OWL2.Nothing.inModel(m).as(OntClass.class).isHierarchyRoot());
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_LITE_MEM_RULES_INF",
+    })
+    public void testIsHierarchyRoot3(TestSpec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        Assertions.assertTrue(OWL2.Nothing.inModel(m).as(OntClass.class).isHierarchyRoot());
     }
 
     @ParameterizedTest
     @EnumSource
-    public void testIsHierarchyRoot1(TestSpec spec) {
+    public void testIsHierarchyRoot4(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
         OntClass a = m.createClass(NS + "A");
         OntClass b = m.createClass(NS + "B");
@@ -135,7 +144,7 @@ public class ClassTest {
             "OWL_DL_MEM",
             "OWL_DL_MEM_TRANS_INF",
     })
-    public void testIsHierarchyRoot2(TestSpec spec) {
+    public void testIsHierarchyRoot5(TestSpec spec) {
         // D  THING    K
         // |  |      / |
         // C  F     H  |
@@ -170,7 +179,7 @@ public class ClassTest {
             "OWL_DL_MEM_RDFS_INF",
             "OWL_DL_MEM_RULE_INF",
     })
-    public void testIsHierarchyRoot4(TestSpec spec) {
+    public void testIsHierarchyRoot6(TestSpec spec) {
         // D  THING    K
         // |  |      / |
         // C  F     H  |
@@ -207,7 +216,7 @@ public class ClassTest {
             "RDFS_MEM",
             "RDFS_MEM_TRANS_INF",
     })
-    public void testIsHierarchyRoot5(TestSpec spec) {
+    public void testIsHierarchyRoot7(TestSpec spec) {
         // D  F     K
         // |  |   / |
         // C  E  H  |
@@ -235,7 +244,7 @@ public class ClassTest {
             "OWL_LITE_MEM",
             "RDFS_MEM",
     })
-    public void testIsHierarchyRoot6(TestSpec spec) {
+    public void testIsHierarchyRoot8(TestSpec spec) {
         //     A
         //   /  / \
         //  /  B   C
@@ -301,7 +310,7 @@ public class ClassTest {
             "RDFS_MEM_RDFS_INF",
             "RDFS_MEM_TRANS_INF",
     })
-    public void testIsHierarchyRoot7(TestSpec spec) {
+    public void testIsHierarchyRoot9(TestSpec spec) {
         //     A
         //   /  / \
         //  /  B   C
