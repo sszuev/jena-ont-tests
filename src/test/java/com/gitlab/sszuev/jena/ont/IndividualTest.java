@@ -14,9 +14,11 @@ import org.apache.jena.ontology.Profile;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.jupiter.api.Assertions;
@@ -359,6 +361,42 @@ public class IndividualTest extends CommonOntTestBase {
                 List.of("http://example.com/foo#anInd"),
                 composite.listIndividuals().mapWith(Resource::getURI).toList()
         );
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_TRANS_INF",
+    })
+    public void testListIndividuals11(TestSpec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntClass c0 = OWL2.Thing.inModel(m).as(OntClass.class);
+        OntClass c1 = m.createClass(NS + "C1");
+        OntClass c2 = m.createClass(NS + "C2");
+        OntClass c3 = m.createClass(NS + "C3");
+
+        Individual i1 = c0.createIndividual(NS + "I1");
+        Individual i2 = m.createIndividual(NS + "I2", OWL2.NamedIndividual);
+        Individual i3 = m.createIndividual(NS + "I3", OWL2.NamedIndividual);
+        Individual i4 = m.createIndividual(NS + "I4", OWL2.NamedIndividual);
+        Individual i6 = c3.createIndividual();
+        Individual i5 = c1.createIndividual(NS + "I5");
+        c2.createIndividual(NS + "I5");
+        c2.createIndividual(NS + "I3");
+        c3.createIndividual(NS + "I3");
+
+        i1.setSameAs(i2);
+        i3.addDifferentFrom(i4);
+        i3.addDifferentFrom(i6);
+
+        Assertions.assertEquals(6, m.listStatements(null, RDF.type, (RDFNode) null)
+                .filterKeep(x -> x.getObject().canAs(OntClass.class)).toList().size());
+        List<Individual> found = m.listIndividuals().toList();
+        Assertions.assertEquals(4, found.size());
+        Assertions.assertEquals(1, found.stream().filter(RDFNode::isAnon).count());
+        Assertions.assertEquals(Set.of(i1, i3, i5), found.stream().filter(it -> !it.isAnon()).collect(Collectors.toSet()));
     }
 
     @ParameterizedTest
@@ -734,8 +772,6 @@ public class IndividualTest extends CommonOntTestBase {
                         Assertions.assertTrue(punned.isIndividual(), "should be an individual");
                     }
                 }
-
-
         };
     }
 
