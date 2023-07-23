@@ -10,6 +10,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.jupiter.api.Assertions;
@@ -77,6 +78,46 @@ public class ClassTest {
     }
 
     @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_TRANS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "OWL_LITE_MEM_TRANS_INF",
+    })
+    public void testIsHierarchyRoot_1(TestSpec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        Assertions.assertTrue(m.getOntClass(OWL2.Thing.getURI()).isHierarchyRoot());
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_TRANS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_DL_MEM_TRANS_INF",
+    })
+    public void testIsHierarchyRoot_2(TestSpec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        Assertions.assertFalse(m.getOntClass(OWL2.Nothing.getURI()).isHierarchyRoot());
+    }
+
+    @ParameterizedTest
     @EnumSource
     public void testIsHierarchyRoot1(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
@@ -95,39 +136,29 @@ public class ClassTest {
             "OWL_DL_MEM_TRANS_INF",
     })
     public void testIsHierarchyRoot2(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
-        OntClass c1 = m.createClass(":C1");
-        OntClass c2 = m.createClass(":C2");
-        OntClass c3 = m.createClass(":C3");
-        OntClass c4 = m.createClass(":C4");
-        OntClass c5 = m.createClass(":C5");
-        OntClass c6 = m.createClass(":C6");
-        OntClass c7 = m.createClass(":C7");
-        OntClass c8 = m.createClass(":C8");
-        OntClass c9 = m.createClass(":C9");
-        OntClass c10 = OWL.Thing.inModel(m).as(OntClass.class);
-        OntClass c11 = OWL.Nothing.inModel(m).as(OntClass.class);
+        // D  THING    K
+        // |  |      / |
+        // C  F     H  |
+        // |  |      \ |
+        // B  E        G
+        // |
+        // A
+        OntModel m = createABCDEFGHKModel(ModelFactory.createOntologyModel(spec.spec));
+        OntClass Thing = OWL.Thing.inModel(m).as(OntClass.class);
+        OntClass Nothing = OWL.Nothing.inModel(m).as(OntClass.class);
+        m.getOntClass(NS + "F").addSuperClass(Thing);
 
-        c1.addSuperClass(c2);
-        c2.addSuperClass(c3);
-        c3.addSuperClass(c4);
-        c5.addSuperClass(c6);
-        c6.addSuperClass(c10);
-        c7.addSuperClass(c8);
-        c8.addSuperClass(c9);
-        c9.addSuperClass(c7);
-
-        Assertions.assertFalse(c1.isHierarchyRoot());   // false
-        Assertions.assertFalse(c2.isHierarchyRoot());   // false
-        Assertions.assertFalse(c3.isHierarchyRoot());   // false
-        Assertions.assertTrue(c4.isHierarchyRoot());    // true
-        Assertions.assertFalse(c5.isHierarchyRoot());   // false
-        Assertions.assertTrue(c6.isHierarchyRoot());    // true
-        Assertions.assertFalse(c7.isHierarchyRoot());   // false
-        Assertions.assertFalse(c8.isHierarchyRoot());   // false
-        Assertions.assertFalse(c9.isHierarchyRoot());   // false
-        Assertions.assertTrue(c10.isHierarchyRoot());   // true
-        Assertions.assertFalse(c11.isHierarchyRoot());  // false
+        Assertions.assertFalse(m.getOntClass(NS + "A").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "B").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "C").isHierarchyRoot());
+        Assertions.assertTrue(m.getOntClass(NS + "D").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "E").isHierarchyRoot());
+        Assertions.assertTrue(m.getOntClass(NS + "F").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "G").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "H").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "K").isHierarchyRoot());
+        Assertions.assertTrue(Thing.isHierarchyRoot());
+        Assertions.assertFalse(Nothing.isHierarchyRoot());
     }
 
     @ParameterizedTest
@@ -139,40 +170,62 @@ public class ClassTest {
             "OWL_DL_MEM_RDFS_INF",
             "OWL_DL_MEM_RULE_INF",
     })
-    public void testIsHierarchyRoot11(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
-        OntClass c1 = m.createClass(":C1");
-        OntClass c2 = m.createClass(":C2");
-        OntClass c3 = m.createClass(":C3");
-        OntClass c4 = m.createClass(":C4");
-        OntClass c5 = m.createClass(":C5");
-        OntClass c6 = m.createClass(":C6");
-        OntClass c7 = m.createClass(":C7");
-        OntClass c8 = m.createClass(":C8");
-        OntClass c9 = m.createClass(":C9");
-        OntClass c10 = OWL.Thing.inModel(m).as(OntClass.class);
-        OntClass c11 = OWL.Nothing.inModel(m).as(OntClass.class);
+    public void testIsHierarchyRoot4(TestSpec spec) {
+        // D  THING    K
+        // |  |      / |
+        // C  F     H  |
+        // |  |      \ |
+        // B  E        G
+        // |
+        // A
+        OntModel m = createABCDEFGHKModel(ModelFactory.createOntologyModel(spec.spec));
+        OntClass Thing = OWL.Thing.inModel(m).as(OntClass.class);
+        OntClass Nothing = OWL.Nothing.inModel(m).as(OntClass.class);
+        m.getOntClass(NS + "F").addSuperClass(Thing);
 
-        c1.addSuperClass(c2);
-        c2.addSuperClass(c3);
-        c3.addSuperClass(c4);
-        c5.addSuperClass(c6);
-        c6.addSuperClass(c10);
-        c7.addSuperClass(c8);
-        c8.addSuperClass(c9);
-        c9.addSuperClass(c7);
+        Assertions.assertFalse(m.getOntClass(NS + "A").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "B").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "C").isHierarchyRoot());
+        Assertions.assertTrue(m.getOntClass(NS + "D").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "E").isHierarchyRoot());
+        Assertions.assertTrue(m.getOntClass(NS + "F").isHierarchyRoot());
+        Assertions.assertTrue(m.getOntClass(NS + "G").isHierarchyRoot());
+        Assertions.assertTrue(m.getOntClass(NS + "H").isHierarchyRoot());
+        Assertions.assertTrue(m.getOntClass(NS + "K").isHierarchyRoot());
+        Assertions.assertTrue(Thing.isHierarchyRoot());
+        Assertions.assertFalse(Nothing.isHierarchyRoot());
+    }
 
-        Assertions.assertFalse(c1.isHierarchyRoot());
-        Assertions.assertFalse(c2.isHierarchyRoot());
-        Assertions.assertFalse(c3.isHierarchyRoot());
-        Assertions.assertTrue(c4.isHierarchyRoot());
-        Assertions.assertFalse(c5.isHierarchyRoot());
-        Assertions.assertTrue(c6.isHierarchyRoot());
-        Assertions.assertTrue(c7.isHierarchyRoot());
-        Assertions.assertTrue(c8.isHierarchyRoot());
-        Assertions.assertTrue(c9.isHierarchyRoot());
-        Assertions.assertTrue(c10.isHierarchyRoot());
-        Assertions.assertFalse(c11.isHierarchyRoot());
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_TRANS_INF",
+    })
+    public void testIsHierarchyRoot5(TestSpec spec) {
+        // D  F     K
+        // |  |   / |
+        // C  E  H  |
+        // |      \ |
+        // B        G
+        // |
+        // A
+        OntModel m = createABCDEFGHKModel(ModelFactory.createOntologyModel(spec.spec));
+
+        Assertions.assertFalse(m.getOntClass(NS + "A").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "B").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "C").isHierarchyRoot());
+        Assertions.assertTrue(m.getOntClass(NS + "D").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "E").isHierarchyRoot());
+        Assertions.assertTrue(m.getOntClass(NS + "F").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "G").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "H").isHierarchyRoot());
+        Assertions.assertFalse(m.getOntClass(NS + "K").isHierarchyRoot());
     }
 
     @ParameterizedTest
@@ -181,8 +234,130 @@ public class ClassTest {
             "OWL_DL_MEM",
             "OWL_LITE_MEM",
             "RDFS_MEM",
+    })
+    public void testIsHierarchyRoot6(TestSpec spec) {
+        //     A
+        //   /  / \
+        //  /  B   C
+        //  | / \ / \
+        //  D   E   F
+        // / \
+        // G  H = K
+        //       / \
+        //      L   M
+
+        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(spec.spec));
+
+        boolean isHierarchyRootA = m.getOntClass(NS + "A").isHierarchyRoot();
+        boolean isHierarchyRootB = m.getOntClass(NS + "B").isHierarchyRoot();
+        boolean isHierarchyRootC = m.getOntClass(NS + "C").isHierarchyRoot();
+        boolean isHierarchyRootD = m.getOntClass(NS + "D").isHierarchyRoot();
+        boolean isHierarchyRootE = m.getOntClass(NS + "E").isHierarchyRoot();
+        boolean isHierarchyRootF = m.getOntClass(NS + "F").isHierarchyRoot();
+        boolean isHierarchyRootG = m.getOntClass(NS + "G").isHierarchyRoot();
+        boolean isHierarchyRootH = m.getOntClass(NS + "H").isHierarchyRoot();
+        boolean isHierarchyRootK = m.getOntClass(NS + "K").isHierarchyRoot();
+        boolean isHierarchyRootL = m.getOntClass(NS + "L").isHierarchyRoot();
+        boolean isHierarchyRootM = m.getOntClass(NS + "M").isHierarchyRoot();
+
+        System.out.println("A:" + isHierarchyRootA);
+        System.out.println("B:" + isHierarchyRootB);
+        System.out.println("C:" + isHierarchyRootC);
+        System.out.println("D:" + isHierarchyRootD);
+        System.out.println("E:" + isHierarchyRootE);
+        System.out.println("F:" + isHierarchyRootF);
+        System.out.println("G:" + isHierarchyRootG);
+        System.out.println("H:" + isHierarchyRootH);
+        System.out.println("K:" + isHierarchyRootK);
+        System.out.println("L:" + isHierarchyRootL);
+        System.out.println("M:" + isHierarchyRootM);
+
+        Assertions.assertTrue(isHierarchyRootA);
+        Assertions.assertFalse(isHierarchyRootB);
+        Assertions.assertFalse(isHierarchyRootC);
+        Assertions.assertFalse(isHierarchyRootD);
+        Assertions.assertFalse(isHierarchyRootE);
+        Assertions.assertFalse(isHierarchyRootF);
+        Assertions.assertFalse(isHierarchyRootG);
+        Assertions.assertFalse(isHierarchyRootH);
+        Assertions.assertTrue(isHierarchyRootK);
+        Assertions.assertFalse(isHierarchyRootL);
+        Assertions.assertFalse(isHierarchyRootM);
     }
-    )
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_TRANS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM_RDFS_INF",
+            "RDFS_MEM_TRANS_INF",
+    })
+    public void testIsHierarchyRoot7(TestSpec spec) {
+        //     A
+        //   /  / \
+        //  /  B   C
+        //  | / \ / \
+        //  D   E   F
+        // / \
+        // G  H = K
+        //       / \
+        //      L   M
+
+        OntModel m = createABCDEFGHKLMModel(ModelFactory.createOntologyModel(spec.spec));
+
+        boolean isHierarchyRootA = m.getOntClass(NS + "A").isHierarchyRoot();
+        boolean isHierarchyRootB = m.getOntClass(NS + "B").isHierarchyRoot();
+        boolean isHierarchyRootC = m.getOntClass(NS + "C").isHierarchyRoot();
+        boolean isHierarchyRootD = m.getOntClass(NS + "D").isHierarchyRoot();
+        boolean isHierarchyRootE = m.getOntClass(NS + "E").isHierarchyRoot();
+        boolean isHierarchyRootF = m.getOntClass(NS + "F").isHierarchyRoot();
+        boolean isHierarchyRootG = m.getOntClass(NS + "G").isHierarchyRoot();
+        boolean isHierarchyRootH = m.getOntClass(NS + "H").isHierarchyRoot();
+        boolean isHierarchyRootK = m.getOntClass(NS + "K").isHierarchyRoot();
+        boolean isHierarchyRootL = m.getOntClass(NS + "L").isHierarchyRoot();
+        boolean isHierarchyRootM = m.getOntClass(NS + "M").isHierarchyRoot();
+
+        System.out.println("A:" + isHierarchyRootA);
+        System.out.println("B:" + isHierarchyRootB);
+        System.out.println("C:" + isHierarchyRootC);
+        System.out.println("D:" + isHierarchyRootD);
+        System.out.println("E:" + isHierarchyRootE);
+        System.out.println("F:" + isHierarchyRootF);
+        System.out.println("G:" + isHierarchyRootG);
+        System.out.println("H:" + isHierarchyRootH);
+        System.out.println("K:" + isHierarchyRootK);
+        System.out.println("L:" + isHierarchyRootL);
+        System.out.println("M:" + isHierarchyRootM);
+
+        Assertions.assertTrue(isHierarchyRootA);
+        Assertions.assertFalse(isHierarchyRootB);
+        Assertions.assertFalse(isHierarchyRootC);
+        Assertions.assertFalse(isHierarchyRootD);
+        Assertions.assertFalse(isHierarchyRootE);
+        Assertions.assertFalse(isHierarchyRootF);
+        Assertions.assertFalse(isHierarchyRootG);
+        Assertions.assertFalse(isHierarchyRootH);
+        Assertions.assertFalse(isHierarchyRootK);
+        Assertions.assertFalse(isHierarchyRootL);
+        Assertions.assertFalse(isHierarchyRootM);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_DL_MEM",
+            "OWL_LITE_MEM",
+            "RDFS_MEM",
+    })
     public void testListSubClasses0(TestSpec spec) {
         // no inference
         OntModel m = createABCDEFModel(spec.spec);
@@ -1486,18 +1661,6 @@ public class ClassTest {
 
     @ParameterizedTest
     @EnumSource
-//            (names = {
-//            "OWL_MEM",
-//            "RDFS_MEM",
-//            "OWL_LITE_MEM",
-//            "OWL_DL_MEM",
-//            "OWL_MEM_RULE_INF",
-//            "OWL_MEM_RDFS_INF",
-//            "OWL_MEM_TRANS_INF",
-//            "RDFS_MEM_RDFS_INF",
-//            "OWL_MEM_MICRO_RULE_INF",
-//            "OWL_DL_MEM_RULE_INF"
-//    })
     public void testDatatypeIsClass(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.spec);
         Resource c = m.createResource();
@@ -1607,6 +1770,35 @@ public class ClassTest {
         K.addSubClass(H);
         K.addSubClass(L);
         K.addSubClass(M);
+        return m;
+    }
+
+    private OntModel createABCDEFGHKModel(OntModel m) {
+        OntClass A = m.createClass(NS + "A");
+        OntClass B = m.createClass(NS + "B");
+        OntClass C = m.createClass(NS + "C");
+        OntClass D = m.createClass(NS + "D");
+        OntClass E = m.createClass(NS + "E");
+        OntClass F = m.createClass(NS + "F");
+        OntClass G = m.createClass(NS + "G");
+        OntClass H = m.createClass(NS + "H");
+        OntClass K = m.createClass(NS + "K");
+
+        // D  F     K
+        // |  |   / |
+        // C  E  H  |
+        // |      \ |
+        // B       G
+        // |
+        // A
+
+        A.addSuperClass(B);
+        B.addSuperClass(C);
+        C.addSuperClass(D);
+        E.addSuperClass(F);
+        G.addSuperClass(H);
+        H.addSuperClass(K);
+        K.addSuperClass(G);
         return m;
     }
 }
