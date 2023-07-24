@@ -6,19 +6,35 @@ import org.apache.jena.ontology.OntModel;
 class TestModelFactory {
     static final String NS = "http://example.com/test#";
 
+    static OntModel createClassesABCD(OntModel m) {
+        //    A
+        //  / |
+        // B  C
+        //     \
+        //      D
+        OntClass A = m.createClass(NS + "A");
+        OntClass B = m.createClass(NS + "B");
+        OntClass C = m.createClass(NS + "C");
+        OntClass D = m.createClass(NS + "D");
+        A.addSubClass(B);
+        A.addSubClass(C);
+        C.addSubClass(D);
+        return m;
+    }
+
     static OntModel createClassesABCDEF(OntModel m) {
+        //      A
+        //     / \
+        //    B   C
+        //   / \ / \
+        //  D   E   F
+
         OntClass a = m.createClass(NS + "A");
         OntClass b = m.createClass(NS + "B");
         OntClass c = m.createClass(NS + "C");
         OntClass d = m.createClass(NS + "D");
         OntClass e = m.createClass(NS + "E");
         OntClass f = m.createClass(NS + "F");
-
-        //      A
-        //     / \
-        //    B   C
-        //   / \ / \
-        //  D   E   F
 
         a.addSubClass(b);
         a.addSubClass(c);
@@ -30,6 +46,16 @@ class TestModelFactory {
     }
 
     static OntModel createClassesABCDEFGHKLM(OntModel m) {
+        //     A
+        //   /  / \
+        //  /  B   C
+        //  | / \ / \
+        //  D   E   F
+        // / \
+        // G  H = K
+        //       / \
+        //      L   M
+
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -41,16 +67,6 @@ class TestModelFactory {
         OntClass K = m.createClass(NS + "K");
         OntClass L = m.createClass(NS + "L");
         OntClass M = m.createClass(NS + "M");
-
-        //     A
-        //   /  / \
-        //  /  B   C
-        //  | / \ / \
-        //  D   E   F
-        // / \
-        // G  H = K
-        //       / \
-        //      L   M
 
         A.addSubClass(D);
         A.addSubClass(B);
@@ -74,6 +90,14 @@ class TestModelFactory {
     }
 
     static OntModel createClassesDGCFKBEHAG(OntModel m) {
+        // D        G
+        // |      / .
+        // C  F  K  .
+        // |  |  |  .
+        // B  E  H  .
+        // |      \ .
+        // A        G
+
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -83,14 +107,6 @@ class TestModelFactory {
         OntClass G = m.createClass(NS + "G");
         OntClass H = m.createClass(NS + "H");
         OntClass K = m.createClass(NS + "K");
-
-        // D        G
-        // |      / .
-        // C  F  K  .
-        // |  |  |  .
-        // B  E  H  .
-        // |      \ .
-        // A        G
 
         A.addSuperClass(B);
         B.addSuperClass(C);
