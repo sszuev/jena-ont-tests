@@ -19,7 +19,7 @@ public class ModelTestUtils {
      * @param fact "S P O" string.
      * @return m.createStatement(S, P, O)
      */
-    public static Statement statement(final Model m, final String fact) {
+    public static Statement statement(Model m, String fact) {
         final StringTokenizer st = new StringTokenizer(fact);
         final Resource sub = ModelTestBase.resource(m, st.nextToken());
         final Property pred = ModelTestBase.property(m, st.nextToken());
@@ -30,13 +30,11 @@ public class ModelTestUtils {
     /* count the number of marker statements in the combined model */
     public static int countMarkers(Model m) {
         int count = 0;
-
         Resource marker = m.getResource("http://jena.hpl.hp.com/2003/03/testont#Marker");
         for (StmtIterator i = m.listStatements(null, RDF.type, marker); i.hasNext(); ) {
             count++;
             i.next();
         }
-
         return count;
     }
 }

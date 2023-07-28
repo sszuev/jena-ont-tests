@@ -30,9 +30,10 @@ public final class IOTestUtils {
         return res.toUri().toString();
     }
 
-    public static void readResourceModel(Model m, String path)  {
+    public static <X extends Model> X readResourceModel(X m, String path)  {
         try (InputStream in = IOTestUtils.class.getResourceAsStream(path)) {
             m.read(in, normalize(path));
+            return m;
         } catch (Exception e) {
             throw new IllegalStateException("Can't read " + path, e);
         }

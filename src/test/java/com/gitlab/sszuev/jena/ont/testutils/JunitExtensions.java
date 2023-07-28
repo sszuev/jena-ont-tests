@@ -11,12 +11,17 @@ import java.util.List;
 
 public final class JunitExtensions {
 
-    public static void assertValues(String testCase, ExtendedIterator<?> expected, Object... actual) {
-        assertValues(testCase, 0, List.of(actual), expected.toList());
+    @SafeVarargs
+    public static <X extends RDFNode> void assertValues(ExtendedIterator<X> actual, X... expected) {
+        assertValues("xxx", 0, List.of(expected), actual.toList());
     }
 
-    public static void assertValues(String testCase, int expectedAnonsCount, ExtendedIterator<?> expected, Object... actual) {
-        assertValues(testCase, expectedAnonsCount, List.of(actual), expected.toList());
+    public static void assertValues(String testCase, ExtendedIterator<?> actual, Object... expected) {
+        assertValues(testCase, 0, List.of(expected), actual.toList());
+    }
+
+    public static void assertValues(String testCase, int expectedAnonsCount, ExtendedIterator<?> actual, Object... _expected) {
+        assertValues(testCase, expectedAnonsCount, List.of(_expected), actual.toList());
     }
 
     public static void assertValues(String testCase, Collection<?> expected, Collection<?> actual) {
@@ -41,9 +46,9 @@ public final class JunitExtensions {
         Assertions.assertEquals(expectedAnonsCount, actualAnonsCount, ":: " + testCase + " test did not find the right number of anon");
     }
 
-    public static boolean iteratorContains(Iterator<?> it, Object target ) {
+    public static boolean iteratorContains(Iterator<?> it, Object target) {
         while (it.hasNext()) {
-            if (it.next().equals( target )) {
+            if (it.next().equals(target)) {
                 return true;
             }
         }
