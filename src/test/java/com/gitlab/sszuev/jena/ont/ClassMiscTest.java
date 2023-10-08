@@ -13,11 +13,10 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 public class ClassMiscTest {
 
-
     @ParameterizedTest
     @EnumSource
     public void testDatatypeIsClass(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         Resource c = m.createResource();
         c.addProperty(RDF.type, RDFS.Datatype);
         Assertions.assertTrue(c.canAs(OntClass.class));

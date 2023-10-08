@@ -38,7 +38,7 @@ public class ClassSuperClassesTest {
             "RDFS_MEM_TRANS_INF",
     })
     public void testSuperClassNE(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass a = m.createClass(NS + "A");
         Assertions.assertNull(a.getSuperClass());
         Assertions.assertFalse(a.hasSuperClass());
@@ -57,7 +57,7 @@ public class ClassSuperClassesTest {
         //    B   C
         //   / \ / \
         //  D   E   F
-        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -117,7 +117,7 @@ public class ClassSuperClassesTest {
         //    B   C
         //   / \ / \
         //  D   E   F
-        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
         OntClass A = m.getOntClass(NS + "A");
         OntClass B = m.getOntClass(NS + "B");
         OntClass C = m.getOntClass(NS + "C");
@@ -166,7 +166,7 @@ public class ClassSuperClassesTest {
     @ParameterizedTest
     @EnumSource
     public void testListSuperClasses2(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -192,7 +192,7 @@ public class ClassSuperClassesTest {
         // B = C
         //  \ |
         //    A
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -262,7 +262,7 @@ public class ClassSuperClassesTest {
         //       / \
         //      L   M
 
-        OntModel m = createClassesABCDEFGHKLM(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEFGHKLM(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -366,7 +366,7 @@ public class ClassSuperClassesTest {
         // B  |  C
         //  \ | /
         //    A
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -412,7 +412,7 @@ public class ClassSuperClassesTest {
             "RDFS_MEM_TRANS_INF",
     })
     public void testListSuperClasses7a(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
         A.addSuperClass(A);
 
@@ -436,7 +436,7 @@ public class ClassSuperClassesTest {
         //  \  /
         //    A
 
-        OntModel m = createClassesDBFCEA(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesDBFCEA(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -504,7 +504,7 @@ public class ClassSuperClassesTest {
         //  \  /
         //    A
 
-        OntModel m = createClassesDBFCEA(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesDBFCEA(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -569,7 +569,7 @@ public class ClassSuperClassesTest {
         //  \  /
         //   A
 
-        OntModel m = createClassesDBFCEA(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesDBFCEA(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -631,7 +631,7 @@ public class ClassSuperClassesTest {
         //  \  /
         //    A
 
-        OntModel m = createClassesDBFCEA(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesDBFCEA(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -693,7 +693,7 @@ public class ClassSuperClassesTest {
         //  \  /
         //   A
 
-        OntModel m = createClassesDBFCEA(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesDBFCEA(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSuperClasses(false).mapWith(Resource::getLocalName).toSet();

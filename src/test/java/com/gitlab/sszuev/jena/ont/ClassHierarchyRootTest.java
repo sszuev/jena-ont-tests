@@ -34,7 +34,7 @@ public class ClassHierarchyRootTest {
             "OWL_LITE_MEM_TRANS_INF",
     })
     public void testIsHierarchyRoot1(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         Assertions.assertTrue(m.getOntClass(OWL2.Thing.getURI()).isHierarchyRoot());
     }
 
@@ -52,7 +52,7 @@ public class ClassHierarchyRootTest {
             "OWL_DL_MEM_TRANS_INF",
     })
     public void testIsHierarchyRoot2(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         Assertions.assertFalse(OWL2.Nothing.inModel(m).as(OntClass.class).isHierarchyRoot());
     }
 
@@ -61,7 +61,7 @@ public class ClassHierarchyRootTest {
             "OWL_LITE_MEM_RULES_INF",
     })
     public void testIsHierarchyRoot3(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         Assertions.assertTrue(OWL2.Nothing.inModel(m).as(OntClass.class).isHierarchyRoot());
     }
 
@@ -86,7 +86,7 @@ public class ClassHierarchyRootTest {
             "RDFS_MEM_TRANS_INF",
     })
     public void testIsHierarchyRoot4(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass a = m.createClass(NS + "A");
         OntClass b = m.createClass(NS + "B");
         a.addSubClass(b);
@@ -109,7 +109,7 @@ public class ClassHierarchyRootTest {
         // B    E   H  .
         // |         \ .
         // A           G
-        OntModel m = createClassesDGCFKBEHAG(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesDGCFKBEHAG(ModelFactory.createOntologyModel(spec.inst));
         OntClass Thing = OWL.Thing.inModel(m).as(OntClass.class);
         OntClass Nothing = OWL.Nothing.inModel(m).as(OntClass.class);
         m.getOntClass(NS + "F").addSuperClass(Thing);
@@ -144,7 +144,7 @@ public class ClassHierarchyRootTest {
         // B    E   H  .
         // |         \ .
         // A           G
-        OntModel m = createClassesDGCFKBEHAG(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesDGCFKBEHAG(ModelFactory.createOntologyModel(spec.inst));
         OntClass Thing = OWL.Thing.inModel(m).as(OntClass.class);
         OntClass Nothing = OWL.Nothing.inModel(m).as(OntClass.class);
         m.getOntClass(NS + "F").addSuperClass(Thing);
@@ -181,7 +181,7 @@ public class ClassHierarchyRootTest {
         // B  E  H  .
         // |      \ .
         // A        G
-        OntModel m = createClassesDGCFKBEHAG(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesDGCFKBEHAG(ModelFactory.createOntologyModel(spec.inst));
 
         Assertions.assertFalse(m.getOntClass(NS + "A").isHierarchyRoot());
         Assertions.assertFalse(m.getOntClass(NS + "B").isHierarchyRoot());
@@ -212,7 +212,7 @@ public class ClassHierarchyRootTest {
         //       / \
         //      L   M
 
-        OntModel m = createClassesABCDEFGHKLM(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEFGHKLM(ModelFactory.createOntologyModel(spec.inst));
 
         boolean isHierarchyRootA = m.getOntClass(NS + "A").isHierarchyRoot();
         boolean isHierarchyRootB = m.getOntClass(NS + "B").isHierarchyRoot();
@@ -278,7 +278,7 @@ public class ClassHierarchyRootTest {
         //       / \
         //      L   M
 
-        OntModel m = createClassesABCDEFGHKLM(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEFGHKLM(ModelFactory.createOntologyModel(spec.inst));
 
         boolean isHierarchyRootA = m.getOntClass(NS + "A").isHierarchyRoot();
         boolean isHierarchyRootB = m.getOntClass(NS + "B").isHierarchyRoot();

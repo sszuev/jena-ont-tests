@@ -38,7 +38,7 @@ public class ClassSubClassesTest {
             "RDFS_MEM_TRANS_INF",
     })
     public void testSubClassNE(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass a = m.createClass(NS + "A");
         Assertions.assertNull(a.getSubClass());
         Assertions.assertFalse(a.hasSubClass());
@@ -64,7 +64,7 @@ public class ClassSubClassesTest {
             "RDFS_MEM_TRANS_INF",
     })
     public void testListSubClasses1a(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
         A.addSubClass(A);
 
@@ -77,7 +77,7 @@ public class ClassSubClassesTest {
             "OWL_MEM_MICRO_RULE_INF",
     })
     public void testListSubClasses1b(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
         A.addSubClass(A);
         Assertions.assertEquals(List.of(OWL2.Nothing), A.listSubClasses(true).toList());
@@ -98,7 +98,7 @@ public class ClassSubClassesTest {
         //     \
         //      D
 
-        OntModel m = createClassesABCD(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCD(ModelFactory.createOntologyModel(spec.inst));
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
         OntClass c = m.getOntClass(NS + "C");
@@ -128,7 +128,7 @@ public class ClassSubClassesTest {
         //   / \ / \
         //  D   E   F
 
-        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -199,7 +199,7 @@ public class ClassSubClassesTest {
         //   / \ / \
         //  D   E   F
 
-        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -245,7 +245,7 @@ public class ClassSubClassesTest {
         //   / \ / \
         //  D   E   F
 
-        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
         OntClass c = m.getOntClass(NS + "C");
@@ -277,7 +277,7 @@ public class ClassSubClassesTest {
         //       / \
         //      L   M
 
-        OntModel m = createClassesABCDEFGHKLM(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEFGHKLM(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -383,7 +383,7 @@ public class ClassSubClassesTest {
         //       / \
         //      L   M
 
-        OntModel m = createClassesABCDEFGHKLM(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEFGHKLM(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> indirectA = m.getOntClass(NS + "A").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
@@ -478,7 +478,7 @@ public class ClassSubClassesTest {
         //     A
         //     |
         // D = B = C
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -533,7 +533,7 @@ public class ClassSubClassesTest {
         //     A
         //     |
         // D = B = C
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -582,7 +582,7 @@ public class ClassSubClassesTest {
         // B = C
         //  \ |
         //    A
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -624,7 +624,7 @@ public class ClassSubClassesTest {
         //  \ .
         //    A
 
-        OntModel m = createClassesABCA(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCA(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> directB = m.getOntClass(NS + "B").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
@@ -663,7 +663,7 @@ public class ClassSubClassesTest {
         //  \ .
         //    A
 
-        OntModel m = createClassesABCA(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCA(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> directB = m.getOntClass(NS + "B").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
@@ -698,7 +698,7 @@ public class ClassSubClassesTest {
         //  \ .
         //    A
 
-        OntModel m = createClassesABCA(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCA(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> directB = m.getOntClass(NS + "B").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
@@ -730,7 +730,7 @@ public class ClassSubClassesTest {
         //  \ .
         //    A
 
-        OntModel m = createClassesABCA(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCA(ModelFactory.createOntologyModel(spec.inst));
 
         Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> directB = m.getOntClass(NS + "B").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
@@ -765,7 +765,7 @@ public class ClassSubClassesTest {
             "RDFS_MEM_RDFS_INF",
     })
     public void testListSubClasses8a(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         A.addSubClass(B);
@@ -798,7 +798,7 @@ public class ClassSubClassesTest {
             "RDFS_MEM_TRANS_INF",
     })
     public void testListSubClasses8b(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         A.addSubClass(B);
@@ -828,7 +828,7 @@ public class ClassSubClassesTest {
             "OWL_MEM_MICRO_RULE_INF",
     })
     public void testListSubClasses8c(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         A.addSubClass(B);

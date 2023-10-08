@@ -25,7 +25,7 @@ public class ClassIndividualsTest {
     @ParameterizedTest
     @EnumSource
     public void testCreateIndividual(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass a = m.createClass(NS + "A");
         Individual i = a.createIndividual(NS + "i");
         Assertions.assertTrue(i.hasRDFType(a));
@@ -46,7 +46,7 @@ public class ClassIndividualsTest {
             "RDFS_MEM_TRANS_INF",
     })
     public void testDropIndividual(TestSpec spec) {
-        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
         Individual ia = a.createIndividual(NS + "iA");
@@ -86,7 +86,7 @@ public class ClassIndividualsTest {
             "RDFS_MEM_TRANS_INF",
     })
     public void testListInstances0(TestSpec spec) {
-        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
 
@@ -113,7 +113,7 @@ public class ClassIndividualsTest {
             "RDFS_MEM_RDFS_INF",
     })
     public void testListInstances1(TestSpec spec) {
-        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
         OntClass c = m.getOntClass(NS + "C");
@@ -146,7 +146,7 @@ public class ClassIndividualsTest {
             "RDFS_MEM_RDFS_INF",
     })
     public void testListInstances2(TestSpec spec) {
-        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
         OntClass c = m.getOntClass(NS + "C");
@@ -185,7 +185,7 @@ public class ClassIndividualsTest {
         //       / \
         //      L   M
 
-        OntModel m = createClassesABCDEFGHKLM(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEFGHKLM(ModelFactory.createOntologyModel(spec.inst));
         m.listStatements(null, RDF.type, OWL.Class)
                 .mapWith(Statement::getSubject)
                 .mapWith(x -> x.as(OntClass.class))
@@ -261,7 +261,7 @@ public class ClassIndividualsTest {
         // B = C
         //  \ |
         //    A
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -313,7 +313,7 @@ public class ClassIndividualsTest {
         // B  |  C
         //  \ | /
         //    A
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         OntClass C = m.createClass(NS + "C");
@@ -377,7 +377,7 @@ public class ClassIndividualsTest {
         //    B   C
         //   / \ / \
         //  D   E   F
-        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
         OntClass a = m.getOntClass(NS + "A");
         OntClass b = m.getOntClass(NS + "B");
         OntClass c = m.getOntClass(NS + "C");

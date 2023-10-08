@@ -1,6 +1,5 @@
 package com.gitlab.sszuev.jena.ont;
 
-import com.gitlab.sszuev.jena.ont.common.CommonOntTestEngine;
 import com.gitlab.sszuev.jena.ont.testutils.IOTestUtils;
 import com.gitlab.sszuev.jena.ont.testutils.JunitExtensions;
 import com.gitlab.sszuev.jena.ont.testutils.TestSpec;
@@ -24,6 +23,8 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.Set;
 
+import static com.gitlab.sszuev.jena.ont.common.CommonOntTestEngine.NS;
+
 public class ClassDeclaredPropertiesTest {
 
     @ParameterizedTest
@@ -44,7 +45,7 @@ public class ClassDeclaredPropertiesTest {
             "OWL_LITE_MEM_TRANS_INF",
     })
     public void testListDeclaredProperties1(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass("A");
         OntClass B = m.createClass("B");
         OntClass C = m.createClass("C");
@@ -144,7 +145,7 @@ public class ClassDeclaredPropertiesTest {
         // C    E
         //  \  /
         //    A
-        OntModel m = TestModelFactory.createClassesDBFCEA(ModelFactory.createOntologyModel(spec.spec));
+        OntModel m = TestModelFactory.createClassesDBFCEA(ModelFactory.createOntologyModel(spec.inst));
 
         Resource d1 = m.createResource(TestModelFactory.NS + "d1", OWL2.DatatypeProperty).addProperty(RDF.type, RDF.Property);
         Resource d2 = m.createResource(TestModelFactory.NS + "d2", OWL2.DatatypeProperty).addProperty(RDF.type, RDF.Property);
@@ -226,7 +227,7 @@ public class ClassDeclaredPropertiesTest {
             "OWL_LITE_MEM_TRANS_INF",
     })
     public void testListDeclaredProperties3(TestSpec spec) {
-        OntModel m0 = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m0 = ModelFactory.createOntologyModel(spec.inst);
 
         // in model M0, p0 has class c0 in the domain
         OntClass c0 = m0.createClass(TestModelFactory.NS + "c0");
@@ -234,7 +235,7 @@ public class ClassDeclaredPropertiesTest {
         p0.setDomain(c0);
 
         // in model M1, class c1 is a subClass of c0
-        OntModel m1 = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m1 = ModelFactory.createOntologyModel(spec.inst);
         OntClass c1 = m1.createClass(TestModelFactory.NS + "c1");
         c1.addSuperClass(c0);
 
@@ -264,7 +265,7 @@ public class ClassDeclaredPropertiesTest {
             "OWL_DL_MEM_TRANS_INF",
     })
     public void testListDeclaredProperties4(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec, null);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst, null);
 
         // a simple class hierarchy  organism -> vertebrate -> mammal -> dog
         OntClass organism = m.createClass(TestModelFactory.NS + "Organism");
@@ -334,7 +335,7 @@ public class ClassDeclaredPropertiesTest {
             "RDFS_MEM_TRANS_INF",
     })
     public void testListDeclaredProperties5(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(TestModelFactory.NS + "A");
         OntClass C = m.createClass(TestModelFactory.NS + "C");
         C.addSuperClass(A);
@@ -370,18 +371,18 @@ public class ClassDeclaredPropertiesTest {
             "OWL_LITE_MEM_TRANS_INF",
     })
     public void testListDeclaredProperties6(TestSpec spec) {
-        OntModel m = IOTestUtils.readResourceModel(ModelFactory.createOntologyModel(spec.spec), "/jena/frame-view-test-ldp.rdf");
+        OntModel m = IOTestUtils.readResourceModel(ModelFactory.createOntologyModel(spec.inst), "/jena/frame-view-test-ldp.rdf");
 
-        OntClass A = m.getOntClass(CommonOntTestEngine.NS + "A");
-        OntClass B = m.getOntClass(CommonOntTestEngine.NS + "B");
-        OntClass C = m.getOntClass(CommonOntTestEngine.NS + "C");
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
 
-        ObjectProperty pA = m.getObjectProperty(CommonOntTestEngine.NS + "pA");
-        ObjectProperty pB = m.getObjectProperty(CommonOntTestEngine.NS + "pB");
-        ObjectProperty pC = m.getObjectProperty(CommonOntTestEngine.NS + "pC");
-        ObjectProperty qA = m.getObjectProperty(CommonOntTestEngine.NS + "qA");
-        ObjectProperty global = m.getObjectProperty(CommonOntTestEngine.NS + "global");
-        ObjectProperty qB = m.getObjectProperty(CommonOntTestEngine.NS + "qB");
+        ObjectProperty pA = m.getObjectProperty(NS + "pA");
+        ObjectProperty pB = m.getObjectProperty(NS + "pB");
+        ObjectProperty pC = m.getObjectProperty(NS + "pC");
+        ObjectProperty qA = m.getObjectProperty(NS + "qA");
+        ObjectProperty global = m.getObjectProperty(NS + "global");
+        ObjectProperty qB = m.getObjectProperty(NS + "qB");
 
         JunitExtensions.assertValues(A.listDeclaredProperties(false), pA, qA, global, qB);
         JunitExtensions.assertValues(A.listDeclaredProperties(true), pA, qA, global, qB);
@@ -406,17 +407,17 @@ public class ClassDeclaredPropertiesTest {
             "OWL_LITE_MEM_TRANS_INF",
     })
     public void testListDeclaredProperties7a(TestSpec spec) {
-        OntModel m = IOTestUtils.readResourceModel(ModelFactory.createOntologyModel(spec.spec), "/jena/frame-view-test-ldp.rdf");
+        OntModel m = IOTestUtils.readResourceModel(ModelFactory.createOntologyModel(spec.inst), "/jena/frame-view-test-ldp.rdf");
 
-        OntClass Union1 = m.getOntClass(CommonOntTestEngine.NS + "Union1");
-        OntClass Union2 = m.getOntClass(CommonOntTestEngine.NS + "Union2");
-        OntClass Intersect1 = m.getOntClass(CommonOntTestEngine.NS + "Intersect1");
-        OntClass Intersect2 = m.getOntClass(CommonOntTestEngine.NS + "Intersect2");
-        OntClass HasAnn = m.getOntClass(CommonOntTestEngine.NS + "HasAnn");
+        OntClass Union1 = m.getOntClass(NS + "Union1");
+        OntClass Union2 = m.getOntClass(NS + "Union2");
+        OntClass Intersect1 = m.getOntClass(NS + "Intersect1");
+        OntClass Intersect2 = m.getOntClass(NS + "Intersect2");
+        OntClass HasAnn = m.getOntClass(NS + "HasAnn");
 
-        AnnotationProperty ann = m.getAnnotationProperty(CommonOntTestEngine.NS + "ann");
-        ObjectProperty global = m.getObjectProperty(CommonOntTestEngine.NS + "global");
-        ObjectProperty qB = m.getObjectProperty(CommonOntTestEngine.NS + "qB");
+        AnnotationProperty ann = m.getAnnotationProperty(NS + "ann");
+        ObjectProperty global = m.getObjectProperty(NS + "global");
+        ObjectProperty qB = m.getObjectProperty(NS + "qB");
 
         JunitExtensions.assertValues(Union1.listDeclaredProperties(false), global, qB);
         JunitExtensions.assertValues(Union2.listDeclaredProperties(false), global, qB);
@@ -430,7 +431,6 @@ public class ClassDeclaredPropertiesTest {
 
         JunitExtensions.assertValues(HasAnn.listDeclaredProperties(false), ann, global, qB);
         JunitExtensions.assertValues(HasAnn.listDeclaredProperties(true), ann, global, qB);
-
     }
 
     @ParameterizedTest
@@ -442,19 +442,20 @@ public class ClassDeclaredPropertiesTest {
             "OWL_LITE_MEM_RULES_INF",
     })
     public void testListDeclaredProperties7b(TestSpec spec) {
-        OntModel m = IOTestUtils.readResourceModel(ModelFactory.createOntologyModel(spec.spec), "/jena/frame-view-test-ldp.rdf");
-        OntClass Union1 = m.getOntClass(CommonOntTestEngine.NS + "Union1");
-        OntClass Union2 = m.getOntClass(CommonOntTestEngine.NS + "Union2");
-        OntClass Intersect1 = m.getOntClass(CommonOntTestEngine.NS + "Intersect1");
-        OntClass Intersect2 = m.getOntClass(CommonOntTestEngine.NS + "Intersect2");
-        OntClass HasAnn = m.getOntClass(CommonOntTestEngine.NS + "HasAnn");
-        AnnotationProperty ann = m.getAnnotationProperty(CommonOntTestEngine.NS + "ann");
-        ObjectProperty global = m.getObjectProperty(CommonOntTestEngine.NS + "global");
-        ObjectProperty unionP = m.getObjectProperty(CommonOntTestEngine.NS + "unionP");
+        OntModel m = IOTestUtils.readResourceModel(ModelFactory.createOntologyModel(spec.inst), "/jena/frame-view-test-ldp.rdf");
+        OntClass Union1 = m.getOntClass(NS + "Union1");
+        OntClass Union2 = m.getOntClass(NS + "Union2");
+        OntClass Intersect1 = m.getOntClass(NS + "Intersect1");
+        OntClass Intersect2 = m.getOntClass(NS + "Intersect2");
+        OntClass HasAnn = m.getOntClass(NS + "HasAnn");
+        AnnotationProperty ann = m.getAnnotationProperty(NS + "ann");
+        ObjectProperty global = m.getObjectProperty(NS + "global");
+        ObjectProperty unionP = m.getObjectProperty(NS + "unionP");
 
         JunitExtensions.assertValues(Union1.listDeclaredProperties(false), global, unionP);
         JunitExtensions.assertValues(Union2.listDeclaredProperties(false), global, unionP);
         JunitExtensions.assertValues(Union1.listDeclaredProperties(true));
+        JunitExtensions.assertValues(Union2.listDeclaredProperties(true));
         JunitExtensions.assertValues(Union2.listDeclaredProperties(true));
 
         JunitExtensions.assertValues(Intersect1.listDeclaredProperties(false), global);
@@ -476,7 +477,7 @@ public class ClassDeclaredPropertiesTest {
             "OWL_DL_MEM_TRANS_INF",
     })
     public void testHasDeclaredProperties1(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass c1 = m.createUnionClass(null, m.createList(OWL2.Thing));
         OntClass c2 = m.createEnumeratedClass(null, m.createList(
                 m.createIndividual("i1", OWL2.NamedIndividual),
@@ -558,7 +559,7 @@ public class ClassDeclaredPropertiesTest {
             "OWL_DL_MEM_RULE_INF",
     })
     public void testHasDeclaredProperties2(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass c1 = m.createUnionClass(null, m.createList(OWL2.Thing));
         OntClass c2 = m.createEnumeratedClass(null, m.createList(
                 m.createIndividual("i1", OWL2.NamedIndividual),
@@ -653,17 +654,16 @@ public class ClassDeclaredPropertiesTest {
             "RDFS_MEM_TRANS_INF",
     })
     public void testHasDeclaredProperties3(TestSpec spec) {
-        OntModel m = IOTestUtils.readResourceModel(ModelFactory.createOntologyModel(spec.spec), "/jena/frame-view-test-ldp.rdf");
-        OntClass A = m.getOntClass(CommonOntTestEngine.NS + "A");
+        OntModel m = IOTestUtils.readResourceModel(ModelFactory.createOntologyModel(spec.inst), "/jena/frame-view-test-ldp.rdf");
+        OntClass A = m.getOntClass(NS + "A");
 
-        ObjectProperty pA = m.getObjectProperty(CommonOntTestEngine.NS + "pA");
-        ObjectProperty pB = m.getObjectProperty(CommonOntTestEngine.NS + "pB");
+        ObjectProperty pA = m.getObjectProperty(NS + "pA");
+        ObjectProperty pB = m.getObjectProperty(NS + "pB");
 
         Assertions.assertTrue(A.hasDeclaredProperty(pA, false));
         Assertions.assertFalse(A.hasDeclaredProperty(pB, false));
 
         Assertions.assertTrue(A.hasDeclaredProperty(pA, true));
         Assertions.assertFalse(A.hasDeclaredProperty(pB, true));
-
     }
 }

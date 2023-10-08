@@ -43,7 +43,7 @@ public class ListSyntaxCategoriesTest extends CommonOntTestBase {
 
     @ParameterizedTest
     @MethodSource("argumentsStream")
-    public void test(ListTestEngine test) {
+    void test(ListTestEngine test) {
         test.runTest();
     }
 
@@ -313,7 +313,12 @@ public class ListSyntaxCategoriesTest extends CommonOntTestBase {
                     return r instanceof Individual;
                 }
             },
-            new ListTestEngine("OWL list individuals with inference", "/jena/list-syntax-categories-test-comps.xml", OntModelSpec.OWL_LITE_MEM_RULES_INF, 6) {
+            new ListTestEngine(
+                    "OWL list individuals with inference",
+                    "/jena/list-syntax-categories-test-comps.xml",
+                    OntModelSpec.OWL_LITE_MEM_RULES_INF,
+                    6
+            ) {
                 @Override
                 public Iterator<? extends Resource> doList(OntModel m) {
                     return m.listIndividuals();

@@ -47,9 +47,9 @@ public enum TestSpec {
     RDFS_MEM_TRANS_INF(OntModelSpec.RDFS_MEM_TRANS_INF),
     ;
 
-    public final OntModelSpec spec;
+    public final OntModelSpec inst;
 
-    TestSpec(OntModelSpec spec) {
-        this.spec = spec;
+    TestSpec(OntModelSpec inst) {
+        this.inst = inst;
     }
 }

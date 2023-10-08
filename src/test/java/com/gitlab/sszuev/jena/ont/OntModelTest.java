@@ -79,7 +79,7 @@ public class OntModelTest extends CommonOntTestBase {
     @ParameterizedTest
     @EnumSource(TestSpec.class)
     public void testListIndividuals(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.spec);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
 
         m.createResource("x", m.createResource("X"));
         m.createResource().addProperty(RDF.type, m.createResource("Y"));
