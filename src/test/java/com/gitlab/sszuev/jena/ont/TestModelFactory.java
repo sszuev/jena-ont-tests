@@ -161,4 +161,30 @@ class TestModelFactory {
         return m;
     }
 
+    static OntModel createClassesAGBCFDE(OntModel m) {
+        //      A   G
+        //     / \   \
+        //    B   C = F
+        //   / \ /
+        //  D   E
+
+        OntClass A = m.createClass(NS + "A");
+        OntClass B = m.createClass(NS + "B");
+        OntClass C = m.createClass(NS + "C");
+        OntClass D = m.createClass(NS + "D");
+        OntClass E = m.createClass(NS + "E");
+        OntClass F = m.createClass(NS + "F");
+        OntClass G = m.createClass(NS + "G");
+
+        A.addSubClass(B);
+        A.addSubClass(C);
+        B.addSubClass(D);
+        B.addSubClass(E);
+        C.addSubClass(E);
+        C.addSubClass(F);
+        F.addSubClass(C);
+        F.addSuperClass(G);
+        return m;
+    }
+
 }

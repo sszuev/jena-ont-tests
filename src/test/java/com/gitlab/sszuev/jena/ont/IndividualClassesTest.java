@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.gitlab.sszuev.jena.ont.common.CommonOntTestEngine.NS;
+import static com.gitlab.sszuev.jena.ont.TestModelFactory.NS;
 
 public class IndividualClassesTest {
 
@@ -137,58 +137,41 @@ public class IndividualClassesTest {
             "OWL_LITE_MEM_RDFS_INF",
     })
     public void testListOntClasses3a(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.inst);
-        OntClass a = m.createClass(NS + "A");
-        OntClass b = m.createClass(NS + "B");
-        OntClass c = m.createClass(NS + "C");
-        OntClass d = m.createClass(NS + "D");
-        OntClass e = m.createClass(NS + "E");
-        OntClass f = m.createClass(NS + "F");
-        OntClass g = m.createClass(NS + "G");
-
         //      A   G
         //     / \   \
         //    B   C = F
         //   / \ /
         //  D   E
+        OntModel m = TestModelFactory.createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
 
-        a.addSubClass(b);
-        a.addSubClass(c);
-        b.addSubClass(d);
-        b.addSubClass(e);
-        c.addSubClass(e);
-        c.addSubClass(f);
-        f.addSubClass(c);
-        f.addSuperClass(g);
+        Individual iA = m.createIndividual("iA", m.getOntClass(NS + "A"));
+        Individual iB = m.createIndividual("iB", m.getOntClass(NS + "B"));
+        Individual iC = m.createIndividual("iC", m.getOntClass(NS + "C"));
+        Individual iD = m.createIndividual("iD", m.getOntClass(NS + "D"));
+        Individual iE = m.createIndividual("iE", m.getOntClass(NS + "E"));
+        Individual iF = m.createIndividual("iF", m.getOntClass(NS + "F"));
+        Individual iG = m.createIndividual("iG", m.getOntClass(NS + "G"));
 
-        Individual A = m.createIndividual("iA", a);
-        Individual B = m.createIndividual("iB", b);
-        Individual C = m.createIndividual("iC", c);
-        Individual D = m.createIndividual("iD", d);
-        Individual E = m.createIndividual("iE", e);
-        Individual F = m.createIndividual("iF", f);
-        Individual G = m.createIndividual("iG", g);
+        Set<String> directA = iA.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = iA.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directA = A.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectA = A.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directB = iB.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = iB.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directB = B.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectB = B.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directC = iC.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = iC.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directC = C.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectC = C.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directD = iD.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = iD.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directD = D.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectD = D.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directE = iE.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = iE.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directE = E.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectE = E.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directF = iF.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectF = iF.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directF = F.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectF = F.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
-
-        Set<String> directG = G.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectG = G.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directG = iG.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectG = iG.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
         System.out.println("DIRECT-iA::" + directA);
         System.out.println("DIRECT-iB::" + directB);
@@ -234,58 +217,56 @@ public class IndividualClassesTest {
             "RDFS_MEM_TRANS_INF",
     })
     public void testListOntClasses3b(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.inst);
-        OntClass a = m.createClass(NS + "A");
-        OntClass b = m.createClass(NS + "B");
-        OntClass c = m.createClass(NS + "C");
-        OntClass d = m.createClass(NS + "D");
-        OntClass e = m.createClass(NS + "E");
-        OntClass f = m.createClass(NS + "F");
-        OntClass g = m.createClass(NS + "G");
-
         //      A   G
         //     / \   \
         //    B   C = F
         //   / \ /
         //  D   E
+        OntModel m = TestModelFactory.createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
 
-        a.addSubClass(b);
-        a.addSubClass(c);
-        b.addSubClass(d);
-        b.addSubClass(e);
-        c.addSubClass(e);
-        c.addSubClass(f);
-        f.addSubClass(c);
-        f.addSuperClass(g);
+        Individual iA = m.createIndividual("iA", m.getOntClass(NS + "A"));
+        Individual iB = m.createIndividual("iB", m.getOntClass(NS + "B"));
+        Individual iC = m.createIndividual("iC", m.getOntClass(NS + "C"));
+        Individual iD = m.createIndividual("iD", m.getOntClass(NS + "D"));
+        Individual iE = m.createIndividual("iE", m.getOntClass(NS + "E"));
+        Individual iF = m.createIndividual("iF", m.getOntClass(NS + "F"));
+        Individual iG = m.createIndividual("iG", m.getOntClass(NS + "G"));
 
-        Individual A = m.createIndividual("iA", a);
-        Individual B = m.createIndividual("iB", b);
-        Individual C = m.createIndividual("iC", c);
-        Individual D = m.createIndividual("iD", d);
-        Individual E = m.createIndividual("iE", e);
-        Individual F = m.createIndividual("iF", f);
-        Individual G = m.createIndividual("iG", g);
+        Set<String> directA = iA.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = iA.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directA = A.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectA = A.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directB = iB.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = iB.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directB = B.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectB = B.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directC = iC.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = iC.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directC = C.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectC = C.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directD = iD.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = iD.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directD = D.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectD = D.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directE = iE.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = iE.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directE = E.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectE = E.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directF = iF.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectF = iF.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directF = F.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectF = F.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directG = iG.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectG = iG.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directG = G.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectG = G.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        System.out.println("DIRECT-iA::" + directA);
+        System.out.println("DIRECT-iB::" + directB);
+        System.out.println("DIRECT-iC::" + directC);
+        System.out.println("DIRECT-iD::" + directD);
+        System.out.println("DIRECT-iE::" + directE);
+        System.out.println("DIRECT-iF::" + directF);
+        System.out.println("DIRECT-iG::" + directG);
+        System.out.println("INDIRECT-iA::" + indirectA);
+        System.out.println("INDIRECT-iB::" + indirectB);
+        System.out.println("INDIRECT-iC::" + indirectC);
+        System.out.println("INDIRECT-iD::" + indirectD);
+        System.out.println("INDIRECT-iE::" + indirectE);
+        System.out.println("INDIRECT-iF::" + indirectF);
+        System.out.println("INDIRECT-iG::" + indirectG);
 
         Assertions.assertEquals(Set.of("A"), directA);
         Assertions.assertEquals(Set.of("B"), directB);
@@ -314,58 +295,41 @@ public class IndividualClassesTest {
             "RDFS_MEM_RDFS_INF",
     })
     public void testListOntClasses3c(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.inst);
-        OntClass a = m.createClass(NS + "A");
-        OntClass b = m.createClass(NS + "B");
-        OntClass c = m.createClass(NS + "C");
-        OntClass d = m.createClass(NS + "D");
-        OntClass e = m.createClass(NS + "E");
-        OntClass f = m.createClass(NS + "F");
-        OntClass g = m.createClass(NS + "G");
-
         //      A   G
         //     / \   \
         //    B   C = F
         //   / \ /
         //  D   E
+        OntModel m = TestModelFactory.createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
 
-        a.addSubClass(b);
-        a.addSubClass(c);
-        b.addSubClass(d);
-        b.addSubClass(e);
-        c.addSubClass(e);
-        c.addSubClass(f);
-        f.addSubClass(c);
-        f.addSuperClass(g);
+        Individual iA = m.createIndividual("iA", m.getOntClass(NS + "A"));
+        Individual iB = m.createIndividual("iB", m.getOntClass(NS + "B"));
+        Individual iC = m.createIndividual("iC", m.getOntClass(NS + "C"));
+        Individual iD = m.createIndividual("iD", m.getOntClass(NS + "D"));
+        Individual iE = m.createIndividual("iE", m.getOntClass(NS + "E"));
+        Individual iF = m.createIndividual("iF", m.getOntClass(NS + "F"));
+        Individual iG = m.createIndividual("iG", m.getOntClass(NS + "G"));
 
-        Individual A = m.createIndividual("iA", a);
-        Individual B = m.createIndividual("iB", b);
-        Individual C = m.createIndividual("iC", c);
-        Individual D = m.createIndividual("iD", d);
-        Individual E = m.createIndividual("iE", e);
-        Individual F = m.createIndividual("iF", f);
-        Individual G = m.createIndividual("iG", g);
+        Set<String> directA = iA.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = iA.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directA = A.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectA = A.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directB = iB.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = iB.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directB = B.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectB = B.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directC = iC.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = iC.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directC = C.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectC = C.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directD = iD.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = iD.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directD = D.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectD = D.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directE = iE.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = iE.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directE = E.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectE = E.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directF = iF.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectF = iF.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directF = F.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectF = F.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
-
-        Set<String> directG = G.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectG = G.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directG = iG.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectG = iG.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
         String R = spec.equals(TestSpec.OWL_MEM_MICRO_RULE_INF) ? null : "Resource";
         String T = spec.equals(TestSpec.RDFS_MEM_RDFS_INF) ? null :  "Thing";
@@ -394,63 +358,52 @@ public class IndividualClassesTest {
             "OWL_LITE_MEM_RDFS_INF",
     })
     public void testListOntClasses4a(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.inst);
-        OntClass a = m.createClass(NS + "A");
-        OntClass b = m.createClass(NS + "B");
-        OntClass c = m.createClass(NS + "C");
-        OntClass d = m.createClass(NS + "D");
-        OntClass e = m.createClass(NS + "E");
-        OntClass f = m.createClass(NS + "F");
-        OntClass g = m.createClass(NS + "G");
-
         //      A   G
         //     / \   \
         //    B   C = F
         //   / \ /
         //  D   E
+        OntModel m = TestModelFactory.createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        OntClass E = m.getOntClass(NS + "E");
+        OntClass G = m.getOntClass(NS + "G");
 
-        a.addSubClass(b);
-        a.addSubClass(c);
-        b.addSubClass(d);
-        b.addSubClass(e);
-        c.addSubClass(e);
-        c.addSubClass(f);
-        f.addSubClass(c);
-        f.addSuperClass(g);
+        Individual iAG = m.createIndividual("iA", A);
+        iAG.addOntClass(G);
 
-        Individual A = m.createIndividual("iA", a);
-        A.addOntClass(g);
+        Individual iBDC = m.createIndividual("iB", B);
+        iBDC.addOntClass(D);
+        iBDC.addOntClass(C);
 
-        Individual B = m.createIndividual("iB", b);
-        B.addOntClass(d);
-        B.addOntClass(c);
+        Individual iDE = m.createIndividual("iD", D);
+        iDE.addOntClass(E);
 
-        Individual C = m.createIndividual("iC", d);
-        C.addOntClass(e);
+        Set<String> directAG = iAG.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectAG = iAG.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directA = A.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectA = A.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directBDC = iBDC.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectBDC = iBDC.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directB = B.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectB = B.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directDE = iDE.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectDE = iDE.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directC = C.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectC = C.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        System.out.println("DIRECT-iAG::" + directAG);
+        System.out.println("DIRECT-iBDC::" + directBDC);
+        System.out.println("DIRECT-iDE::" + directDE);
+        System.out.println("INDIRECT-iAG::" + indirectAG);
+        System.out.println("INDIRECT-iBDC::" + indirectBDC);
+        System.out.println("INDIRECT-iDE::" + indirectDE);
 
-        System.out.println("DIRECT-iA::" + directA);
-        System.out.println("DIRECT-iB::" + directB);
-        System.out.println("DIRECT-iC::" + directC);
-        System.out.println("INDIRECT-iA::" + indirectA);
-        System.out.println("INDIRECT-iB::" + indirectB);
-        System.out.println("INDIRECT-iC::" + indirectC);
+        Assertions.assertEquals(Set.of("A", "G"), directAG);
+        Assertions.assertEquals(Set.of("C", "D", "F"), directBDC);
+        Assertions.assertEquals(Set.of("D", "E"), directDE);
 
-        Assertions.assertEquals(Set.of("A", "G"), directA);
-        Assertions.assertEquals(Set.of("C", "D", "F"), directB);
-        Assertions.assertEquals(Set.of("D", "E"), directC);
-
-        Assertions.assertEquals(Set.of("A", "G"), indirectA);
-        Assertions.assertEquals(Set.of("A", "B", "C", "D", "F", "G"), indirectB);
-        Assertions.assertEquals(Set.of("A", "B", "C", "D", "E", "F", "G"), indirectC);
+        Assertions.assertEquals(Set.of("A", "G"), indirectAG);
+        Assertions.assertEquals(Set.of("A", "B", "C", "D", "F", "G"), indirectBDC);
+        Assertions.assertEquals(Set.of("A", "B", "C", "D", "E", "F", "G"), indirectDE);
     }
 
     @ParameterizedTest
@@ -465,56 +418,45 @@ public class IndividualClassesTest {
             "RDFS_MEM_TRANS_INF",
     })
     public void testListOntClasses4b(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.inst);
-        OntClass a = m.createClass(NS + "A");
-        OntClass b = m.createClass(NS + "B");
-        OntClass c = m.createClass(NS + "C");
-        OntClass d = m.createClass(NS + "D");
-        OntClass e = m.createClass(NS + "E");
-        OntClass f = m.createClass(NS + "F");
-        OntClass g = m.createClass(NS + "G");
-
         //      A   G
         //     / \   \
         //    B   C = F
         //   / \ /
         //  D   E
+        OntModel m = TestModelFactory.createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        OntClass E = m.getOntClass(NS + "E");
+        OntClass G = m.getOntClass(NS + "G");
 
-        a.addSubClass(b);
-        a.addSubClass(c);
-        b.addSubClass(d);
-        b.addSubClass(e);
-        c.addSubClass(e);
-        c.addSubClass(f);
-        f.addSubClass(c);
-        f.addSuperClass(g);
+        Individual iAG = m.createIndividual("iA", A);
+        iAG.addOntClass(G);
 
-        Individual A = m.createIndividual("iA", a);
-        A.addOntClass(g);
+        Individual iBDC = m.createIndividual("iB", B);
+        iBDC.addOntClass(D);
+        iBDC.addOntClass(C);
 
-        Individual B = m.createIndividual("iB", b);
-        B.addOntClass(d);
-        B.addOntClass(c);
+        Individual iDE = m.createIndividual("iD", D);
+        iDE.addOntClass(E);
 
-        Individual C = m.createIndividual("iC", d);
-        C.addOntClass(e);
+        Set<String> directAG = iAG.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectAG = iAG.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directA = A.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectA = A.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directBDC = iBDC.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectBDC = iBDC.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directB = B.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectB = B.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directDE = iDE.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectDE = iDE.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directC = C.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectC = C.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Assertions.assertEquals(Set.of("A", "G"), directAG);
+        Assertions.assertEquals(Set.of("C", "D"), directBDC);
+        Assertions.assertEquals(Set.of("D", "E"), directDE);
 
-        Assertions.assertEquals(Set.of("A", "G"), directA);
-        Assertions.assertEquals(Set.of("C", "D"), directB);
-        Assertions.assertEquals(Set.of("D", "E"), directC);
-
-        Assertions.assertEquals(Set.of("A", "G"), indirectA);
-        Assertions.assertEquals(Set.of("B", "C", "D"), indirectB);
-        Assertions.assertEquals(Set.of("D", "E"), indirectC);
+        Assertions.assertEquals(Set.of("A", "G"), indirectAG);
+        Assertions.assertEquals(Set.of("B", "C", "D"), indirectBDC);
+        Assertions.assertEquals(Set.of("D", "E"), indirectDE);
     }
 
     @ParameterizedTest
@@ -527,58 +469,47 @@ public class IndividualClassesTest {
             "RDFS_MEM_RDFS_INF",
     })
     public void testListOntClasses4c(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.inst);
-        OntClass a = m.createClass(NS + "A");
-        OntClass b = m.createClass(NS + "B");
-        OntClass c = m.createClass(NS + "C");
-        OntClass d = m.createClass(NS + "D");
-        OntClass e = m.createClass(NS + "E");
-        OntClass f = m.createClass(NS + "F");
-        OntClass g = m.createClass(NS + "G");
-
         //      A   G
         //     / \   \
         //    B   C = F
         //   / \ /
         //  D   E
+        OntModel m = TestModelFactory.createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        OntClass E = m.getOntClass(NS + "E");
+        OntClass G = m.getOntClass(NS + "G");
 
-        a.addSubClass(b);
-        a.addSubClass(c);
-        b.addSubClass(d);
-        b.addSubClass(e);
-        c.addSubClass(e);
-        c.addSubClass(f);
-        f.addSubClass(c);
-        f.addSuperClass(g);
+        Individual iAG = m.createIndividual("iA", A);
+        iAG.addOntClass(G);
 
-        Individual A = m.createIndividual("iA", a);
-        A.addOntClass(g);
+        Individual iBDC = m.createIndividual("iB", B);
+        iBDC.addOntClass(D);
+        iBDC.addOntClass(C);
 
-        Individual B = m.createIndividual("iB", b);
-        B.addOntClass(d);
-        B.addOntClass(c);
+        Individual iDE = m.createIndividual("iD", D);
+        iDE.addOntClass(E);
 
-        Individual C = m.createIndividual("iC", d);
-        C.addOntClass(e);
+        Set<String> directAG = iAG.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectAG = iAG.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directA = A.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectA = A.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directBDC = iBDC.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectBDC = iBDC.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directB = B.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectB = B.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
-
-        Set<String> directC = C.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectC = C.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directDE = iDE.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectDE = iDE.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
         String R = spec.equals(TestSpec.OWL_MEM_MICRO_RULE_INF) ? null : "Resource";
         String T = spec.equals(TestSpec.RDFS_MEM_RDFS_INF) ? null :  "Thing";
 
-        Assertions.assertEquals(Set.of("A", "G"), directA);
-        Assertions.assertEquals(Set.of("C", "D", "F"), directB);
-        Assertions.assertEquals(Set.of("D", "E"), directC);
+        Assertions.assertEquals(Set.of("A", "G"), directAG);
+        Assertions.assertEquals(Set.of("C", "D", "F"), directBDC);
+        Assertions.assertEquals(Set.of("D", "E"), directDE);
 
-        Assertions.assertEquals(Stream.of("A", "G", T, R).filter(Objects::nonNull).collect(Collectors.toSet()), indirectA);
-        Assertions.assertEquals(Stream.of("A", "B", "C", "D", "F", "G", T, R).filter(Objects::nonNull).collect(Collectors.toSet()), indirectB);
-        Assertions.assertEquals(Stream.of("A", "B", "C", "D", "E", "F", "G", T, R).filter(Objects::nonNull).collect(Collectors.toSet()), indirectC);
+        Assertions.assertEquals(Stream.of("A", "G", T, R).filter(Objects::nonNull).collect(Collectors.toSet()), indirectAG);
+        Assertions.assertEquals(Stream.of("A", "B", "C", "D", "F", "G", T, R).filter(Objects::nonNull).collect(Collectors.toSet()), indirectBDC);
+        Assertions.assertEquals(Stream.of("A", "B", "C", "D", "E", "F", "G", T, R).filter(Objects::nonNull).collect(Collectors.toSet()), indirectDE);
     }
 }
