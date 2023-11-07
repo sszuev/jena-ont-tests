@@ -12,14 +12,24 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.gitlab.sszuev.jena.ont.TestModelFactory.NS;
+import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesABCDAEB;
+import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesAGBCFDE;
+import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesiAEDcCABiAE;
 
 public class IndividualClassesTest {
+
+    @SafeVarargs
+    static <X> Set<X> hashSetOf(X... items) {
+        return new HashSet<>(Arrays.asList(items));
+    }
 
     @ParameterizedTest
     @EnumSource(names = {
@@ -37,6 +47,9 @@ public class IndividualClassesTest {
     })
     public void testListOntClasses1a(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.inst);
+        // A [x]
+        // |
+        // B
         OntClass A = m.createClass(NS + "A");
         OntClass B = m.createClass(NS + "B");
         A.addSubClass(B);
@@ -142,7 +155,7 @@ public class IndividualClassesTest {
         //    B   C = F
         //   / \ /
         //  D   E
-        OntModel m = TestModelFactory.createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
+        OntModel m = createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
 
         Individual iA = m.createIndividual("iA", m.getOntClass(NS + "A"));
         Individual iB = m.createIndividual("iB", m.getOntClass(NS + "B"));
@@ -222,7 +235,7 @@ public class IndividualClassesTest {
         //    B   C = F
         //   / \ /
         //  D   E
-        OntModel m = TestModelFactory.createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
+        OntModel m = createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
 
         Individual iA = m.createIndividual("iA", m.getOntClass(NS + "A"));
         Individual iB = m.createIndividual("iB", m.getOntClass(NS + "B"));
@@ -300,7 +313,7 @@ public class IndividualClassesTest {
         //    B   C = F
         //   / \ /
         //  D   E
-        OntModel m = TestModelFactory.createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
+        OntModel m = createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
 
         Individual iA = m.createIndividual("iA", m.getOntClass(NS + "A"));
         Individual iB = m.createIndividual("iB", m.getOntClass(NS + "B"));
@@ -332,7 +345,7 @@ public class IndividualClassesTest {
         Set<String> indirectG = iG.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
         String R = spec.equals(TestSpec.OWL_MEM_MICRO_RULE_INF) ? null : "Resource";
-        String T = spec.equals(TestSpec.RDFS_MEM_RDFS_INF) ? null :  "Thing";
+        String T = spec.equals(TestSpec.RDFS_MEM_RDFS_INF) ? null : "Thing";
 
         Assertions.assertEquals(Set.of("A"), directA);
         Assertions.assertEquals(Set.of("B"), directB);
@@ -363,7 +376,7 @@ public class IndividualClassesTest {
         //    B   C = F
         //   / \ /
         //  D   E
-        OntModel m = TestModelFactory.createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
+        OntModel m = createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
         OntClass A = m.getOntClass(NS + "A");
         OntClass B = m.getOntClass(NS + "B");
         OntClass C = m.getOntClass(NS + "C");
@@ -423,7 +436,7 @@ public class IndividualClassesTest {
         //    B   C = F
         //   / \ /
         //  D   E
-        OntModel m = TestModelFactory.createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
+        OntModel m = createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
         OntClass A = m.getOntClass(NS + "A");
         OntClass B = m.getOntClass(NS + "B");
         OntClass C = m.getOntClass(NS + "C");
@@ -474,7 +487,7 @@ public class IndividualClassesTest {
         //    B   C = F
         //   / \ /
         //  D   E
-        OntModel m = TestModelFactory.createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
+        OntModel m = createClassesAGBCFDE(ModelFactory.createOntologyModel(spec.inst));
         OntClass A = m.getOntClass(NS + "A");
         OntClass B = m.getOntClass(NS + "B");
         OntClass C = m.getOntClass(NS + "C");
@@ -502,7 +515,7 @@ public class IndividualClassesTest {
         Set<String> indirectDE = iDE.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
 
         String R = spec.equals(TestSpec.OWL_MEM_MICRO_RULE_INF) ? null : "Resource";
-        String T = spec.equals(TestSpec.RDFS_MEM_RDFS_INF) ? null :  "Thing";
+        String T = spec.equals(TestSpec.RDFS_MEM_RDFS_INF) ? null : "Thing";
 
         Assertions.assertEquals(Set.of("A", "G"), directAG);
         Assertions.assertEquals(Set.of("C", "D", "F"), directBDC);
@@ -511,5 +524,370 @@ public class IndividualClassesTest {
         Assertions.assertEquals(Stream.of("A", "G", T, R).filter(Objects::nonNull).collect(Collectors.toSet()), indirectAG);
         Assertions.assertEquals(Stream.of("A", "B", "C", "D", "F", "G", T, R).filter(Objects::nonNull).collect(Collectors.toSet()), indirectBDC);
         Assertions.assertEquals(Stream.of("A", "B", "C", "D", "E", "F", "G", T, R).filter(Objects::nonNull).collect(Collectors.toSet()), indirectDE);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RDFS_INF",
+    })
+    public void textListOntClasses5a(TestSpec spec) {
+        //  A   B
+        //  .\ /.
+        //  . C .
+        //  . | .
+        //  . D .
+        //  ./  .
+        //  A   .   E
+        //   \  .  |
+        //    \ . /
+        //      B
+        OntModel m = createClassesABCDAEB(ModelFactory.createOntologyModel(spec.inst));
+
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass D = m.getOntClass(NS + "D");
+
+        Individual iAD = A.createIndividual("i");
+        iAD.addOntClass(D);
+        Individual iDB = D.createIndividual();
+        iDB.addOntClass(B);
+
+        Set<String> directDB = iDB.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectDB = iDB.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directAD = iAD.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectAD = iAD.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-DB::" + directDB);
+        System.out.println("INDIRECT-DB::" + indirectDB);
+        System.out.println("DIRECT-AD::" + directAD);
+        System.out.println("INDIRECT-AD::" + indirectAD);
+
+        Assertions.assertEquals(Set.of("A", "B", "C", "D"), directDB);
+        Assertions.assertEquals(Set.of("A", "B", "C", "D", "E"), indirectDB);
+        Assertions.assertEquals(Set.of("A", "B", "C", "D"), directAD);
+        Assertions.assertEquals(Set.of("A", "B", "C", "D", "E"), indirectAD);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_DL_MEM",
+            "OWL_LITE_MEM",
+            "RDFS_MEM",
+    })
+    public void textListOntClasses5b(TestSpec spec) {
+        //  A   B
+        //  .\ /.
+        //  . C .
+        //  . | .
+        //  . D .
+        //  ./  .
+        //  A   .   E
+        //   \  .  |
+        //    \ . /
+        //      B
+        OntModel m = createClassesABCDAEB(ModelFactory.createOntologyModel(spec.inst));
+
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass D = m.getOntClass(NS + "D");
+
+        Individual iAD = A.createIndividual("i");
+        iAD.addOntClass(D);
+        Individual iDB = D.createIndividual();
+        iDB.addOntClass(B);
+
+        Set<String> directDB = iDB.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectDB = iDB.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directAD = iAD.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectAD = iAD.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-DB::" + directDB);
+        System.out.println("INDIRECT-DB::" + indirectDB);
+        System.out.println("DIRECT-AD::" + directAD);
+        System.out.println("INDIRECT-AD::" + indirectAD);
+
+        Assertions.assertEquals(Set.of("B", "D"), directDB);
+        Assertions.assertEquals(Set.of("B", "D"), indirectDB);
+        Assertions.assertEquals(Set.of("A"), directAD);
+        Assertions.assertEquals(Set.of("A", "D"), indirectAD);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "RDFS_MEM_RDFS_INF",
+    })
+    public void textListOntClasses5c(TestSpec spec) {
+        //  A   B
+        //  .\ /.
+        //  . C .
+        //  . | .
+        //  . D .
+        //  ./  .
+        //  A   .   E
+        //   \  .  |
+        //    \ . /
+        //      B
+        OntModel m = createClassesABCDAEB(ModelFactory.createOntologyModel(spec.inst));
+
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass D = m.getOntClass(NS + "D");
+
+        Individual iAD = A.createIndividual("i");
+        iAD.addOntClass(D);
+        Individual iDB = D.createIndividual();
+        iDB.addOntClass(B);
+
+        Set<String> directDB = iDB.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectDB = iDB.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directAD = iAD.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectAD = iAD.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-DB::" + directDB);
+        System.out.println("INDIRECT-DB::" + indirectDB);
+        System.out.println("DIRECT-AD::" + directAD);
+        System.out.println("INDIRECT-AD::" + indirectAD);
+
+        String R = null;
+        String T = null;
+        if (TestSpec.OWL_MEM_RULE_INF.equals(spec) ||
+                TestSpec.OWL_DL_MEM_RULE_INF.equals(spec) ||
+                TestSpec.OWL_MEM_MINI_RULE_INF.equals(spec) ||
+                TestSpec.OWL_LITE_MEM_RULES_INF.equals(spec)) {
+            R = "Resource";
+            T = "Thing";
+        } else if (TestSpec.OWL_MEM_MICRO_RULE_INF.equals(spec)) {
+            T = "Thing";
+        } else if (TestSpec.RDFS_MEM_RDFS_INF.equals(spec)) {
+            R = "Resource";
+        }
+
+        Assertions.assertEquals(Stream.of("A", "B", "C", "D").collect(Collectors.toSet()), directDB);
+        Assertions.assertEquals(Stream.of("A", "B", "C", "D", "E", R, T).filter(Objects::nonNull).collect(Collectors.toSet()), indirectDB);
+        Assertions.assertEquals(Stream.of("A", "B", "C", "D").collect(Collectors.toSet()), directAD);
+        Assertions.assertEquals(Stream.of("A", "B", "C", "D", "E", R, T).filter(Objects::nonNull).collect(Collectors.toSet()), indirectAD);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM_TRANS_INF",
+    })
+    public void textListOntClasses5d(TestSpec spec) {
+        //  A   B
+        //  .\ /.
+        //  . C .
+        //  . | .
+        //  . D .
+        //  ./  .
+        //  A   .   E
+        //   \  .  |
+        //    \ . /
+        //      B
+        OntModel m = createClassesABCDAEB(ModelFactory.createOntologyModel(spec.inst));
+
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass D = m.getOntClass(NS + "D");
+
+        Individual iAD = A.createIndividual("i");
+        iAD.addOntClass(D);
+        Individual iDB = D.createIndividual();
+        iDB.addOntClass(B);
+
+        Set<String> directDB = iDB.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectDB = iDB.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directAD = iAD.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectAD = iAD.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-DB::" + directDB);
+        System.out.println("INDIRECT-DB::" + indirectDB);
+        System.out.println("DIRECT-AD::" + directAD);
+        System.out.println("INDIRECT-AD::" + indirectAD);
+
+        Assertions.assertEquals(Set.of("B", "D"), directDB);
+        Assertions.assertEquals(Set.of("B", "D"), indirectDB);
+        Assertions.assertEquals(Set.of("A", "D"), directAD);
+        Assertions.assertEquals(Set.of("A", "D"), indirectAD);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_DL_MEM",
+    })
+    public void testListOntClasses6a(TestSpec spec) {
+        //         I_AE
+        //         |  .
+        //        D   .
+        //       /    .
+        // C_C  A     .
+        //  \  / \    .
+        //   B    \   .
+        //     \  /   .
+        //       I_A_E
+        OntModel m = createClassesiAEDcCABiAE(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getResource(NS + "A").as(OntClass.class);
+        OntClass B = m.getResource(NS + "B").as(OntClass.class);
+        OntClass D = m.getResource(NS + "D").as(OntClass.class);
+
+        Individual iAD = A.createIndividual("iAD");
+        iAD.addOntClass(D);
+        Individual iDB = D.createIndividual();
+        iDB.addOntClass(B);
+
+        Set<String> directDB = iDB.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectDB = iDB.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directAD = iAD.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectAD = iAD.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-DB::" + directDB);
+        System.out.println("INDIRECT-DB::" + indirectDB);
+        System.out.println("DIRECT-AD::" + directAD);
+        System.out.println("INDIRECT-AD::" + indirectAD);
+
+        Assertions.assertEquals(Set.of("B", "D"), directDB);
+        Assertions.assertEquals(Set.of("B", "D"), indirectDB);
+        Assertions.assertEquals(Set.of("A"), directAD);
+        Assertions.assertEquals(Set.of("A", "D"), indirectAD);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RDFS_INF",
+    })
+    public void testListOntClasses6b(TestSpec spec) {
+        //         I_AE
+        //         |  .
+        //        D   .
+        //       /    .
+        // C_C  A     .
+        //  \  / \    .
+        //   B    \   .
+        //     \  /   .
+        //       I_A_E
+        OntModel m = createClassesiAEDcCABiAE(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getResource(NS + "A").as(OntClass.class);
+        OntClass B = m.getResource(NS + "B").as(OntClass.class);
+        OntClass D = m.getResource(NS + "D").as(OntClass.class);
+
+        Individual iAD = A.createIndividual("iAD");
+        iAD.addOntClass(D);
+        Individual iDB = D.createIndividual();
+        iDB.addOntClass(B);
+
+        Set<String> directDB = iDB.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectDB = iDB.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directAD = iAD.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectAD = iAD.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-DB::" + directDB);
+        System.out.println("INDIRECT-DB::" + indirectDB);
+        System.out.println("DIRECT-AD::" + directAD);
+        System.out.println("INDIRECT-AD::" + indirectAD);
+
+        Assertions.assertEquals(hashSetOf(null, "A", "B", "D"), directDB);
+        Assertions.assertEquals(hashSetOf(null, "A", "B", "D"), indirectDB);
+        Assertions.assertEquals(hashSetOf(null, "A", "B", "D"), directAD);
+        Assertions.assertEquals(hashSetOf(null, "A", "B", "D"), indirectAD);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RULE_INF",
+    })
+    public void testListOntClasses6c(TestSpec spec) {
+        //         I_AE
+        //         |  .
+        //        D   .
+        //       /    .
+        // C_C  A     .
+        //  \  / \    .
+        //   B    \   .
+        //     \  /   .
+        //       I_A_E
+        OntModel m = createClassesiAEDcCABiAE(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getResource(NS + "A").as(OntClass.class);
+        OntClass B = m.getResource(NS + "B").as(OntClass.class);
+        OntClass D = m.getResource(NS + "D").as(OntClass.class);
+
+        Individual iAD = A.createIndividual("iAD");
+        iAD.addOntClass(D);
+        Individual iDB = D.createIndividual();
+        iDB.addOntClass(B);
+
+        Set<String> directDB = iDB.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectDB = iDB.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directAD = iAD.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectAD = iAD.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-DB::" + directDB);
+        System.out.println("INDIRECT-DB::" + indirectDB);
+        System.out.println("DIRECT-AD::" + directAD);
+        System.out.println("INDIRECT-AD::" + indirectAD);
+
+        Set<String> expectedDirect = hashSetOf(null, "A", "B", "D");
+        Set<String> expectedIndirect = spec == TestSpec.OWL_MEM_MICRO_RULE_INF ?
+                hashSetOf(null, "A", "B", "D", "E", "Thing") :
+                hashSetOf(null, "A", "B", "D", "E", "Resource", "Thing");
+        Assertions.assertEquals(expectedDirect, directDB);
+        Assertions.assertEquals(expectedIndirect, indirectDB);
+        Assertions.assertEquals(expectedDirect, directAD);
+        Assertions.assertEquals(expectedIndirect, indirectAD);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM_TRANS_INF",
+    })
+    public void testListOntClasses6d(TestSpec spec) {
+        //         I_AE
+        //         |  .
+        //        D   .
+        //       /    .
+        // C_C  A     .
+        //  \  / \    .
+        //   B    \   .
+        //     \  /   .
+        //       I_A_E
+        OntModel m = createClassesiAEDcCABiAE(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getResource(NS + "A").as(OntClass.class);
+        OntClass B = m.getResource(NS + "B").as(OntClass.class);
+        OntClass D = m.getResource(NS + "D").as(OntClass.class);
+
+        Individual iAD = A.createIndividual("iAD");
+        iAD.addOntClass(D);
+        Individual iDB = D.createIndividual();
+        iDB.addOntClass(B);
+
+        Set<String> directDB = iDB.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectDB = iDB.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directAD = iAD.listOntClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectAD = iAD.listOntClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-DB::" + directDB);
+        System.out.println("INDIRECT-DB::" + indirectDB);
+        System.out.println("DIRECT-AD::" + directAD);
+        System.out.println("INDIRECT-AD::" + indirectAD);
+
+        Assertions.assertEquals(hashSetOf("B", "D"), directDB);
+        Assertions.assertEquals(hashSetOf( "B", "D"), indirectDB);
+        Assertions.assertEquals(hashSetOf("A",  "D"), directAD);
+        Assertions.assertEquals(hashSetOf("A",  "D"), indirectAD);
     }
 }

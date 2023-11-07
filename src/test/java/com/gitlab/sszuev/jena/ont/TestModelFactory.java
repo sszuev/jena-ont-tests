@@ -187,4 +187,130 @@ class TestModelFactory {
         return m;
     }
 
+    static OntModel createClassesABCDAEB(OntModel m) {
+        //  A   B
+        //  .\ /.
+        //  . C .
+        //  . | .
+        //  . D .
+        //  ./    .
+        //  A   .   E
+        //   \  .  |
+        //    \ . /
+        //      B
+
+        OntClass A = m.createClass(NS + "A");
+        OntClass B = m.createClass(NS + "B");
+        OntClass C = m.createClass(NS + "C");
+        OntClass D = m.createClass(NS + "D");
+        OntClass E = m.createClass(NS + "E");
+
+        B.addSuperClass(E);
+        B.addSuperClass(A);
+
+        A.addSuperClass(D);
+        D.addSuperClass(C);
+        C.addSuperClass(A);
+        C.addSuperClass(B);
+
+        return m;
+    }
+
+    static OntModel createClassesABCDEFBCF(OntModel m) {
+        //      A       B
+        //    /   \   / |
+        //  /       C   |
+        // |      / .   |
+        // |    D   .   |
+        // |  / |   .   |
+        // E    |   .   |
+        //   \  |   .   |
+        //     F ...... F
+        //       \  .
+        //        \ .
+        //          C
+
+        OntClass A = m.createClass(NS + "A");
+        OntClass B = m.createClass(NS + "B");
+        OntClass C = m.createClass(NS + "C");
+        OntClass D = m.createClass(NS + "D");
+        OntClass E = m.createClass(NS + "E");
+        OntClass F = m.createClass(NS + "F");
+
+        C.addSuperClass(F);
+        C.addSuperClass(A);
+        C.addSuperClass(B);
+
+        F.addSuperClass(E);
+        F.addSuperClass(D);
+        F.addSuperClass(B);
+
+        E.addSuperClass(A);
+        E.addSuperClass(D);
+
+        D.addSuperClass(C);
+
+        return m;
+    }
+
+    static OntModel createClassesBCA(OntModel m) {
+        // B = C
+        //  \ |
+        //    A
+
+        OntClass A = m.createClass(NS + "A");
+        OntClass B = m.createClass(NS + "B");
+        OntClass C = m.createClass(NS + "C");
+
+        A.addSuperClass(B);
+        A.addSuperClass(C);
+        B.addSuperClass(C);
+        C.addSuperClass(B);
+        return m;
+    }
+
+    static OntModel createClassesABC(OntModel m) {
+        //    A
+        //  /  \
+        // B  = C
+
+        OntClass A = m.createClass(NS + "A");
+        OntClass B = m.createClass(NS + "B");
+        OntClass C = m.createClass(NS + "C");
+
+        B.addSuperClass(A);
+        C.addSuperClass(A);
+        B.addSuperClass(C);
+        C.addSuperClass(B);
+        return m;
+    }
+
+    static OntModel createClassesiAEDcCABiAE(OntModel m) {
+        //         I_AE
+        //         |  .
+        //        D   .
+        //       /    .
+        // C_C  A     .
+        //  \  / \    .
+        //   B    \   .
+        //     \  /   .
+        //       I_A_E
+
+        OntClass A = m.createClass(NS + "A");
+        OntClass B = m.createClass(NS + "B");
+        OntClass C = m.createClass(NS + "C");
+        OntClass D = m.createClass(NS + "D");
+        OntClass E = m.createClass(NS + "E");
+        OntClass complementOf_C = m.createComplementClass(null, C);
+        OntClass intersectionOf_A_E = m.createIntersectionClass(null, m.createList(A, E));
+
+        B.addSuperClass(complementOf_C);
+        B.addSuperClass(A);
+        D.addSuperClass(intersectionOf_A_E);
+        A.addSuperClass(D);
+        intersectionOf_A_E.addSuperClass(A);
+        intersectionOf_A_E.addSuperClass(B);
+
+        return m;
+    }
 }

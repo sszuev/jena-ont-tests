@@ -19,6 +19,7 @@ import java.util.Set;
 import static com.gitlab.sszuev.jena.ont.TestModelFactory.NS;
 import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesABCDEF;
 import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesABCDEFGHKLM;
+import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesBCA;
 import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesDBFCEA;
 
 public class ClassSuperClassesTest {
@@ -118,10 +119,10 @@ public class ClassSuperClassesTest {
         //   / \ / \
         //  D   E   F
         OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
-        OntClass A = m.getOntClass(NS + "A");
-        OntClass B = m.getOntClass(NS + "B");
-        OntClass C = m.getOntClass(NS + "C");
-        OntClass E = m.getOntClass(NS + "E");
+        OntClass A = m.getResource(NS + "A").as(OntClass.class);
+        OntClass B = m.getResource(NS + "B").as(OntClass.class);
+        OntClass C = m.getResource(NS + "C").as(OntClass.class);
+        OntClass E = m.getResource(NS + "E").as(OntClass.class);
 
         Set<String> directA = A.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> directB = B.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
@@ -152,10 +153,10 @@ public class ClassSuperClassesTest {
         //   / \ / \
         //  D   E   F
         OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF));
-        OntClass a = m.getOntClass(NS + "A");
-        OntClass b = m.getOntClass(NS + "B");
-        OntClass c = m.getOntClass(NS + "C");
-        OntClass e = m.getOntClass(NS + "E");
+        OntClass a = m.getResource(NS + "A").as(OntClass.class);
+        OntClass b = m.getResource(NS + "B").as(OntClass.class);
+        OntClass c = m.getResource(NS + "C").as(OntClass.class);
+        OntClass e = m.getResource(NS + "E").as(OntClass.class);
 
         JunitExtensions.assertValues("", e.listSuperClasses(), b, c, a, OWL.Thing);
         JunitExtensions.assertValues("", e.listSuperClasses(false), b, c, a, OWL.Thing);
@@ -192,14 +193,10 @@ public class ClassSuperClassesTest {
         // B = C
         //  \ |
         //    A
-        OntModel m = ModelFactory.createOntologyModel(spec.inst);
-        OntClass A = m.createClass(NS + "A");
-        OntClass B = m.createClass(NS + "B");
-        OntClass C = m.createClass(NS + "C");
-        A.addSuperClass(B);
-        A.addSuperClass(C);
-        B.addSuperClass(C);
-        C.addSuperClass(B);
+        OntModel m = createClassesBCA(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getResource(NS + "A").as(OntClass.class);
+        OntClass B = m.getResource(NS + "B").as(OntClass.class);
+        OntClass C = m.getResource(NS + "C").as(OntClass.class);
 
         Set<String> directA = A.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
         Set<String> directB = B.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
@@ -216,6 +213,127 @@ public class ClassSuperClassesTest {
         Assertions.assertEquals(Set.of("B", "C"), indirectA);
         Assertions.assertEquals(Set.of("C"), indirectB);
         Assertions.assertEquals(Set.of("B"), indirectC);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_LITE_MEM_RULES_INF",
+    })
+    public void testListSuperClasses3b(TestSpec spec) {
+        // B = C
+        //  \ |
+        //    A
+        OntModel m = createClassesBCA(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getResource(NS + "A").as(OntClass.class);
+        OntClass B = m.getResource(NS + "B").as(OntClass.class);
+        OntClass C = m.getResource(NS + "C").as(OntClass.class);
+
+        Set<String> directA = A.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> directB = B.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> directC = C.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> indirectA = A.listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = B.listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = C.listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+
+        Assertions.assertEquals(Set.of("B", "C"), directA);
+        Assertions.assertEquals(Set.of("Thing"), directB);
+        Assertions.assertEquals(Set.of("Thing"), directC);
+
+        Assertions.assertEquals(Set.of("B", "C", "Resource", "Thing"), indirectA);
+        Assertions.assertEquals(Set.of("C", "Resource", "Thing"), indirectB);
+        Assertions.assertEquals(Set.of("B", "Resource", "Thing"), indirectC);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM_TRANS_INF",
+    })
+    public void testListSuperClasses3c(TestSpec spec) {
+        // B = C
+        //  \ |
+        //    A
+        OntModel m = createClassesBCA(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getResource(NS + "A").as(OntClass.class);
+        OntClass B = m.getResource(NS + "B").as(OntClass.class);
+        OntClass C = m.getResource(NS + "C").as(OntClass.class);
+
+        Set<String> directA = A.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> directB = B.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> directC = C.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> indirectA = A.listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = B.listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = C.listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+
+        Assertions.assertEquals(Set.of("B", "C"), directA);
+        Assertions.assertEquals(Set.of("C"), directB);
+        Assertions.assertEquals(Set.of("B"), directC);
+
+        Assertions.assertEquals(Set.of("B", "C"), indirectA);
+        Assertions.assertEquals(Set.of("C"), indirectB);
+        Assertions.assertEquals(Set.of("B"), indirectC);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_MICRO_RULE_INF",
+            "RDFS_MEM_RDFS_INF",
+    })
+    public void testListSuperClasses3d(TestSpec spec) {
+        // B = C
+        //  \ |
+        //    A
+        OntModel m = createClassesBCA(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getResource(NS + "A").as(OntClass.class);
+        OntClass B = m.getResource(NS + "B").as(OntClass.class);
+        OntClass C = m.getResource(NS + "C").as(OntClass.class);
+
+        Set<String> directA = A.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> directB = B.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> directC = C.listSuperClasses(true).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> indirectA = A.listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = B.listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = C.listSuperClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+
+        String RT = spec == TestSpec.RDFS_MEM_RDFS_INF ? "Resource" : "Thing";
+
+        Assertions.assertEquals(Set.of("B", "C"), directA);
+        Assertions.assertEquals(Set.of(RT), directB);
+        Assertions.assertEquals(Set.of(RT), directC);
+
+        Assertions.assertEquals(Set.of("B", "C", RT), indirectA);
+        Assertions.assertEquals(Set.of("C", RT), indirectB);
+        Assertions.assertEquals(Set.of("B", RT), indirectC);
     }
 
     @Test
@@ -741,5 +859,4 @@ public class ClassSuperClassesTest {
         Assertions.assertEquals(Set.of("D", "F", "Resource"), indirectE);
         Assertions.assertEquals(Set.of("D", "Resource"), indirectF);
     }
-
 }
