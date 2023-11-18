@@ -313,4 +313,24 @@ class TestModelFactory {
 
         return m;
     }
+
+    public static OntModel createClassesDBCA(OntModel m) {
+        //     D
+        //    | \
+        // B  |  C
+        //  \ | /
+        //    A
+
+        OntClass A = m.createClass(NS + "A");
+        OntClass B = m.createClass(NS + "B");
+        OntClass C = m.createClass(NS + "C");
+        OntClass D = m.createClass(NS + "D");
+
+        A.addSuperClass(D);
+        A.addSuperClass(B);
+        A.addSuperClass(C);
+        C.addSuperClass(D);
+
+        return m;
+    }
 }

@@ -7,18 +7,19 @@ import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.vocabulary.OWL;
-import org.apache.jena.vocabulary.RDF;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.gitlab.sszuev.jena.ont.TestModelFactory.NS;
+import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesABCDAEB;
 import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesABCDEF;
 import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesABCDEFGHKLM;
+import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesBCA;
+import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesDBCA;
 
 public class ClassIndividualsTest {
 
@@ -47,8 +48,8 @@ public class ClassIndividualsTest {
     })
     public void testDropIndividual(TestSpec spec) {
         OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
-        OntClass a = m.getOntClass(NS + "A");
-        OntClass b = m.getOntClass(NS + "B");
+        OntClass a = m.getResource(NS + "A").as(OntClass.class);
+        OntClass b = m.getResource(NS + "B").as(OntClass.class);
         Individual ia = a.createIndividual(NS + "iA");
         ia.addOntClass(b);
 
@@ -87,8 +88,8 @@ public class ClassIndividualsTest {
     })
     public void testListInstances0(TestSpec spec) {
         OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
-        OntClass a = m.getOntClass(NS + "A");
-        OntClass b = m.getOntClass(NS + "B");
+        OntClass a = m.getResource(NS + "A").as(OntClass.class);
+        OntClass b = m.getResource(NS + "B").as(OntClass.class);
 
         Individual ia = a.createIndividual();
         Individual ib = b.createIndividual();
@@ -114,11 +115,11 @@ public class ClassIndividualsTest {
     })
     public void testListInstances1(TestSpec spec) {
         OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
-        OntClass a = m.getOntClass(NS + "A");
-        OntClass b = m.getOntClass(NS + "B");
-        OntClass c = m.getOntClass(NS + "C");
-        OntClass d = m.getOntClass(NS + "D");
-        OntClass e = m.getOntClass(NS + "E");
+        OntClass a = m.getResource(NS + "A").as(OntClass.class);
+        OntClass b = m.getResource(NS + "B").as(OntClass.class);
+        OntClass c = m.getResource(NS + "C").as(OntClass.class);
+        OntClass d = m.getResource(NS + "D").as(OntClass.class);
+        OntClass e = m.getResource(NS + "E").as(OntClass.class);
 
         Individual ia = a.createIndividual(NS + "iA");
         Individual ib = b.createIndividual(NS + "iB");
@@ -147,11 +148,11 @@ public class ClassIndividualsTest {
     })
     public void testListInstances2(TestSpec spec) {
         OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
-        OntClass a = m.getOntClass(NS + "A");
-        OntClass b = m.getOntClass(NS + "B");
-        OntClass c = m.getOntClass(NS + "C");
-        OntClass d = m.getOntClass(NS + "D");
-        OntClass e = m.getOntClass(NS + "E");
+        OntClass a = m.getResource(NS + "A").as(OntClass.class);
+        OntClass b = m.getResource(NS + "B").as(OntClass.class);
+        OntClass c = m.getResource(NS + "C").as(OntClass.class);
+        OntClass d = m.getResource(NS + "D").as(OntClass.class);
+        OntClass e = m.getResource(NS + "E").as(OntClass.class);
 
         Individual ia = a.createIndividual(NS + "iA");
         Individual ib = b.createIndividual(NS + "iB");
@@ -170,11 +171,15 @@ public class ClassIndividualsTest {
     @EnumSource(names = {
             "OWL_MEM_RULE_INF",
             "OWL_MEM_RDFS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
             "OWL_MEM_MINI_RULE_INF",
             "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
             "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "RDFS_MEM_RDFS_INF",
     })
-    public void testListInstances3(TestSpec spec) {
+    public void testListInstances3a(TestSpec spec) {
         //     A
         //   /  / \
         //  /  B   C
@@ -186,43 +191,41 @@ public class ClassIndividualsTest {
         //      L   M
 
         OntModel m = createClassesABCDEFGHKLM(ModelFactory.createOntologyModel(spec.inst));
-        m.listStatements(null, RDF.type, OWL.Class)
-                .mapWith(Statement::getSubject)
-                .mapWith(x -> x.as(OntClass.class))
-                .toList()
-                .forEach(x -> x.createIndividual(NS + "i" + x.getLocalName()));
-        Set<String> directA = m.getOntClass(NS + "A").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectA = m.getOntClass(NS + "A").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Stream.of("A", "B", "C", "D", "E", "F", "G", "H", "K", "L", "M")
+                .forEach(s -> m.createResource(NS + "i" + s, m.getResource(NS + s)));
 
-        Set<String> directB = m.getOntClass(NS + "B").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectB = m.getOntClass(NS + "B").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directA = m.getResource(NS + "A").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = m.getResource(NS + "A").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directC = m.getOntClass(NS + "C").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectC = m.getOntClass(NS + "C").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directB = m.getResource(NS + "B").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = m.getResource(NS + "B").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directD = m.getOntClass(NS + "D").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectD = m.getOntClass(NS + "D").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directC = m.getResource(NS + "C").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = m.getResource(NS + "C").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directE = m.getOntClass(NS + "E").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectE = m.getOntClass(NS + "E").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directD = m.getResource(NS + "D").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = m.getResource(NS + "D").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directF = m.getOntClass(NS + "F").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectF = m.getOntClass(NS + "F").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directE = m.getResource(NS + "E").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = m.getResource(NS + "E").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directG = m.getOntClass(NS + "G").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectG = m.getOntClass(NS + "G").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directF = m.getResource(NS + "F").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectF = m.getResource(NS + "F").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directH = m.getOntClass(NS + "H").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectH = m.getOntClass(NS + "H").listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> directG = m.getResource(NS + "G").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectG = m.getResource(NS + "G").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directK = m.getOntClass(NS + "K").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectK = m.getOntClass(NS + "K").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directH = m.getResource(NS + "H").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectH = m.getResource(NS + "H").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directL = m.getOntClass(NS + "L").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectL = m.getOntClass(NS + "L").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directK = m.getResource(NS + "K").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectK = m.getResource(NS + "K").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directM = m.getOntClass(NS + "M").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectM = m.getOntClass(NS + "M").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directL = m.getResource(NS + "L").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectL = m.getResource(NS + "L").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directM = m.getResource(NS + "M").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectM = m.getResource(NS + "M").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
 
         Assertions.assertEquals(Set.of("iA"), directA);
         Assertions.assertEquals(Set.of("iB"), directB);
@@ -251,38 +254,73 @@ public class ClassIndividualsTest {
 
     @ParameterizedTest
     @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_TRANS_INF",
+    })
+    public void testListInstances3b(TestSpec spec) {
+        //     A
+        //   /  / \
+        //  /  B   C
+        //  | / \ / \
+        //  D   E   F
+        // / \
+        // G  H = K
+        //       / \
+        //      L   M
+
+        OntModel m = createClassesABCDEFGHKLM(ModelFactory.createOntologyModel(spec.inst));
+        Stream.of("A", "B", "C", "D", "E", "F", "G", "H", "K", "L", "M")
+                .forEach(s -> m.createResource(NS + "i" + s, m.getResource(NS + s)));
+
+        Stream.of("A", "B", "C", "D", "E", "F", "G", "H", "K", "L", "M")
+                .forEach(s -> {
+                            Set<String> direct = m.getResource(NS + s).as(OntClass.class)
+                                    .listInstances(true).mapWith(Resource::getLocalName).toSet();
+                            Set<String> indirect = m.getResource(NS + s).as(OntClass.class)
+                                    .listInstances(false).mapWith(Resource::getLocalName).toSet();
+                            Assertions.assertEquals(Set.of("i" + s), direct);
+                            Assertions.assertEquals(Set.of("i" + s), indirect);
+                        }
+                );
+
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
             "OWL_MEM_RULE_INF",
             "OWL_MEM_RDFS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
             "OWL_MEM_MINI_RULE_INF",
             "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
             "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "RDFS_MEM_RDFS_INF",
     })
-    public void testListInstances4(TestSpec spec) {
+    public void testListInstances4a(TestSpec spec) {
         // B = C
         //  \ |
         //    A
-        OntModel m = ModelFactory.createOntologyModel(spec.inst);
-        OntClass A = m.createClass(NS + "A");
-        OntClass B = m.createClass(NS + "B");
-        OntClass C = m.createClass(NS + "C");
-        A.addSuperClass(B);
-        A.addSuperClass(C);
-        B.addSuperClass(C);
-        C.addSuperClass(B);
-        m.listStatements(null, RDF.type, OWL.Class)
-                .mapWith(Statement::getSubject)
-                .mapWith(x -> x.as(OntClass.class))
-                .toList()
-                .forEach(x -> x.createIndividual(NS + "i" + x.getLocalName()));
+        OntModel m = createClassesBCA(ModelFactory.createOntologyModel(spec.inst));
 
-        Set<String> directA = m.getOntClass(NS + "A").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectA = m.getOntClass(NS + "A").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        m.createResource(NS + "iA", m.getResource(NS + "A"));
+        m.createResource(NS + "iB", m.getResource(NS + "B"));
+        m.createResource(NS + "iC", m.getResource(NS + "C"));
 
-        Set<String> directB = m.getOntClass(NS + "B").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectB = m.getOntClass(NS + "B").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directA = m.getResource(NS + "A").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = m.getResource(NS + "A").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directC = m.getOntClass(NS + "C").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectC = m.getOntClass(NS + "C").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directB = m.getResource(NS + "B").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = m.getResource(NS + "B").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = m.getResource(NS + "C").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = m.getResource(NS + "C").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
 
         System.out.println("DIRECT-A::" + directA);
         System.out.println("DIRECT-B::" + directB);
@@ -301,44 +339,85 @@ public class ClassIndividualsTest {
 
     @ParameterizedTest
     @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_TRANS_INF",
+    })
+    public void testListInstances4b(TestSpec spec) {
+        // B = C
+        //  \ |
+        //    A
+        OntModel m = createClassesBCA(ModelFactory.createOntologyModel(spec.inst));
+
+        m.createResource(NS + "iA", m.getResource(NS + "A"));
+        m.createResource(NS + "iB", m.getResource(NS + "B"));
+        m.createResource(NS + "iC", m.getResource(NS + "C"));
+
+        Set<String> directA = m.getResource(NS + "A").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = m.getResource(NS + "A").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directB = m.getResource(NS + "B").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = m.getResource(NS + "B").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = m.getResource(NS + "C").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = m.getResource(NS + "C").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+
+        Assertions.assertEquals(Set.of("iA"), directA);
+        Assertions.assertEquals(Set.of("iB"), directB);
+        Assertions.assertEquals(Set.of("iC"), directC);
+        Assertions.assertEquals(Set.of("iA"), indirectA);
+        Assertions.assertEquals(Set.of("iB"), indirectB);
+        Assertions.assertEquals(Set.of("iC"), indirectC);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
             "OWL_MEM_RULE_INF",
             "OWL_MEM_RDFS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
             "OWL_MEM_MINI_RULE_INF",
             "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
             "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "RDFS_MEM_RDFS_INF",
     })
-    public void testListInstances5(TestSpec spec) {
+    public void testListInstances5a(TestSpec spec) {
         //     D
         //    | \
         // B  |  C
         //  \ | /
         //    A
-        OntModel m = ModelFactory.createOntologyModel(spec.inst);
-        OntClass A = m.createClass(NS + "A");
-        OntClass B = m.createClass(NS + "B");
-        OntClass C = m.createClass(NS + "C");
-        OntClass D = m.createClass(NS + "D");
-        C.addSubClass(A);
-        B.addSubClass(A);
-        D.addSubClass(C);
-        D.addSubClass(A);
-        m.listStatements(null, RDF.type, OWL.Class)
-                .mapWith(Statement::getSubject)
-                .mapWith(x -> x.as(OntClass.class))
-                .toList()
-                .forEach(x -> x.createIndividual(NS + "i" + x.getLocalName()));
+        OntModel m = createClassesDBCA(ModelFactory.createOntologyModel(spec.inst));
 
-        Set<String> directA = m.getOntClass(NS + "A").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectA = m.getOntClass(NS + "A").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        m.createResource(NS + "iA", m.getResource(NS + "A"));
+        m.createResource(NS + "iB", m.getResource(NS + "B"));
+        m.createResource(NS + "iC", m.getResource(NS + "C"));
+        m.createResource(NS + "iD", m.getResource(NS + "D"));
 
-        Set<String> directB = m.getOntClass(NS + "B").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectB = m.getOntClass(NS + "B").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directA = m.getResource(NS + "A").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = m.getResource(NS + "A").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directC = m.getOntClass(NS + "C").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectC = m.getOntClass(NS + "C").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directB = m.getResource(NS + "B").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = m.getResource(NS + "B").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directD = m.getOntClass(NS + "D").listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectD = m.getOntClass(NS + "D").listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directC = m.getResource(NS + "C").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = m.getResource(NS + "C").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directD = m.getResource(NS + "D").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = m.getResource(NS + "D").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
 
         System.out.println("DIRECT-A::" + directA);
         System.out.println("DIRECT-B::" + directB);
@@ -361,6 +440,61 @@ public class ClassIndividualsTest {
 
     @ParameterizedTest
     @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_TRANS_INF",
+    })
+    public void testListInstances5b(TestSpec spec) {
+        //     D
+        //    | \
+        // B  |  C
+        //  \ | /
+        //    A
+        OntModel m = createClassesDBCA(ModelFactory.createOntologyModel(spec.inst));
+
+        m.createResource(NS + "iA", m.getResource(NS + "A"));
+        m.createResource(NS + "iB", m.getResource(NS + "B"));
+        m.createResource(NS + "iC", m.getResource(NS + "C"));
+        m.createResource(NS + "iD", m.getResource(NS + "D"));
+
+        Set<String> directA = m.getResource(NS + "A").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = m.getResource(NS + "A").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directB = m.getResource(NS + "B").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = m.getResource(NS + "B").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = m.getResource(NS + "C").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = m.getResource(NS + "C").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directD = m.getResource(NS + "D").as(OntClass.class).listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = m.getResource(NS + "D").as(OntClass.class).listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("DIRECT-D::" + directD);
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+        System.out.println("INDIRECT-D::" + indirectD);
+
+        Assertions.assertEquals(Set.of("iA"), directA);
+        Assertions.assertEquals(Set.of("iB"), directB);
+        Assertions.assertEquals(Set.of("iC"), directC);
+        Assertions.assertEquals(Set.of("iD"), directD);
+        Assertions.assertEquals(Set.of("iA"), indirectA);
+        Assertions.assertEquals(Set.of("iB"), indirectB);
+        Assertions.assertEquals(Set.of("iC"), indirectC);
+        Assertions.assertEquals(Set.of("iD"), indirectD);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
             "OWL_MEM_RULE_INF",
             "OWL_MEM_RDFS_INF",
             "OWL_MEM_MICRO_RULE_INF",
@@ -371,43 +505,43 @@ public class ClassIndividualsTest {
             "OWL_LITE_MEM_RULES_INF",
             "RDFS_MEM_RDFS_INF",
     })
-    public void testListInstances6(TestSpec spec) {
+    public void testListInstances6a(TestSpec spec) {
         //      A
         //     / \
         //    B   C
         //   / \ / \
         //  D   E   F
         OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
-        OntClass a = m.getOntClass(NS + "A");
-        OntClass b = m.getOntClass(NS + "B");
-        OntClass c = m.getOntClass(NS + "C");
-        OntClass d = m.getOntClass(NS + "D");
-        OntClass e = m.getOntClass(NS + "E");
-        OntClass f = m.getOntClass(NS + "F");
+        OntClass A = m.getResource(NS + "A").as(OntClass.class);
+        OntClass B = m.getResource(NS + "B").as(OntClass.class);
+        OntClass C = m.getResource(NS + "C").as(OntClass.class);
+        OntClass D = m.getResource(NS + "D").as(OntClass.class);
+        OntClass E = m.getResource(NS + "E").as(OntClass.class);
+        OntClass F = m.getResource(NS + "F").as(OntClass.class);
 
-        a.createIndividual(NS + "iA");
-        b.createIndividual(NS + "iB");
-        c.createIndividual(NS + "iC");
-        d.createIndividual(NS + "iD");
-        e.createIndividual(NS + "iE");
+        A.createIndividual(NS + "iA");
+        B.createIndividual(NS + "iB");
+        C.createIndividual(NS + "iC");
+        D.createIndividual(NS + "iD");
+        E.createIndividual(NS + "iE");
 
-        Set<String> directA = a.listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectA = a.listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directA = A.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = A.listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directB = b.listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectB = b.listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directB = B.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = B.listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directC = c.listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectC = c.listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directC = C.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = C.listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directD = d.listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectD = d.listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directD = D.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = D.listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directE = e.listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectE = e.listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directE = E.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = E.listInstances(false).mapWith(Resource::getLocalName).toSet();
 
-        Set<String> directF = f.listInstances(true).mapWith(Resource::getLocalName).toSet();
-        Set<String> indirectF = f.listInstances(false).mapWith(Resource::getLocalName).toSet();
+        Set<String> directF = F.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectF = F.listInstances(false).mapWith(Resource::getLocalName).toSet();
 
         System.out.println("DIRECT-A::" + directA);
         System.out.println("DIRECT-B::" + directB);
@@ -434,4 +568,297 @@ public class ClassIndividualsTest {
         Assertions.assertEquals(Set.of(), indirectF);
     }
 
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_TRANS_INF",
+    })
+    public void testListInstances6b(TestSpec spec) {
+        //      A
+        //     / \
+        //    B   C
+        //   / \ / \
+        //  D   E   F
+        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getResource(NS + "A").as(OntClass.class);
+        OntClass B = m.getResource(NS + "B").as(OntClass.class);
+        OntClass C = m.getResource(NS + "C").as(OntClass.class);
+        OntClass D = m.getResource(NS + "D").as(OntClass.class);
+        OntClass E = m.getResource(NS + "E").as(OntClass.class);
+        OntClass F = m.getResource(NS + "F").as(OntClass.class);
+
+        A.createIndividual(NS + "iA");
+        B.createIndividual(NS + "iB");
+        C.createIndividual(NS + "iC");
+        D.createIndividual(NS + "iD");
+        E.createIndividual(NS + "iE");
+
+        Set<String> directA = A.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = A.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directB = B.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = B.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = C.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = C.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directD = D.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = D.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directE = E.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = E.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directF = F.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectF = F.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("DIRECT-D::" + directD);
+        System.out.println("DIRECT-E::" + directE);
+        System.out.println("DIRECT-F::" + directF);
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+        System.out.println("INDIRECT-D::" + indirectD);
+        System.out.println("INDIRECT-E::" + indirectE);
+        System.out.println("INDIRECT-F::" + indirectF);
+
+        Assertions.assertEquals(Set.of("iA"), directA);
+        Assertions.assertEquals(Set.of("iB"), directB);
+        Assertions.assertEquals(Set.of("iC"), directC);
+        Assertions.assertEquals(Set.of("iD"), directD);
+        Assertions.assertEquals(Set.of("iE"), directE);
+        Assertions.assertEquals(Set.of(), directF);
+        Assertions.assertEquals(Set.of("iA"), indirectA);
+        Assertions.assertEquals(Set.of("iB"), indirectB);
+        Assertions.assertEquals(Set.of("iC"), indirectC);
+        Assertions.assertEquals(Set.of("iD"), indirectD);
+        Assertions.assertEquals(Set.of("iE"), indirectE);
+        Assertions.assertEquals(Set.of(), indirectF);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_DL_MEM",
+            "OWL_LITE_MEM",
+            "RDFS_MEM",
+    })
+    public void testListInstances7a(TestSpec spec) {
+        //  A   B
+        //  .\ /.
+        //  . C .
+        //  . | .
+        //  . D .
+        //  ./    .
+        //  A   .   E
+        //   \  .  |
+        //    \ . /
+        //      B
+        OntModel m = createClassesABCDAEB(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getResource(NS + "A").as(OntClass.class);
+        OntClass B = m.getResource(NS + "B").as(OntClass.class);
+        OntClass C = m.getResource(NS + "C").as(OntClass.class);
+        OntClass D = m.getResource(NS + "D").as(OntClass.class);
+        OntClass E = m.getResource(NS + "E").as(OntClass.class);
+
+        A.createIndividual(NS + "iA");
+        B.createIndividual(NS + "iB");
+        Individual CE = C.createIndividual(NS + "iCE");
+        CE.addOntClass(E);
+        Individual DBA = B.createIndividual(NS + "iDBA");
+        DBA.addOntClass(B);
+        DBA.addOntClass(A);
+
+        Set<String> directA = A.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = A.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directB = B.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = B.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = C.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = C.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directD = D.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = D.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directE = E.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = E.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("DIRECT-D::" + directD);
+        System.out.println("DIRECT-E::" + directE);
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+        System.out.println("INDIRECT-D::" + indirectD);
+        System.out.println("INDIRECT-E::" + indirectE);
+
+        Assertions.assertEquals(Set.of("iA"), directA);
+        Assertions.assertEquals(Set.of("iB", "iDBA"), directB);
+        Assertions.assertEquals(Set.of("iCE"), directC);
+        Assertions.assertEquals(Set.of(), directD);
+        Assertions.assertEquals(Set.of("iCE"), directE);
+        Assertions.assertEquals(Set.of("iA", "iDBA"), indirectA);
+        Assertions.assertEquals(Set.of("iB", "iDBA"), indirectB);
+        Assertions.assertEquals(Set.of("iCE"), indirectC);
+        Assertions.assertEquals(Set.of(), indirectD);
+        Assertions.assertEquals(Set.of("iCE"), indirectE);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "RDFS_MEM_RDFS_INF",
+    })
+    public void testListInstances7b(TestSpec spec) {
+        //  A   B
+        //  .\ /.
+        //  . C .
+        //  . | .
+        //  . D .
+        //  ./    .
+        //  A   .   E
+        //   \  .  |
+        //    \ . /
+        //      B
+        OntModel m = createClassesABCDAEB(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getResource(NS + "A").as(OntClass.class);
+        OntClass B = m.getResource(NS + "B").as(OntClass.class);
+        OntClass C = m.getResource(NS + "C").as(OntClass.class);
+        OntClass D = m.getResource(NS + "D").as(OntClass.class);
+        OntClass E = m.getResource(NS + "E").as(OntClass.class);
+
+        A.createIndividual(NS + "iA");
+        B.createIndividual(NS + "iB");
+        Individual CE = C.createIndividual(NS + "iCE");
+        CE.addOntClass(E);
+        Individual DBA = B.createIndividual(NS + "iDBA");
+        DBA.addOntClass(B);
+        DBA.addOntClass(A);
+
+        Set<String> directA = A.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = A.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directB = B.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = B.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = C.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = C.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directD = D.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = D.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directE = E.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = E.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("DIRECT-D::" + directD);
+        System.out.println("DIRECT-E::" + directE);
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+        System.out.println("INDIRECT-D::" + indirectD);
+        System.out.println("INDIRECT-E::" + indirectE);
+
+        Assertions.assertEquals(Set.of("iA", "iB", "iDBA", "iCE"), directA);
+        Assertions.assertEquals(Set.of("iA", "iB", "iDBA", "iCE"), directB);
+        Assertions.assertEquals(Set.of("iA", "iB", "iDBA", "iCE"), directC);
+        Assertions.assertEquals(Set.of("iA", "iB", "iDBA", "iCE"), directD);
+        Assertions.assertEquals(Set.of(), directE);
+        Assertions.assertEquals(Set.of("iA", "iB", "iDBA", "iCE"), indirectA);
+        Assertions.assertEquals(Set.of("iA", "iB", "iDBA", "iCE"), indirectB);
+        Assertions.assertEquals(Set.of("iA", "iB", "iDBA", "iCE"), indirectC);
+        Assertions.assertEquals(Set.of("iA", "iB", "iDBA", "iCE"), indirectD);
+        Assertions.assertEquals(Set.of("iA", "iB", "iDBA", "iCE"), indirectE);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM_TRANS_INF",
+    })
+    public void testListInstances7c(TestSpec spec) {
+        //  A   B
+        //  .\ /.
+        //  . C .
+        //  . | .
+        //  . D .
+        //  ./    .
+        //  A   .   E
+        //   \  .  |
+        //    \ . /
+        //      B
+        OntModel m = createClassesABCDAEB(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getResource(NS + "A").as(OntClass.class);
+        OntClass B = m.getResource(NS + "B").as(OntClass.class);
+        OntClass C = m.getResource(NS + "C").as(OntClass.class);
+        OntClass D = m.getResource(NS + "D").as(OntClass.class);
+        OntClass E = m.getResource(NS + "E").as(OntClass.class);
+
+        A.createIndividual(NS + "iA");
+        B.createIndividual(NS + "iB");
+        Individual CE = C.createIndividual(NS + "iCE");
+        CE.addOntClass(E);
+        Individual DBA = B.createIndividual(NS + "iDBA");
+        DBA.addOntClass(B);
+        DBA.addOntClass(A);
+
+        Set<String> directA = A.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = A.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directB = B.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = B.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = C.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = C.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directD = D.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = D.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directE = E.listInstances(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = E.listInstances(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("DIRECT-D::" + directD);
+        System.out.println("DIRECT-E::" + directE);
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+        System.out.println("INDIRECT-D::" + indirectD);
+        System.out.println("INDIRECT-E::" + indirectE);
+
+        Assertions.assertEquals(Set.of("iA", "iDBA"), directA);
+        Assertions.assertEquals(Set.of("iB", "iDBA"), directB);
+        Assertions.assertEquals(Set.of("iCE"), directC);
+        Assertions.assertEquals(Set.of(), directD);
+        Assertions.assertEquals(Set.of(), directE);
+        Assertions.assertEquals(Set.of("iA", "iDBA"), indirectA);
+        Assertions.assertEquals(Set.of("iB", "iDBA"), indirectB);
+        Assertions.assertEquals(Set.of("iCE"), indirectC);
+        Assertions.assertEquals(Set.of(), indirectD);
+        Assertions.assertEquals(Set.of("iCE"), indirectE);
+    }
 }

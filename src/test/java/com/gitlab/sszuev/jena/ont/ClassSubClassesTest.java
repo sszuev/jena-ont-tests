@@ -1325,7 +1325,7 @@ public class ClassSubClassesTest {
         Assertions.assertEquals(Set.of("C", "D", "E", "F"), indirectB, "wrong indirect nodes for B");
         Assertions.assertEquals(Set.of("D", "E", "F"), indirectC, "wrong indirect nodes for C");
         Assertions.assertEquals(Set.of("C", "E", "F"), indirectD, "wrong indirect nodes for D");
-        Assertions.assertEquals(Set.of("C", "D",  "F"), indirectE, "wrong indirect nodes for E");
+        Assertions.assertEquals(Set.of("C", "D", "F"), indirectE, "wrong indirect nodes for E");
         Assertions.assertEquals(Set.of("C", "D", "E"), indirectF, "wrong indirect nodes for F");
     }
 
