@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 import static com.gitlab.sszuev.jena.ont.TestModelFactory.NS;
 import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesABCDAEB;
+import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesABCDEF;
 import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesAGBCFDE;
 import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesiAEDcCABiAE;
 
@@ -29,6 +30,39 @@ public class IndividualClassesTest {
     @SafeVarargs
     static <X> Set<X> hashSetOf(X... items) {
         return new HashSet<>(Arrays.asList(items));
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_TRANS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_RDFS_INF",
+            "RDFS_MEM_TRANS_INF",
+    })
+    public void testGetOntClass0(TestSpec spec) {
+        //      A
+        //     / \
+        //    B   C
+        //   / \ / \
+        //  D   E   F
+
+        OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
+        OntClass A = m.getOntClass(NS + "A");
+        Individual iA = A.createIndividual("iA");
+        Assertions.assertEquals(A, iA.getOntClass());
     }
 
     @ParameterizedTest
@@ -886,8 +920,8 @@ public class IndividualClassesTest {
         System.out.println("INDIRECT-AD::" + indirectAD);
 
         Assertions.assertEquals(hashSetOf("B", "D"), directDB);
-        Assertions.assertEquals(hashSetOf( "B", "D"), indirectDB);
-        Assertions.assertEquals(hashSetOf("A",  "D"), directAD);
-        Assertions.assertEquals(hashSetOf("A",  "D"), indirectAD);
+        Assertions.assertEquals(hashSetOf("B", "D"), indirectDB);
+        Assertions.assertEquals(hashSetOf("A", "D"), directAD);
+        Assertions.assertEquals(hashSetOf("A", "D"), indirectAD);
     }
 }

@@ -2,7 +2,6 @@ package com.gitlab.sszuev.jena.ont;
 
 import com.gitlab.sszuev.jena.ont.common.CommonOntTestBase;
 import com.gitlab.sszuev.jena.ont.testutils.IOTestUtils;
-import com.gitlab.sszuev.jena.ont.testutils.JunitExtensions;
 import com.gitlab.sszuev.jena.ont.testutils.ModelTestUtils;
 import com.gitlab.sszuev.jena.ont.testutils.TestSpec;
 import org.apache.jena.graph.Graph;
@@ -847,89 +846,6 @@ public class OntModelTest extends CommonOntTestBase {
         Object dr = i.next();
         Assertions.assertInstanceOf(DataRange.class, dr);
         Assertions.assertFalse(i.hasNext(), "Should no more DataRange");
-    }
-
-
-    @Test
-    public void testListHierarchyRoots0() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        Assertions.assertFalse(m.listHierarchyRootClasses().hasNext());
-        m = ModelFactory.createOntologyModel(OntModelSpec.RDFS_MEM);
-        Assertions.assertFalse(m.listHierarchyRootClasses().hasNext());
-    }
-
-    @Test
-    public void testListHierarchyRoots1() {
-        String doc =
-                "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>. "
-                        + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>. "
-                        + "@prefix xsd: <http://www.w3.org/2001/XMLSchema#>. "
-                        + "@prefix owl: <http://www.w3.org/2002/07/owl#>. "
-                        + "@prefix : <" + NS + ">. "
-                        + ":A a owl:Class. ";
-
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, null);
-        m.read(new StringReader(doc), NS, "N3");
-
-        OntClass a = m.getOntClass(NS + "A");
-        JunitExtensions.assertValues("", m.listHierarchyRootClasses(), a);
-    }
-
-
-    @Test
-    public void testListHierarchyRoots2() {
-        String doc =
-                "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>. "
-                        + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>. "
-                        + "@prefix xsd: <http://www.w3.org/2001/XMLSchema#>. "
-                        + "@prefix owl: <http://www.w3.org/2002/07/owl#>. "
-                        + "@prefix : <" + NS + ">. "
-                        + ":A a owl:Class. ";
-
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RULE_INF, null);
-        m.read(new StringReader(doc), NS, "N3");
-
-        OntClass a = m.getOntClass(NS + "A");
-        JunitExtensions.assertValues("", m.listHierarchyRootClasses(), a);
-    }
-
-
-    @Test
-    public void testListHierarchyRoots3() {
-        String doc =
-                "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>. "
-                        + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>. "
-                        + "@prefix xsd: <http://www.w3.org/2001/XMLSchema#>. "
-                        + "@prefix owl: <http://www.w3.org/2002/07/owl#>. "
-                        + "@prefix : <" + NS + ">. "
-                        + ":A a owl:Class. "
-                        + ":B a owl:Class ; rdfs:subClassOf :A . ";
-
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MINI_RULE_INF, null);
-        m.read(new StringReader(doc), NS, "N3");
-
-        OntClass a = m.getOntClass(NS + "A");
-        JunitExtensions.assertValues("", m.listHierarchyRootClasses(), a);
-    }
-
-    @Test
-    public void testListHierarchyRoots4() {
-        String doc =
-                "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>. "
-                        + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>. "
-                        + "@prefix xsd: <http://www.w3.org/2001/XMLSchema#>. "
-                        + "@prefix owl: <http://www.w3.org/2002/07/owl#>. "
-                        + "@prefix : <" + NS + ">. "
-                        + ":A a rdfs:Class. "
-                        + ":C a rdfs:Class. "
-                        + ":B a rdfs:Class ; rdfs:subClassOf :A . ";
-
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.RDFS_MEM_RDFS_INF, null);
-        m.read(new StringReader(doc), NS, "N3");
-
-        OntClass a = m.getOntClass(NS + "A");
-        OntClass c = m.getOntClass(NS + "C");
-        JunitExtensions.assertValues("", m.listHierarchyRootClasses(), a, c);
     }
 
     /* Auto-loading of imports is off by default */
