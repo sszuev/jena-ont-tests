@@ -30,8 +30,6 @@ public class OntModelClassesTest {
     })
     public void testListClasses1a(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.inst, null);
-        m.getDocumentManager().addAltEntry("http://www.w3.org/2002/07/owl", IOTestUtils.normalize("file:jena/builtins-owl.rdf"));
-        m.getDocumentManager().addAltEntry("http://www.w3.org/2000/01/rdf-schema", IOTestUtils.normalize("file:jena/builtins-rdfs.rdf"));
         IOTestUtils.readResourceModel(m, "/jena/list-syntax-categories-test.rdf");
         Assertions.assertEquals(
                 Set.of("Y0", "Z", "B", "D", "Y1", "X0", "C", "E", "X1", "A", "null"),
@@ -46,8 +44,6 @@ public class OntModelClassesTest {
     })
     public void testListClasses1b(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.inst, null);
-        m.getDocumentManager().addAltEntry("http://www.w3.org/2002/07/owl", IOTestUtils.normalize("file:jena/builtins-owl.rdf"));
-        m.getDocumentManager().addAltEntry("http://www.w3.org/2000/01/rdf-schema", IOTestUtils.normalize("file:jena/builtins-rdfs.rdf"));
         IOTestUtils.readResourceModel(m, "/jena/list-syntax-categories-test.rdf");
         Assertions.assertEquals(0, m.listClasses().toList().size());
     }
@@ -63,8 +59,6 @@ public class OntModelClassesTest {
     })
     public void testListClasses1c(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.inst, null);
-        m.getDocumentManager().addAltEntry("http://www.w3.org/2002/07/owl", IOTestUtils.normalize("file:jena/builtins-owl.rdf"));
-        m.getDocumentManager().addAltEntry("http://www.w3.org/2000/01/rdf-schema", IOTestUtils.normalize("file:jena/builtins-rdfs.rdf"));
         IOTestUtils.readResourceModel(m, "/jena/list-syntax-categories-test.rdf");
         int expectedClassesSize;
         if (spec == TestSpec.OWL_MEM_MICRO_RULE_INF) {

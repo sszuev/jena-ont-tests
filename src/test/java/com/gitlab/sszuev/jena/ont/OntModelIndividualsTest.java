@@ -156,7 +156,7 @@ public class OntModelIndividualsTest {
             "OWL_LITE_MEM_RDFS_INF",
             "OWL_LITE_MEM_TRANS_INF",
     })
-    public void testListIndividuals6(TestSpec spec) {
+    public void testListIndividuals6a(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.inst);
         IOTestUtils.readResourceModel(m, "/jena/list-syntax-categories-test-comps.xml");
         Assertions.assertEquals(
@@ -173,7 +173,7 @@ public class OntModelIndividualsTest {
             "OWL_DL_MEM_RULE_INF",
             "OWL_LITE_MEM_RULES_INF",
     })
-    public void testListIndividuals7(TestSpec spec) {
+    public void testListIndividuals6b(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.inst);
         IOTestUtils.readResourceModel(m, "/jena/list-syntax-categories-test-comps.xml");
         Assertions.assertEquals(
@@ -197,7 +197,7 @@ public class OntModelIndividualsTest {
             "RDFS_MEM",
             "RDFS_MEM_TRANS_INF",
     })
-    public void testListIndividuals8(TestSpec spec) {
+    public void testListIndividuals6c(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.inst);
         IOTestUtils.readResourceModel(m, "/jena/list-syntax-categories-test-comps.xml");
         Assertions.assertEquals(0, m.listIndividuals().toList().size());
@@ -207,7 +207,7 @@ public class OntModelIndividualsTest {
     @EnumSource(names = {
             "RDFS_MEM_RDFS_INF",
     })
-    public void testListIndividuals9(TestSpec spec) {
+    public void testListIndividuals6d(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.inst);
         IOTestUtils.readResourceModel(m, "/jena/list-syntax-categories-test-comps.xml");
         Assertions.assertEquals(
@@ -246,7 +246,7 @@ public class OntModelIndividualsTest {
             "OWL_LITE_MEM_RDFS_INF",
             "OWL_LITE_MEM_TRANS_INF",
     })
-    public void testListIndividuals10(TestSpec spec) {
+    public void testListIndividuals7(TestSpec spec) {
         OntModel schema = ModelFactory.createOntologyModel(spec.inst);
         Model data = ModelFactory.createDefaultModel();
         Resource c = schema.createResource("http://example.com/foo#AClass");
@@ -270,7 +270,7 @@ public class OntModelIndividualsTest {
             "OWL_DL_MEM",
             "OWL_DL_MEM_TRANS_INF",
     })
-    public void testListIndividuals11(TestSpec spec) {
+    public void testListIndividuals8(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass c0 = OWL2.Thing.inModel(m).as(OntClass.class);
         OntClass c1 = m.createClass(NS + "C1");
@@ -297,5 +297,24 @@ public class OntModelIndividualsTest {
         Assertions.assertEquals(4, found.size());
         Assertions.assertEquals(1, found.stream().filter(RDFNode::isAnon).count());
         Assertions.assertEquals(Set.of(i1, i3, i5), found.stream().filter(it -> !it.isAnon()).collect(Collectors.toSet()));
+    }
+
+    @ParameterizedTest
+    @EnumSource(TestSpec.class)
+    public void testListIndividuals9(TestSpec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
+
+        m.createResource("x", m.createResource("X"));
+        m.createResource().addProperty(RDF.type, m.createResource("Y"));
+
+        OntClass clazz = m.createClass("Q");
+        clazz.createIndividual("q");
+        clazz.createIndividual();
+
+        m.write(System.out, "ttl");
+        List<Individual> individuals = m.listIndividuals().toList();
+
+        int expectedNumOfIndividuals = spec == TestSpec.RDFS_MEM_RDFS_INF ? 4 : 2;
+        Assertions.assertEquals(expectedNumOfIndividuals, individuals.size());
     }
 }

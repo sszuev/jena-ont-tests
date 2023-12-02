@@ -3,26 +3,20 @@ package com.gitlab.sszuev.jena.ont;
 import com.gitlab.sszuev.jena.ont.common.CommonOntTestBase;
 import com.gitlab.sszuev.jena.ont.testutils.IOTestUtils;
 import com.gitlab.sszuev.jena.ont.testutils.ModelTestUtils;
-import com.gitlab.sszuev.jena.ont.testutils.TestSpec;
 import org.apache.jena.graph.Graph;
-import org.apache.jena.ontology.AnnotationProperty;
 import org.apache.jena.ontology.DataRange;
-import org.apache.jena.ontology.DatatypeProperty;
 import org.apache.jena.ontology.HasValueRestriction;
-import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.ObjectProperty;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
-import org.apache.jena.ontology.OntProperty;
 import org.apache.jena.ontology.OntResource;
 import org.apache.jena.ontology.Ontology;
 import org.apache.jena.ontology.impl.OWLDLProfile;
 import org.apache.jena.ontology.impl.OWLLiteProfile;
 import org.apache.jena.ontology.impl.OWLProfile;
 import org.apache.jena.ontology.impl.OntModelImpl;
-import org.apache.jena.ontology.impl.TestListSyntaxCategories;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -33,8 +27,6 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -47,7 +39,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class OntModelTest extends CommonOntTestBase {
+public class OntModelMiscTest extends CommonOntTestBase {
     public static final String BASE = "http://www.hp.com/test";
     public static final String NS = BASE + "#";
 
@@ -74,25 +66,6 @@ public class OntModelTest extends CommonOntTestBase {
             "  </owl:ObjectProperty>" +
             "</rdf:RDF>";
 
-
-    @ParameterizedTest
-    @EnumSource(TestSpec.class)
-    public void testListIndividuals(TestSpec spec) {
-        OntModel m = ModelFactory.createOntologyModel(spec.inst);
-
-        m.createResource("x", m.createResource("X"));
-        m.createResource().addProperty(RDF.type, m.createResource("Y"));
-
-        OntClass clazz = m.createClass("Q");
-        clazz.createIndividual("q");
-        clazz.createIndividual();
-
-        m.write(System.out, "ttl");
-        List<Individual> individuals = m.listIndividuals().toList();
-
-        int expectedNumOfIndividuals = spec == TestSpec.RDFS_MEM_RDFS_INF ? 4 : 2;
-        Assertions.assertEquals(expectedNumOfIndividuals, individuals.size());
-    }
 
     /**
      * Test writing the base model to an output stream
@@ -225,7 +198,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getOntology(NS + "r"), "result of get r");
     }
 
-
     @Test
     public void testGetIndividual() {
         OntModel m = ModelFactory.createOntologyModel();
@@ -269,7 +241,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getOntProperty(NS + "r"), "result of get r");
     }
 
-
     @Test
     public void testGetObjectProperty() {
         OntModel m = ModelFactory.createOntologyModel();
@@ -280,7 +251,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getObjectProperty(NS + "q"), "result of get q");
         Assertions.assertNull(m.getObjectProperty(NS + "r"), "result of get r");
     }
-
 
     @Test
     public void testGetTransitiveProperty() {
@@ -293,7 +263,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getTransitiveProperty(NS + "r"), "result of get r");
     }
 
-
     @Test
     public void testGetSymmetricProperty() {
         OntModel m = ModelFactory.createOntologyModel();
@@ -304,7 +273,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getSymmetricProperty(NS + "q"), "result of get q");
         Assertions.assertNull(m.getSymmetricProperty(NS + "r"), "result of get r");
     }
-
 
     @Test
     public void testGetInverseFunctionalProperty() {
@@ -317,7 +285,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getInverseFunctionalProperty(NS + "r"), "result of get r");
     }
 
-
     @Test
     public void testGetDatatypeProperty() {
         OntModel m = ModelFactory.createOntologyModel();
@@ -328,7 +295,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getDatatypeProperty(NS + "q"), "result of get q");
         Assertions.assertNull(m.getDatatypeProperty(NS + "r"), "result of get r");
     }
-
 
     @Test
     public void testGetAnnotationProperty() {
@@ -370,7 +336,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getOntClass(NS + "r"), "result of get r");
     }
 
-
     @Test
     public void testGetComplementClass() {
         OntModel m = ModelFactory.createOntologyModel();
@@ -382,7 +347,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getComplementClass(NS + "q"), "result of get q");
         Assertions.assertNull(m.getComplementClass(NS + "r"), "result of get r");
     }
-
 
     @Test
     public void testGetEnumeratedClass() {
@@ -396,7 +360,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getEnumeratedClass(NS + "r"), "result of get r");
     }
 
-
     @Test
     public void testGetUnionClass() {
         OntModel m = ModelFactory.createOntologyModel();
@@ -408,7 +371,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getUnionClass(NS + "q"), "result of get q");
         Assertions.assertNull(m.getUnionClass(NS + "r"), "result of get r");
     }
-
 
     @Test
     public void testGetIntersectionClass() {
@@ -422,7 +384,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getIntersectionClass(NS + "r"), "result of get r");
     }
 
-
     @Test
     public void testGetRestriction() {
         OntModel m = ModelFactory.createOntologyModel();
@@ -434,7 +395,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getRestriction(NS + "q"), "result of get q");
         Assertions.assertNull(m.getRestriction(NS + "r"), "result of get r");
     }
-
 
     @Test
     public void testGetHasValueRestriction() {
@@ -449,7 +409,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getHasValueRestriction(NS + "r"), "result of get r");
     }
 
-
     @Test
     public void testGetSomeValuesFromRestriction() {
         OntModel m = ModelFactory.createOntologyModel();
@@ -462,7 +421,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getSomeValuesFromRestriction(NS + "q"), "result of get q");
         Assertions.assertNull(m.getSomeValuesFromRestriction(NS + "r"), "result of get r");
     }
-
 
     @Test
     public void testGetAllValuesFromRestriction() {
@@ -477,7 +435,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getAllValuesFromRestriction(NS + "r"), "result of get r");
     }
 
-
     @Test
     public void testGetCardinalityRestriction() {
         OntModel m = ModelFactory.createOntologyModel();
@@ -489,7 +446,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertNull(m.getCardinalityRestriction(NS + "q"), "result of get q");
         Assertions.assertNull(m.getCardinalityRestriction(NS + "r"), "result of get r");
     }
-
 
     @Test
     public void testGetMinCardinalityRestriction() {
@@ -550,146 +506,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertTrue(hasImport(c, IOTestUtils.normalize("file:jena/ont-model-test-import-6-b.owl")), "b should be imported ");
         Assertions.assertTrue(hasImport(c, IOTestUtils.normalize("file:jena/ont-model-test-import-6-c.owl")), "c should be imported ");
         Assertions.assertTrue(hasImport(c, IOTestUtils.normalize("file:jena/ont-model-test-import-6-d.owl")), "d should be imported ");
-    }
-
-    /**
-     * Some tests for listing properties. See also {@link TestListSyntaxCategories}
-     */
-
-    @Test
-    public void testListOntProperties0() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        ObjectProperty op = m.createObjectProperty(NS + "op");
-        DatatypeProperty dp = m.createDatatypeProperty(NS + "dp");
-        AnnotationProperty ap = m.createAnnotationProperty(NS + "ap");
-        OntProperty ontp = m.createOntProperty(NS + "ontp");
-        Property rdfp = m.createProperty(NS + "rdfp");
-        rdfp.addProperty(RDF.type, RDF.Property);
-
-        // no rdf:type entailment, so we don't find most properties ...
-
-        Assertions.assertFalse(iteratorContains(m.listOntProperties(), op));
-        Assertions.assertFalse(iteratorContains(m.listOntProperties(), dp));
-        Assertions.assertFalse(iteratorContains(m.listOntProperties(), ap));
-        Assertions.assertTrue(iteratorContains(m.listOntProperties(), ontp));
-        Assertions.assertTrue(iteratorContains(m.listOntProperties(), rdfp));
-    }
-
-    @Test
-    public void testListOntProperties1() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF);
-        ObjectProperty op = m.createObjectProperty(NS + "op");
-        DatatypeProperty dp = m.createDatatypeProperty(NS + "dp");
-        AnnotationProperty ap = m.createAnnotationProperty(NS + "ap");
-        OntProperty ontp = m.createOntProperty(NS + "ontp");
-        Property rdfp = m.createProperty(NS + "rdfp");
-        rdfp.addProperty(RDF.type, RDF.Property);
-
-        Assertions.assertTrue(iteratorContains(m.listOntProperties(), op));
-        Assertions.assertTrue(iteratorContains(m.listOntProperties(), dp));
-
-        // note that owl:AnnotationProperty is an rdf:Property in OWL Full
-        Assertions.assertTrue(iteratorContains(m.listOntProperties(), ap));
-        Assertions.assertTrue(iteratorContains(m.listOntProperties(), ontp));
-        Assertions.assertTrue(iteratorContains(m.listOntProperties(), rdfp));
-    }
-
-    @Test
-    public void testListOntProperties2() {
-        OntModelSpec owlDLReasoner = new OntModelSpec(OntModelSpec.OWL_DL_MEM);
-        owlDLReasoner.setReasoner(OntModelSpec.OWL_MEM_MICRO_RULE_INF.getReasoner());
-        OntModel m = ModelFactory.createOntologyModel(owlDLReasoner);
-        ObjectProperty op = m.createObjectProperty(NS + "op");
-        DatatypeProperty dp = m.createDatatypeProperty(NS + "dp");
-        AnnotationProperty ap = m.createAnnotationProperty(NS + "ap");
-        OntProperty ontp = m.createOntProperty(NS + "ontp");
-        Property rdfp = m.createProperty(NS + "rdfp");
-        rdfp.addProperty(RDF.type, RDF.Property);
-
-        Assertions.assertTrue(iteratorContains(m.listOntProperties(), op));
-        Assertions.assertTrue(iteratorContains(m.listOntProperties(), dp));
-
-        // note that owl:AnnotationProperty not an rdf:Property in OWL DL
-        Assertions.assertFalse(iteratorContains(m.listOntProperties(), ap));
-        Assertions.assertTrue(iteratorContains(m.listOntProperties(), ontp));
-        Assertions.assertTrue(iteratorContains(m.listOntProperties(), rdfp));
-    }
-
-
-    @Test
-    public void testListAllOntProperties0() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        ObjectProperty op = m.createObjectProperty(NS + "op");
-        DatatypeProperty dp = m.createDatatypeProperty(NS + "dp");
-        AnnotationProperty ap = m.createAnnotationProperty(NS + "ap");
-        OntProperty ontp = m.createOntProperty(NS + "ontp");
-        Property rdfp = m.createProperty(NS + "rdfp");
-        rdfp.addProperty(RDF.type, RDF.Property);
-
-        // no rdf:type entailment, so we don't find most properties ...
-
-        Assertions.assertTrue(iteratorContains(m.listAllOntProperties(), op));
-        Assertions.assertTrue(iteratorContains(m.listAllOntProperties(), dp));
-        Assertions.assertTrue(iteratorContains(m.listAllOntProperties(), ap));
-        Assertions.assertTrue(iteratorContains(m.listAllOntProperties(), ontp));
-        Assertions.assertTrue(iteratorContains(m.listAllOntProperties(), rdfp));
-    }
-
-    @Test
-    public void testListObjectProperties0() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        ObjectProperty op = m.createObjectProperty(NS + "op");
-        DatatypeProperty dp = m.createDatatypeProperty(NS + "dp");
-        AnnotationProperty ap = m.createAnnotationProperty(NS + "ap");
-        OntProperty ontp = m.createOntProperty(NS + "ontp");
-        Property rdfp = m.createProperty(NS + "rdfp");
-        rdfp.addProperty(RDF.type, RDF.Property);
-
-        // no rdf:type entailment, so we don't find most properties ...
-
-        Assertions.assertTrue(iteratorContains(m.listObjectProperties(), op));
-        Assertions.assertFalse(iteratorContains(m.listObjectProperties(), dp));
-        Assertions.assertFalse(iteratorContains(m.listObjectProperties(), ap));
-        Assertions.assertFalse(iteratorContains(m.listObjectProperties(), ontp));
-        Assertions.assertFalse(iteratorContains(m.listObjectProperties(), rdfp));
-    }
-
-    @Test
-    public void testListDatatypeProperties0() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        ObjectProperty op = m.createObjectProperty(NS + "op");
-        DatatypeProperty dp = m.createDatatypeProperty(NS + "dp");
-        AnnotationProperty ap = m.createAnnotationProperty(NS + "ap");
-        OntProperty ontp = m.createOntProperty(NS + "ontp");
-        Property rdfp = m.createProperty(NS + "rdfp");
-        rdfp.addProperty(RDF.type, RDF.Property);
-
-        // no rdf:type entailment, so we don't find most properties ...
-
-        Assertions.assertFalse(iteratorContains(m.listDatatypeProperties(), op));
-        Assertions.assertTrue(iteratorContains(m.listDatatypeProperties(), dp));
-        Assertions.assertFalse(iteratorContains(m.listDatatypeProperties(), ap));
-        Assertions.assertFalse(iteratorContains(m.listDatatypeProperties(), ontp));
-        Assertions.assertFalse(iteratorContains(m.listDatatypeProperties(), rdfp));
-    }
-
-    @Test
-    public void testListAnnotationProperties0() {
-        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        ObjectProperty op = m.createObjectProperty(NS + "op");
-        DatatypeProperty dp = m.createDatatypeProperty(NS + "dp");
-        AnnotationProperty ap = m.createAnnotationProperty(NS + "ap");
-        OntProperty ontp = m.createOntProperty(NS + "ontp");
-        Property rdfp = m.createProperty(NS + "rdfp");
-        rdfp.addProperty(RDF.type, RDF.Property);
-
-        // no rdf:type entailment, so we don't find most properties ...
-
-        Assertions.assertFalse(iteratorContains(m.listAnnotationProperties(), op));
-        Assertions.assertFalse(iteratorContains(m.listAnnotationProperties(), dp));
-        Assertions.assertTrue(iteratorContains(m.listAnnotationProperties(), ap));
-        Assertions.assertFalse(iteratorContains(m.listAnnotationProperties(), ontp));
-        Assertions.assertFalse(iteratorContains(m.listAnnotationProperties(), rdfp));
     }
 
     @Test
@@ -1240,22 +1056,6 @@ public class OntModelTest extends CommonOntTestBase {
         Assertions.assertFalse(acceptHeaderSet[0]);
 
     }
-
-
-    // Internal implementation methods
-    //////////////////////////////////
-
-    /**
-     * Answer true iff an iterator contains a given value.
-     */
-    private boolean iteratorContains(Iterator<?> i, Object x) {
-        boolean found = false;
-        while (i.hasNext()) {
-            found = i.next().equals(x) || found;
-        }
-        return found;
-    }
-
 
     protected static class OWLProfileExt extends OWLProfile {
         public Set<Class<?>> getSupportsSet() {
