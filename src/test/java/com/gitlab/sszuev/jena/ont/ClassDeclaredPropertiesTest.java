@@ -656,9 +656,8 @@ public class ClassDeclaredPropertiesTest {
     public void testHasDeclaredProperties3(TestSpec spec) {
         OntModel m = IOTestUtils.readResourceModel(ModelFactory.createOntologyModel(spec.inst), "/jena/frame-view-test-ldp.rdf");
         OntClass A = m.getOntClass(NS + "A");
-
-        ObjectProperty pA = m.getObjectProperty(NS + "pA");
-        ObjectProperty pB = m.getObjectProperty(NS + "pB");
+        OntProperty pA = m.getObjectProperty(NS + "pA");
+        OntProperty pB = m.getObjectProperty(NS + "pB");
 
         Assertions.assertTrue(A.hasDeclaredProperty(pA, false));
         Assertions.assertFalse(A.hasDeclaredProperty(pB, false));

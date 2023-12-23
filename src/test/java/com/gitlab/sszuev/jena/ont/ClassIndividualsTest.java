@@ -127,24 +127,23 @@ public class ClassIndividualsTest {
         Individual id = d.createIndividual(NS + "iD");
         Individual ie = e.createIndividual(NS + "iE");
 
-        JunitExtensions.assertValues("", a.listInstances(), ia, ib, ic, id, ie);
-        JunitExtensions.assertValues("", b.listInstances(), ib, id, ie);
+        Assertions.assertEquals(Set.of(ia, ib, ic, id, ie), a.listInstances().toSet());
+        Assertions.assertEquals(Set.of(ib, id, ie), b.listInstances().toSet());
 
-        JunitExtensions.assertValues("", a.listInstances(true), ia);
-        JunitExtensions.assertValues("", b.listInstances(true), ib);
+        Assertions.assertEquals(Set.of(ia), a.listInstances(true).toSet());
+        Assertions.assertEquals(Set.of(ib), b.listInstances(true).toSet());
     }
 
     @ParameterizedTest
     @EnumSource(names = {
-            "OWL_MEM_RULE_INF",
-            "OWL_MEM_RDFS_INF",
-            "OWL_MEM_MICRO_RULE_INF",
-            "OWL_MEM_MINI_RULE_INF",
-            "OWL_DL_MEM_RDFS_INF",
-            "OWL_DL_MEM_RULE_INF",
-            "OWL_LITE_MEM_RDFS_INF",
-            "OWL_LITE_MEM_RULES_INF",
-            "RDFS_MEM_RDFS_INF",
+            "OWL_MEM",
+            "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_TRANS_INF",
     })
     public void testListInstances2(TestSpec spec) {
         OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
@@ -156,15 +155,15 @@ public class ClassIndividualsTest {
 
         Individual ia = a.createIndividual(NS + "iA");
         Individual ib = b.createIndividual(NS + "iB");
-        Individual ic = c.createIndividual(NS + "iC");
-        Individual id = d.createIndividual(NS + "iD");
-        Individual ie = e.createIndividual(NS + "iE");
+        c.createIndividual(NS + "iC");
+        d.createIndividual(NS + "iD");
+        e.createIndividual(NS + "iE");
 
-        JunitExtensions.assertValues("", a.listInstances(), ia, ib, ic, id, ie);
-        JunitExtensions.assertValues("", b.listInstances(), ib, id, ie);
+        Assertions.assertEquals(Set.of(ia), a.listInstances().toSet());
+        Assertions.assertEquals(Set.of(ib), b.listInstances().toSet());
 
-        JunitExtensions.assertValues("", a.listInstances(true), ia);
-        JunitExtensions.assertValues("", b.listInstances(true), ib);
+        Assertions.assertEquals(Set.of(ia), a.listInstances(true).toSet());
+        Assertions.assertEquals(Set.of(ib), b.listInstances(true).toSet());
     }
 
     @ParameterizedTest
