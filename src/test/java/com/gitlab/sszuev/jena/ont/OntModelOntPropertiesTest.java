@@ -5,6 +5,7 @@ import com.gitlab.sszuev.jena.ont.testutils.TestSpec;
 import org.apache.jena.ontology.AnnotationProperty;
 import org.apache.jena.ontology.DatatypeProperty;
 import org.apache.jena.ontology.ObjectProperty;
+import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntProperty;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -394,7 +395,9 @@ public class OntModelOntPropertiesTest {
             "OWL_LITE_MEM_TRANS_INF",
     })
     public void testListOntProperties3b(TestSpec spec) {
+        OntDocumentManager.getInstance().reset(true);
         OntModel m = ModelFactory.createOntologyModel(spec.inst, null);
+        m.reset();
         m.getDocumentManager().addAltEntry("http://www.w3.org/2002/07/owl", IOTestUtils.normalize("file:jena/builtins-owl.rdf"));
         m.getDocumentManager().addAltEntry("http://www.w3.org/2000/01/rdf-schema", IOTestUtils.normalize("file:jena/builtins-rdfs.rdf"));
         IOTestUtils.readResourceModel(m, "/jena/list-syntax-categories-test-with-import.rdf");
@@ -413,6 +416,7 @@ public class OntModelOntPropertiesTest {
     })
     public void testListOntProperties3c(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.inst, null);
+        m.reset();
         m.getDocumentManager().addAltEntry("http://www.w3.org/2002/07/owl", IOTestUtils.normalize("file:jena/builtins-owl.rdf"));
         m.getDocumentManager().addAltEntry("http://www.w3.org/2000/01/rdf-schema", IOTestUtils.normalize("file:jena/builtins-rdfs.rdf"));
         IOTestUtils.readResourceModel(m, "/jena/list-syntax-categories-test-with-import.rdf");
@@ -433,6 +437,7 @@ public class OntModelOntPropertiesTest {
     })
     public void testListOntProperties3d(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.inst, null);
+        m.loadImports();
         m.getDocumentManager().addAltEntry("http://www.w3.org/2002/07/owl", IOTestUtils.normalize("file:jena/builtins-owl.rdf"));
         m.getDocumentManager().addAltEntry("http://www.w3.org/2000/01/rdf-schema", IOTestUtils.normalize("file:jena/builtins-rdfs.rdf"));
         IOTestUtils.readResourceModel(m, "/jena/list-syntax-categories-test-with-import.rdf");
@@ -451,6 +456,7 @@ public class OntModelOntPropertiesTest {
     })
     public void testListOntProperties3e(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.inst, null);
+        m.reset();
         m.getDocumentManager().addAltEntry("http://www.w3.org/2002/07/owl", IOTestUtils.normalize("file:jena/builtins-owl.rdf"));
         m.getDocumentManager().addAltEntry("http://www.w3.org/2000/01/rdf-schema", IOTestUtils.normalize("file:jena/builtins-rdfs.rdf"));
         IOTestUtils.readResourceModel(m, "/jena/list-syntax-categories-test-with-import.rdf");
@@ -473,5 +479,84 @@ public class OntModelOntPropertiesTest {
         System.out.println(spec + " " + actual1 + " " + actual2);
         Assertions.assertEquals(expected1, actual1);
         Assertions.assertEquals(expected2, actual2);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_LITE_MEM_RULES_INF",
+    })
+    public void testListOntProperties4a(TestSpec spec) {
+        testListOntProperties4(spec, 32, 32);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RDFS_INF",
+            "RDFS_MEM_RDFS_INF",
+    })
+    public void testListOntProperties4b(TestSpec spec) {
+        testListOntProperties4(spec, 15, 15);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_TRANS_INF",
+    })
+    public void testListOntProperties4c(TestSpec spec) {
+        testListOntProperties4(spec, 2, 2);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RDFS_INF",
+    })
+    public void testListOntProperties4d(TestSpec spec) {
+        testListOntProperties4(spec, 16, 16);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_TRANS_INF",
+    })
+    public void testListOntProperties4e(TestSpec spec) {
+        testListOntProperties4(spec, 1, 1);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_MICRO_RULE_INF",
+    })
+    public void testListOntProperties4f(TestSpec spec) {
+        testListOntProperties4(spec, 37, 36);
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_MINI_RULE_INF",
+    })
+    public void testListOntProperties4g(TestSpec spec) {
+        testListOntProperties4(spec, 34, 33);
+    }
+
+    private void testListOntProperties4(TestSpec spec, int expected1, int expected2) {
+        spec.inst.getDocumentManager().setProcessImports(false);
+        OntModel m = ModelFactory.createOntologyModel(spec.inst, null);
+        m.reset();
+        IOTestUtils.readResourceModel(m, "/jena/list-syntax-categories-test-with-import.rdf");
+        int actual1 = m.listOntProperties().toList().size();
+        int actual2 = m.listOntProperties().toSet().size();
+        System.out.println(actual1 + " " + actual2);
+        Assertions.assertEquals(expected1, actual1);
+        Assertions.assertEquals(expected2, actual2);
+        spec.inst.getDocumentManager().setProcessImports(true);
     }
 }
