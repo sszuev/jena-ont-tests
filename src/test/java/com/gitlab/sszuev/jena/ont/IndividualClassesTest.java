@@ -1,5 +1,6 @@
 package com.gitlab.sszuev.jena.ont;
 
+import com.gitlab.sszuev.jena.ont.testutils.MiscUtils;
 import com.gitlab.sszuev.jena.ont.testutils.TestSpec;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
@@ -12,8 +13,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,31 +26,8 @@ import static com.gitlab.sszuev.jena.ont.TestModelFactory.createClassesiAEDcCABi
 
 public class IndividualClassesTest {
 
-    @SafeVarargs
-    static <X> Set<X> hashSetOf(X... items) {
-        return new HashSet<>(Arrays.asList(items));
-    }
-
     @ParameterizedTest
-    @EnumSource(names = {
-            "OWL_MEM",
-            "OWL_MEM_RULE_INF",
-            "OWL_MEM_RDFS_INF",
-            "OWL_MEM_TRANS_INF",
-            "OWL_MEM_MICRO_RULE_INF",
-            "OWL_MEM_MINI_RULE_INF",
-            "OWL_DL_MEM",
-            "OWL_DL_MEM_RDFS_INF",
-            "OWL_DL_MEM_RULE_INF",
-            "OWL_DL_MEM_TRANS_INF",
-            "OWL_LITE_MEM",
-            "OWL_LITE_MEM_RDFS_INF",
-            "OWL_LITE_MEM_RULES_INF",
-            "OWL_LITE_MEM_TRANS_INF",
-            "RDFS_MEM",
-            "RDFS_MEM_RDFS_INF",
-            "RDFS_MEM_TRANS_INF",
-    })
+    @EnumSource
     public void testGetOntClass0(TestSpec spec) {
         //      A
         //     / \
@@ -146,25 +122,7 @@ public class IndividualClassesTest {
     }
 
     @ParameterizedTest
-    @EnumSource(names = {
-            "OWL_MEM",
-            "OWL_MEM_RULE_INF",
-            "OWL_MEM_RDFS_INF",
-            "OWL_MEM_TRANS_INF",
-            "OWL_MEM_MICRO_RULE_INF",
-            "OWL_MEM_MINI_RULE_INF",
-            "OWL_DL_MEM",
-            "OWL_DL_MEM_RDFS_INF",
-            "OWL_DL_MEM_RULE_INF",
-            "OWL_DL_MEM_TRANS_INF",
-            "OWL_LITE_MEM",
-            "OWL_LITE_MEM_RDFS_INF",
-            "OWL_LITE_MEM_RULES_INF",
-            "OWL_LITE_MEM_TRANS_INF",
-            "RDFS_MEM",
-            "RDFS_MEM_RDFS_INF",
-            "RDFS_MEM_TRANS_INF",
-    })
+    @EnumSource
     public void testListOntClasses2(TestSpec spec) {
         OntModel m = ModelFactory.createOntologyModel(spec.inst);
         OntClass A = m.createClass(NS + "A");
@@ -831,10 +789,10 @@ public class IndividualClassesTest {
         System.out.println("DIRECT-AD::" + directAD);
         System.out.println("INDIRECT-AD::" + indirectAD);
 
-        Assertions.assertEquals(hashSetOf(null, "A", "B", "D"), directDB);
-        Assertions.assertEquals(hashSetOf(null, "A", "B", "D"), indirectDB);
-        Assertions.assertEquals(hashSetOf(null, "A", "B", "D"), directAD);
-        Assertions.assertEquals(hashSetOf(null, "A", "B", "D"), indirectAD);
+        Assertions.assertEquals(MiscUtils.hashSetOf(null, "A", "B", "D"), directDB);
+        Assertions.assertEquals(MiscUtils.hashSetOf(null, "A", "B", "D"), indirectDB);
+        Assertions.assertEquals(MiscUtils.hashSetOf(null, "A", "B", "D"), directAD);
+        Assertions.assertEquals(MiscUtils.hashSetOf(null, "A", "B", "D"), indirectAD);
     }
 
     @ParameterizedTest
@@ -874,10 +832,10 @@ public class IndividualClassesTest {
         System.out.println("DIRECT-AD::" + directAD);
         System.out.println("INDIRECT-AD::" + indirectAD);
 
-        Set<String> expectedDirect = hashSetOf(null, "A", "B", "D");
+        Set<String> expectedDirect = MiscUtils.hashSetOf(null, "A", "B", "D");
         Set<String> expectedIndirect = spec == TestSpec.OWL_MEM_MICRO_RULE_INF ?
-                hashSetOf(null, "A", "B", "D", "E", "Thing") :
-                hashSetOf(null, "A", "B", "D", "E", "Resource", "Thing");
+                MiscUtils.hashSetOf(null, "A", "B", "D", "E", "Thing") :
+                MiscUtils.hashSetOf(null, "A", "B", "D", "E", "Resource", "Thing");
         Assertions.assertEquals(expectedDirect, directDB);
         Assertions.assertEquals(expectedIndirect, indirectDB);
         Assertions.assertEquals(expectedDirect, directAD);
@@ -919,9 +877,9 @@ public class IndividualClassesTest {
         System.out.println("DIRECT-AD::" + directAD);
         System.out.println("INDIRECT-AD::" + indirectAD);
 
-        Assertions.assertEquals(hashSetOf("B", "D"), directDB);
-        Assertions.assertEquals(hashSetOf("B", "D"), indirectDB);
-        Assertions.assertEquals(hashSetOf("A", "D"), directAD);
-        Assertions.assertEquals(hashSetOf("A", "D"), indirectAD);
+        Assertions.assertEquals(MiscUtils.hashSetOf("B", "D"), directDB);
+        Assertions.assertEquals(MiscUtils.hashSetOf("B", "D"), indirectDB);
+        Assertions.assertEquals(MiscUtils.hashSetOf("A", "D"), directAD);
+        Assertions.assertEquals(MiscUtils.hashSetOf("A", "D"), indirectAD);
     }
 }

@@ -1,12 +1,10 @@
 package com.gitlab.sszuev.jena.ont;
 
-import com.gitlab.sszuev.jena.ont.testutils.JunitExtensions;
 import com.gitlab.sszuev.jena.ont.testutils.TestSpec;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.jupiter.api.Assertions;
@@ -280,17 +278,52 @@ public class ClassSubClassesTest {
         //  D   E   F
 
         OntModel m = createClassesABCDEF(ModelFactory.createOntologyModel(spec.inst));
-        OntClass a = m.getResource(NS + "A").as(OntClass.class);
-        OntClass b = m.getResource(NS + "B").as(OntClass.class);
-        OntClass c = m.getResource(NS + "C").as(OntClass.class);
-        OntClass d = m.getResource(NS + "D").as(OntClass.class);
-        OntClass e = m.getResource(NS + "E").as(OntClass.class);
-        OntClass f = m.getResource(NS + "F").as(OntClass.class);
 
-        JunitExtensions.assertValues("", a.listSubClasses(), b, c, d, e, f, OWL.Nothing);
-        JunitExtensions.assertValues("", a.listSubClasses(false), b, c, d, e, f, OWL.Nothing);
-        JunitExtensions.assertValues("", a.listSubClasses(true), b, c);
-        JunitExtensions.assertValues("", b.listSubClasses(true), d, e);
+        Set<String> directA = m.getOntClass(NS + "A").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectA = m.getOntClass(NS + "A").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directB = m.getOntClass(NS + "B").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectB = m.getOntClass(NS + "B").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directC = m.getOntClass(NS + "C").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectC = m.getOntClass(NS + "C").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directD = m.getOntClass(NS + "D").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectD = m.getOntClass(NS + "D").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directE = m.getOntClass(NS + "E").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectE = m.getOntClass(NS + "E").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        Set<String> directF = m.getOntClass(NS + "F").listSubClasses(true).mapWith(Resource::getLocalName).toSet();
+        Set<String> indirectF = m.getOntClass(NS + "F").listSubClasses(false).mapWith(Resource::getLocalName).toSet();
+
+        System.out.println("DIRECT-A::" + directA);
+        System.out.println("DIRECT-B::" + directB);
+        System.out.println("DIRECT-C::" + directC);
+        System.out.println("DIRECT-D::" + directD);
+        System.out.println("DIRECT-E::" + directE);
+        System.out.println("DIRECT-F::" + directF);
+
+        System.out.println("INDIRECT-A::" + indirectA);
+        System.out.println("INDIRECT-B::" + indirectB);
+        System.out.println("INDIRECT-C::" + indirectC);
+        System.out.println("INDIRECT-D::" + indirectD);
+        System.out.println("INDIRECT-E::" + indirectE);
+        System.out.println("INDIRECT-F::" + indirectF);
+
+        Assertions.assertEquals(Set.of("C", "B"), directA);
+        Assertions.assertEquals(Set.of("D", "E"), directB);
+        Assertions.assertEquals(Set.of("F", "E"), directC);
+        Assertions.assertEquals(Set.of("Nothing"), directD);
+        Assertions.assertEquals(Set.of("Nothing"), directE);
+        Assertions.assertEquals(Set.of("Nothing"), directF);
+
+        Assertions.assertEquals(Set.of("C", "B", "D", "E", "F", "Nothing"), indirectA);
+        Assertions.assertEquals(Set.of("E", "D", "Nothing"), indirectB);
+        Assertions.assertEquals(Set.of("F", "E", "Nothing"), indirectC);
+        Assertions.assertEquals(Set.of("Nothing"), indirectD);
+        Assertions.assertEquals(Set.of("Nothing"), indirectE);
+        Assertions.assertEquals(Set.of("Nothing"), indirectF);
     }
 
     @ParameterizedTest
