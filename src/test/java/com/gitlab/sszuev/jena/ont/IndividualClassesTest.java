@@ -882,4 +882,237 @@ public class IndividualClassesTest {
         Assertions.assertEquals(MiscUtils.hashSetOf("A", "D"), directAD);
         Assertions.assertEquals(MiscUtils.hashSetOf("A", "D"), indirectAD);
     }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_DL_MEM",
+            "OWL_LITE_MEM",
+            "RDFS_MEM",
+    })
+    public void testHasOntClasses1a(TestSpec spec) {
+        //  A   B
+        //  .\ /.
+        //  . C .
+        //  . | .
+        //  . D .
+        //  ./  .
+        //  A   .   E
+        //   \  .  |
+        //    \ . /
+        //      B
+        OntModel m = createClassesABCDAEB(ModelFactory.createOntologyModel(spec.inst));
+
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        OntClass E = m.getOntClass(NS + "E");
+
+        Individual iAD = A.createIndividual(NS + "iAD");
+        iAD.addOntClass(D);
+        Individual iDB = D.createIndividual(NS + "iDB");
+        iDB.addOntClass(B);
+        Individual iC = C.createIndividual(NS + "iC");
+        Individual iE = E.createIndividual(NS + "iE");
+
+        Assertions.assertTrue(iAD.hasOntClass(A, false));
+        Assertions.assertFalse(iDB.hasOntClass(A, false));
+        Assertions.assertFalse(iC.hasOntClass(A, false));
+        Assertions.assertFalse(iE.hasOntClass(A, false));
+        Assertions.assertFalse(iAD.hasOntClass(B, false));
+        Assertions.assertTrue(iDB.hasOntClass(B, false));
+        Assertions.assertFalse(iC.hasOntClass(B, false));
+        Assertions.assertFalse(iE.hasOntClass(B, false));
+        Assertions.assertFalse(iAD.hasOntClass(C, false));
+        Assertions.assertFalse(iDB.hasOntClass(C, false));
+        Assertions.assertTrue(iC.hasOntClass(C, false));
+        Assertions.assertFalse(iE.hasOntClass(C, false));
+        Assertions.assertTrue(iAD.hasOntClass(D, false));
+        Assertions.assertTrue(iDB.hasOntClass(D, false));
+        Assertions.assertFalse(iC.hasOntClass(D, false));
+        Assertions.assertFalse(iE.hasOntClass(D, false));
+        Assertions.assertFalse(iAD.hasOntClass(E, false));
+        Assertions.assertFalse(iDB.hasOntClass(E, false));
+        Assertions.assertFalse(iC.hasOntClass(E, false));
+        Assertions.assertTrue(iE.hasOntClass(E, false));
+
+        Assertions.assertTrue(iAD.hasOntClass(A, true));
+        Assertions.assertFalse(iDB.hasOntClass(A, true));
+        Assertions.assertFalse(iC.hasOntClass(A, true));
+        Assertions.assertFalse(iE.hasOntClass(A, true));
+        Assertions.assertFalse(iAD.hasOntClass(B, true));
+        Assertions.assertTrue(iDB.hasOntClass(B, true));
+        Assertions.assertFalse(iC.hasOntClass(B, true));
+        Assertions.assertFalse(iE.hasOntClass(B, true));
+        Assertions.assertFalse(iAD.hasOntClass(C, true));
+        Assertions.assertFalse(iDB.hasOntClass(C, true));
+        Assertions.assertTrue(iC.hasOntClass(C, true));
+        Assertions.assertFalse(iE.hasOntClass(C, true));
+        Assertions.assertFalse(iAD.hasOntClass(D, true));
+        Assertions.assertTrue(iDB.hasOntClass(D, true));
+        Assertions.assertFalse(iC.hasOntClass(D, true));
+        Assertions.assertFalse(iE.hasOntClass(D, true));
+        Assertions.assertFalse(iAD.hasOntClass(E, true));
+        Assertions.assertFalse(iDB.hasOntClass(E, true));
+        Assertions.assertFalse(iC.hasOntClass(E, true));
+        Assertions.assertTrue(iE.hasOntClass(E, true));
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "RDFS_MEM_RDFS_INF",
+    })
+    public void testHasOntClasses1b(TestSpec spec) {
+        //  A   B
+        //  .\ /.
+        //  . C .
+        //  . | .
+        //  . D .
+        //  ./  .
+        //  A   .   E
+        //   \  .  |
+        //    \ . /
+        //      B
+        OntModel m = createClassesABCDAEB(ModelFactory.createOntologyModel(spec.inst));
+
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        OntClass E = m.getOntClass(NS + "E");
+
+        Individual iAD = A.createIndividual(NS + "iAD");
+        iAD.addOntClass(D);
+        Individual iDB = D.createIndividual(NS + "iDB");
+        iDB.addOntClass(B);
+        Individual iC = C.createIndividual(NS + "iC");
+        Individual iE = E.createIndividual(NS + "iE");
+
+        Assertions.assertTrue(iAD.hasOntClass(A, false));
+        Assertions.assertTrue(iDB.hasOntClass(A, false));
+        Assertions.assertTrue(iC.hasOntClass(A, false));
+        Assertions.assertFalse(iE.hasOntClass(A, false));
+        Assertions.assertTrue(iAD.hasOntClass(B, false));
+        Assertions.assertTrue(iDB.hasOntClass(B, false));
+        Assertions.assertTrue(iC.hasOntClass(B, false));
+        Assertions.assertFalse(iE.hasOntClass(B, false));
+        Assertions.assertTrue(iAD.hasOntClass(C, false));
+        Assertions.assertTrue(iDB.hasOntClass(C, false));
+        Assertions.assertTrue(iC.hasOntClass(C, false));
+        Assertions.assertFalse(iE.hasOntClass(C, false));
+        Assertions.assertTrue(iAD.hasOntClass(D, false));
+        Assertions.assertTrue(iDB.hasOntClass(D, false));
+        Assertions.assertTrue(iC.hasOntClass(D, false));
+        Assertions.assertFalse(iE.hasOntClass(D, false));
+        Assertions.assertTrue(iAD.hasOntClass(E, false));
+        Assertions.assertTrue(iDB.hasOntClass(E, false));
+        Assertions.assertTrue(iC.hasOntClass(E, false));
+        Assertions.assertTrue(iE.hasOntClass(E, false));
+
+        Assertions.assertTrue(iAD.hasOntClass(A, true));
+        Assertions.assertTrue(iDB.hasOntClass(A, true));
+        Assertions.assertTrue(iC.hasOntClass(A, true));
+        Assertions.assertFalse(iE.hasOntClass(A, true));
+        Assertions.assertTrue(iAD.hasOntClass(B, true));
+        Assertions.assertTrue(iDB.hasOntClass(B, true));
+        Assertions.assertTrue(iC.hasOntClass(B, true));
+        Assertions.assertFalse(iE.hasOntClass(B, true));
+        Assertions.assertTrue(iAD.hasOntClass(C, true));
+        Assertions.assertTrue(iDB.hasOntClass(C, true));
+        Assertions.assertTrue(iC.hasOntClass(C, true));
+        Assertions.assertFalse(iE.hasOntClass(C, true));
+        Assertions.assertTrue(iAD.hasOntClass(D, true));
+        Assertions.assertTrue(iDB.hasOntClass(D, true));
+        Assertions.assertTrue(iC.hasOntClass(D, true));
+        Assertions.assertFalse(iE.hasOntClass(D, true));
+        Assertions.assertFalse(iAD.hasOntClass(E, true));
+        Assertions.assertFalse(iDB.hasOntClass(E, true));
+        Assertions.assertFalse(iC.hasOntClass(E, true));
+        Assertions.assertTrue(iE.hasOntClass(E, true));
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM_TRANS_INF",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM_TRANS_INF",
+    })
+    public void testHasOntClasses1c(TestSpec spec) {
+        //  A   B
+        //  .\ /.
+        //  . C .
+        //  . | .
+        //  . D .
+        //  ./  .
+        //  A   .   E
+        //   \  .  |
+        //    \ . /
+        //      B
+        OntModel m = createClassesABCDAEB(ModelFactory.createOntologyModel(spec.inst));
+
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        OntClass E = m.getOntClass(NS + "E");
+
+        Individual iAD = A.createIndividual(NS + "iAD");
+        iAD.addOntClass(D);
+        Individual iDB = D.createIndividual(NS + "iDB");
+        iDB.addOntClass(B);
+        Individual iC = C.createIndividual(NS + "iC");
+        Individual iE = E.createIndividual(NS + "iE");
+
+        Assertions.assertTrue(iAD.hasOntClass(A, false));
+        Assertions.assertFalse(iDB.hasOntClass(A, false));
+        Assertions.assertFalse(iC.hasOntClass(A, false));
+        Assertions.assertFalse(iE.hasOntClass(A, false));
+        Assertions.assertFalse(iAD.hasOntClass(B, false));
+        Assertions.assertTrue(iDB.hasOntClass(B, false));
+        Assertions.assertFalse(iC.hasOntClass(B, false));
+        Assertions.assertFalse(iE.hasOntClass(B, false));
+        Assertions.assertFalse(iAD.hasOntClass(C, false));
+        Assertions.assertFalse(iDB.hasOntClass(C, false));
+        Assertions.assertTrue(iC.hasOntClass(C, false));
+        Assertions.assertFalse(iE.hasOntClass(C, false));
+        Assertions.assertTrue(iAD.hasOntClass(D, false));
+        Assertions.assertTrue(iDB.hasOntClass(D, false));
+        Assertions.assertFalse(iC.hasOntClass(D, false));
+        Assertions.assertFalse(iE.hasOntClass(D, false));
+        Assertions.assertFalse(iAD.hasOntClass(E, false));
+        Assertions.assertFalse(iDB.hasOntClass(E, false));
+        Assertions.assertFalse(iC.hasOntClass(E, false));
+        Assertions.assertTrue(iE.hasOntClass(E, false));
+
+        Assertions.assertTrue(iAD.hasOntClass(A, true));
+        Assertions.assertFalse(iDB.hasOntClass(A, true));
+        Assertions.assertFalse(iC.hasOntClass(A, true));
+        Assertions.assertFalse(iE.hasOntClass(A, true));
+        Assertions.assertFalse(iAD.hasOntClass(B, true));
+        Assertions.assertTrue(iDB.hasOntClass(B, true));
+        Assertions.assertFalse(iC.hasOntClass(B, true));
+        Assertions.assertFalse(iE.hasOntClass(B, true));
+        Assertions.assertFalse(iAD.hasOntClass(C, true));
+        Assertions.assertFalse(iDB.hasOntClass(C, true));
+        Assertions.assertTrue(iC.hasOntClass(C, true));
+        Assertions.assertFalse(iE.hasOntClass(C, true));
+        Assertions.assertTrue(iAD.hasOntClass(D, true));
+        Assertions.assertTrue(iDB.hasOntClass(D, true));
+        Assertions.assertFalse(iC.hasOntClass(D, true));
+        Assertions.assertFalse(iE.hasOntClass(D, true));
+        Assertions.assertFalse(iAD.hasOntClass(E, true));
+        Assertions.assertFalse(iDB.hasOntClass(E, true));
+        Assertions.assertFalse(iC.hasOntClass(E, true));
+        Assertions.assertTrue(iE.hasOntClass(E, true));
+    }
 }
