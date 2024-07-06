@@ -4,6 +4,7 @@ import com.gitlab.sszuev.jena.ont.common.CommonOntTestBase;
 import com.gitlab.sszuev.jena.ont.common.CommonOntTestEngine;
 import com.gitlab.sszuev.jena.ont.testutils.IOTestUtils;
 import com.gitlab.sszuev.jena.ont.testutils.JunitExtensions;
+import com.gitlab.sszuev.jena.ont.testutils.TestSpec;
 import org.apache.jena.ontology.ObjectProperty;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
@@ -18,13 +19,17 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.reasoner.test.TestUtil;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 import java.util.stream.Stream;
+
+import static com.gitlab.sszuev.jena.ont.TestModelFactory.NS;
 
 public class PropertyTest extends CommonOntTestBase {
 
@@ -36,6 +41,54 @@ public class PropertyTest extends CommonOntTestBase {
     @MethodSource("argumentsStream")
     public void test(CommonOntTestEngine test) {
         test.runTest();
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = {
+            "OWL_MEM",
+            "OWL_MEM_RULE_INF",
+            "OWL_MEM_RDFS_INF",
+            "OWL_MEM_TRANS_INF",
+            "OWL_MEM_MICRO_RULE_INF",
+            "OWL_MEM_MINI_RULE_INF",
+            "OWL_DL_MEM",
+            "OWL_DL_MEM_RDFS_INF",
+            "OWL_DL_MEM_RULE_INF",
+            "OWL_DL_MEM_TRANS_INF",
+            "OWL_LITE_MEM",
+            "OWL_LITE_MEM_RDFS_INF",
+            "OWL_LITE_MEM_RULES_INF",
+            "OWL_LITE_MEM_TRANS_INF",
+            "RDFS_MEM",
+            "RDFS_MEM_RDFS_INF",
+            "RDFS_MEM_TRANS_INF",
+    })
+    public void testHasSubProperty(TestSpec spec) {
+        OntModel m = ModelFactory.createOntologyModel(spec.inst);
+        OntProperty p1 = m.createOntProperty(NS + "p1");
+        OntProperty p2 = m.createOntProperty(NS + "p2");
+        OntProperty p3 = m.createOntProperty(NS + "p3");
+
+        p1.addProperty(RDFS.subPropertyOf, p2);
+        p2.addProperty(RDFS.subPropertyOf, p3);
+
+        Stream.of(p1, p2, p3).forEach(left -> Stream.of(p1, p2, p3).forEach(right -> {
+            String s = left.getLocalName() + ".hasSubProperty(" + right.getLocalName() + ", false)";
+            if (left.hasSubProperty(right, false)) {
+                System.out.println("Assertions.assertTrue(" + s + ");");
+            } else {
+                System.out.println("Assertions.assertFalse(" + s + ");");
+            }
+        }));
+        System.out.println();
+        Stream.of(p1, p2, p3).forEach(left -> Stream.of(p1, p2, p3).forEach(right -> {
+            String s = left.getLocalName() + ".hasSubProperty(" + right.getLocalName() + ", true)";
+            if (left.hasSubProperty(right, true)) {
+                System.out.println("Assertions.assertTrue(" + s + ");");
+            } else {
+                System.out.println("Assertions.assertFalse(" + s + ");");
+            }
+        }));
     }
 
     private static void readTestModel(Model m, CommonOntTestEngine.ProfileLang profileLang) {
@@ -195,8 +248,8 @@ public class PropertyTest extends CommonOntTestBase {
                         p.addInverseOf(q);
                         Assertions.assertEquals(1, p.getCardinality(prof.INVERSE_OF()), "Cardinality should be 1");
                         Assertions.assertEquals(q, p.getInverseOf(), "p should have inverse q");
-                        Assertions.assertTrue(p.getInverseOf() instanceof ObjectProperty, "inverse value should be an object property");
-                        Assertions.assertTrue(q.getInverse() instanceof ObjectProperty, "inverse value should be an object property");
+                        Assertions.assertInstanceOf(ObjectProperty.class, p.getInverseOf(), "inverse value should be an object property");
+                        Assertions.assertInstanceOf(ObjectProperty.class, q.getInverse(), "inverse value should be an object property");
 
                         p.addInverseOf(r);
                         Assertions.assertEquals(2, p.getCardinality(prof.INVERSE_OF()), "Cardinality should be 2");

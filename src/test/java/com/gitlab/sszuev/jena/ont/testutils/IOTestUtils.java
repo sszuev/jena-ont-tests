@@ -38,4 +38,13 @@ public final class IOTestUtils {
             throw new IllegalStateException("Can't read " + path, e);
         }
     }
+
+    public static <X extends Model> X readResourceModel(X m, String path, String lang) {
+        try (InputStream in = IOTestUtils.class.getResourceAsStream(path)) {
+            m.read(in, normalize(path), lang);
+            return m;
+        } catch (Exception e) {
+            throw new IllegalStateException("Can't read " + path, e);
+        }
+    }
 }
