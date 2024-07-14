@@ -6,8 +6,12 @@ import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.ontology.OntTools;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.OWL;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -456,5 +460,163 @@ public class OntToolsTest {
 
         Assertions.assertEquals(2, actual.size());
         Assertions.assertEquals(expected, new HashSet<>(actual));
+    }
+
+    @Test
+    public void testShortestPath1() {
+        Model m = TestModelFactory.createStdModelClassesABCDEFGThing();
+        Resource A = m.getResource(NS + "A");
+        Resource B = m.getResource(NS + "B");
+        Property p = m.createProperty(NS + "p");
+        A.addProperty(p, B);
+
+        List<Statement> actual = OntTools.findShortestPath(m, A, B, s -> true);
+        Assertions.assertEquals(List.of(p), actual.stream().map(Statement::getPredicate).toList());
+    }
+
+    @Test
+    public void testShortestPath2() {
+        Model m = TestModelFactory.createStdModelClassesABCDEFGThing();
+        Resource A = m.getResource(NS + "A");
+        Resource B = m.getResource(NS + "B");
+        Resource C = m.getResource(NS + "C");
+        Property p = m.createProperty(NS + "p");
+        A.addProperty(p, B);
+        B.addProperty(p, C);
+
+        List<Statement> actual = OntTools.findShortestPath(m, A, C, s -> true);
+        Assertions.assertEquals(List.of(p, p), actual.stream().map(Statement::getPredicate).toList());
+    }
+
+    @Test
+    public void testShortestPath3() {
+        Model m = TestModelFactory.createStdModelClassesABCDEFGThing();
+        Resource A = m.getResource(NS + "A");
+        Resource B = m.getResource(NS + "B");
+        Resource C = m.getResource(NS + "C");
+        Resource D = m.getResource(NS + "D");
+        Resource E = m.getResource(NS + "E");
+        Resource F = m.getResource(NS + "F");
+        Property p = m.createProperty(NS + "p");
+        // a - b - c
+        A.addProperty(p, B);
+        B.addProperty(p, C);
+
+        // a - d - e - f
+        A.addProperty(p, D);
+        D.addProperty(p, E);
+        E.addProperty(p, F);
+
+        List<Statement> actual1 = OntTools.findShortestPath(m, A, C, s -> true);
+        Assertions.assertEquals(List.of(p, p), actual1.stream().map(Statement::getPredicate).toList());
+
+        List<Statement> actual2 = OntTools.findShortestPath(m, A, F, s -> true);
+        Assertions.assertEquals(List.of(p, p, p), actual2.stream().map(Statement::getPredicate).toList());
+
+        List<Statement> actual3 = OntTools.findShortestPath(m, A, C, s -> p.equals(s.getPredicate()));
+        Assertions.assertEquals(List.of(p, p), actual3.stream().map(Statement::getPredicate).toList());
+
+        List<Statement> actual4 = OntTools.findShortestPath(m, A, F, s -> p.equals(s.getPredicate()));
+        Assertions.assertEquals(List.of(p, p, p), actual4.stream().map(Statement::getPredicate).toList());
+    }
+
+    @Test
+    public void testShortestPath4() {
+        Model m = TestModelFactory.createStdModelClassesABCDEFGThing();
+        Resource A = m.getResource(NS + "A");
+        Resource B = m.getResource(NS + "B");
+        Resource C = m.getResource(NS + "C");
+        Resource D = m.getResource(NS + "D");
+        Resource E = m.getResource(NS + "E");
+        Resource F = m.getResource(NS + "F");
+        Property p = m.createProperty(NS + "p");
+        Property q = m.createProperty(NS + "q");
+
+        // a - b - c by q
+        A.addProperty(q, B);
+        B.addProperty(q, C);
+
+        // a - d - e - f by p
+        A.addProperty(p, D);
+        D.addProperty(p, E);
+        E.addProperty(p, F);
+
+        List<Statement> actual1 = OntTools.findShortestPath(m, A, C, s -> p.equals(s.getPredicate()));
+        Assertions.assertNull(actual1);
+        List<Statement> actual2 = OntTools.findShortestPath(m, A, F, s -> p.equals(s.getPredicate()));
+        Assertions.assertEquals(List.of(p, p, p), actual2.stream().map(Statement::getPredicate).toList());
+    }
+
+    @Test
+    public void testShortestPath5() {
+        Model m = TestModelFactory.createStdModelClassesABCDEFGThing();
+        Resource A = m.getResource(NS + "A");
+        Property p = m.createProperty(NS + "p");
+        A.addProperty(p, A);
+
+        List<Statement> actual = OntTools.findShortestPath(m, A, A, s -> true);
+        Assertions.assertEquals(List.of(p), actual.stream().map(Statement::getPredicate).toList());
+    }
+
+    @Test
+    public void testShortestPath6() {
+        Model m = TestModelFactory.createStdModelClassesABCDEFGThing();
+        Resource A = m.getResource(NS + "A");
+        Resource B = m.getResource(NS + "B");
+        Resource C = m.getResource(NS + "C");
+        Property p = m.createProperty(NS + "p");
+        Property q = m.createProperty(NS + "q");
+        // a - b - a by q
+        // tests loop detection
+        A.addProperty(q, B);
+        B.addProperty(q, A);
+
+        List<Statement> actual = OntTools.findShortestPath(m, A, C, s -> Set.of(p, q).contains(s.getPredicate()));
+        Assertions.assertNull(actual);
+    }
+
+    @Test
+    public void testShortestPath7() {
+        Model m = TestModelFactory.createStdModelClassesABCDEFGThing();
+        Resource A = m.getResource(NS + "A");
+        Resource B = m.getResource(NS + "B");
+        Resource D = m.getResource(NS + "D");
+        Resource E = m.getResource(NS + "E");
+        Resource F = m.getResource(NS + "F");
+        Property p = m.createProperty(NS + "p");
+        Property q = m.createProperty(NS + "q");
+
+        // a - d - e - f by p and q
+        A.addProperty(p, D);
+        D.addProperty(q, E);
+        D.addProperty(q, B);
+        E.addProperty(p, F);
+
+        List<Statement> actual = OntTools.findShortestPath(m, A, F, s -> Set.of(p, q).contains(s.getPredicate()));
+        Assertions.assertEquals(List.of(p, q, p), actual.stream().map(Statement::getPredicate).toList());
+    }
+
+    @Test
+    public void testShortestPath8() {
+        Model m = TestModelFactory.createStdModelClassesABCDEFGThing();
+        Resource A = m.getResource(NS + "A");
+        Resource B = m.getResource(NS + "B");
+        Resource D = m.getResource(NS + "D");
+        Resource E = m.getResource(NS + "E");
+        Resource F = m.getResource(NS + "F");
+        Property p = m.createProperty(NS + "p");
+        Property q = m.createProperty(NS + "q");
+
+        // a - d - e - f by p and q
+        A.addProperty(p, D);
+        D.addProperty(q, E);
+        D.addProperty(q, "bluff");
+        D.addProperty(q, B);
+        E.addProperty(p, F);
+        F.addProperty(q, "arnie");
+
+        List<Statement> actual = OntTools.findShortestPath(m, A, ResourceFactory.createPlainLiteral("arnie"),
+                s -> Set.of(p, q).contains(s.getPredicate()));
+        Assertions.assertEquals(List.of(p, q, p, q), actual.stream().map(Statement::getPredicate).toList());
     }
 }

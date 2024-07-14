@@ -2,6 +2,9 @@ package com.gitlab.sszuev.jena.ont;
 
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.vocabulary.OWL2;
 
 class TestModelFactory {
     static final String NS = "http://example.com/test#";
@@ -331,6 +334,19 @@ class TestModelFactory {
         A.addSuperClass(C);
         C.addSuperClass(D);
 
+        return m;
+    }
+
+    static Model createStdModelClassesABCDEFGThing() {
+        Model m = ModelFactory.createDefaultModel();
+        m.createResource(NS + "A", OWL2.Class);
+        m.createResource(NS + "B", OWL2.Class);
+        m.createResource(NS + "C", OWL2.Class);
+        m.createResource(NS + "D", OWL2.Class);
+        m.createResource(NS + "E", OWL2.Class);
+        m.createResource(NS + "F", OWL2.Class);
+        m.createResource(NS + "G", OWL2.Class);
+        m.createResource(OWL2.Thing.getURI(), OWL2.Class);
         return m;
     }
 }
