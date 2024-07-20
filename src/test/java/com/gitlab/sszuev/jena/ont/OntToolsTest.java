@@ -13,6 +13,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.OWL2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -463,6 +464,16 @@ public class OntToolsTest {
     }
 
     @Test
+    public void testShortestPath0() {
+        Model m = TestModelFactory.createStdModelClassesABCDEFGThing();
+        Resource A = m.getResource(NS + "A");
+        Resource B = m.getResource(NS + "B");
+
+        List<Statement> actual = OntTools.findShortestPath(m, A, B, s -> true);
+        Assertions.assertNull(actual);
+    }
+
+    @Test
     public void testShortestPath1() {
         Model m = TestModelFactory.createStdModelClassesABCDEFGThing();
         Resource A = m.getResource(NS + "A");
@@ -619,4 +630,272 @@ public class OntToolsTest {
                 s -> Set.of(p, q).contains(s.getPredicate()));
         Assertions.assertEquals(List.of(p, q, p, q), actual.stream().map(Statement::getPredicate).toList());
     }
+
+    @Test
+    public void testIndexLCA0() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        A.addSubClass(B);
+        A.addSubClass(C);
+
+        Assertions.assertEquals(A, OntTools.getLCA(m, B, C));
+    }
+
+    @Test
+    public void testIndexLCA1() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        A.addSubClass(B);
+        A.addSubClass(C);
+
+        Assertions.assertEquals(A, OntTools.getLCA(m, C, B));
+    }
+
+    @Test
+    public void testIndexLCA2() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        A.addSubClass(B);
+        A.addSubClass(C);
+
+        Assertions.assertEquals(A, OntTools.getLCA(m, A, C));
+    }
+
+    @Test
+    public void testIndexLCA3() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        A.addSubClass(B);
+        A.addSubClass(C);
+
+        Assertions.assertEquals(A, OntTools.getLCA(m, B, A));
+    }
+
+    @Test
+    public void testIndexLCA4() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        A.addSubClass(B);
+        A.addSubClass(C);
+        B.addSubClass(D);
+
+        Assertions.assertEquals(A, OntTools.getLCA(m, D, C));
+    }
+
+    @Test
+    public void testIndexLCA5() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        A.addSubClass(B);
+        A.addSubClass(C);
+        B.addSubClass(D);
+
+        Assertions.assertEquals(A, OntTools.getLCA(m, C, D));
+    }
+
+    @Test
+    public void testIndexLCA6() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        OntClass E = m.getOntClass(NS + "E");
+
+        A.addSubClass(B);
+        A.addSubClass(C);
+        B.addSubClass(D);
+        C.addSubClass(E);
+
+        Assertions.assertEquals(A, OntTools.getLCA(m, D, E));
+    }
+
+    @Test
+    public void testIndexLCA7() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        OntClass E = m.getOntClass(NS + "E");
+
+        A.addSubClass(B);
+        A.addSubClass(C);
+        B.addSubClass(D);
+        C.addSubClass(E);
+
+        Assertions.assertEquals(A, OntTools.getLCA(m, E, D));
+    }
+
+    @Test
+    public void testIndexLCA8() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        OntClass E = m.getOntClass(NS + "E");
+
+        A.addSubClass(B);
+        A.addSubClass(C);
+        B.addSubClass(D);
+        D.addSubClass(E);
+
+        Assertions.assertEquals(A, OntTools.getLCA(m, C, E));
+    }
+
+    @Test
+    public void testIndexLCA9() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        OntClass E = m.getOntClass(NS + "E");
+
+        A.addSubClass(B);
+        A.addSubClass(C);
+        B.addSubClass(D);
+        D.addSubClass(E);
+
+        Assertions.assertEquals(A, OntTools.getLCA(m, B, C));
+    }
+
+    @Test
+    public void testIndexLCA10() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        OntClass E = m.getOntClass(NS + "E");
+        OntClass F = m.getOntClass(NS + "F");
+
+        A.addSubClass(B);
+        A.addSubClass(C);
+        A.addSubClass(D);
+        C.addSubClass(E);
+        D.addSubClass(F);
+
+        Assertions.assertEquals(A, OntTools.getLCA(m, B, E));
+    }
+
+    @Test
+    public void testIndexLCA11() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        OntClass E = m.getOntClass(NS + "E");
+        OntClass F = m.getOntClass(NS + "F");
+
+        A.addSubClass(B);
+        A.addSubClass(C);
+        A.addSubClass(D);
+        C.addSubClass(E);
+        D.addSubClass(F);
+
+        Assertions.assertEquals(A, OntTools.getLCA(m, B, F));
+    }
+
+    @Test
+    public void testIndexLCA12() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        OntClass E = m.getOntClass(NS + "E");
+        OntClass F = m.getOntClass(NS + "F");
+
+        A.addSubClass(B);
+        A.addSubClass(C);
+        A.addSubClass(D);
+        D.addSubClass(E);
+        D.addSubClass(F);
+
+        Assertions.assertEquals(D, OntTools.getLCA(m, F, E));
+    }
+
+    @Test
+    public void testIndexLCA13() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass D = m.getOntClass(NS + "D");
+        OntClass E = m.getOntClass(NS + "E");
+        OntClass F = m.getOntClass(NS + "F");
+
+        A.addSubClass(B);
+        A.addSubClass(C);
+        A.addSubClass(D);
+        C.addSubClass(E);
+        D.addSubClass(E);
+        D.addSubClass(F);
+
+        Assertions.assertEquals(D, OntTools.getLCA(m, F, E));
+    }
+
+    @Test
+    public void testIndexLCA14() {
+        OntModel m = TestModelFactory.createClassesABCDEFGThing(
+                ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF)
+        );
+        OntClass A = m.getOntClass(NS + "A");
+        OntClass B = m.getOntClass(NS + "B");
+        OntClass C = m.getOntClass(NS + "C");
+        OntClass E = m.getOntClass(NS + "E");
+
+        A.addSubClass(B);
+        A.addSubClass(C);
+
+        Assertions.assertEquals(OWL2.Thing, OntTools.getLCA(m, B, E));
+        Assertions.assertEquals(OWL2.Thing, OntTools.getLCA(m, C, E));
+        Assertions.assertEquals(OWL2.Thing, OntTools.getLCA(m, A, E));
+    }
+
 }

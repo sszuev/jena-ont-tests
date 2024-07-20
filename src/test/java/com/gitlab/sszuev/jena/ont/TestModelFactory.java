@@ -349,4 +349,16 @@ class TestModelFactory {
         m.createResource(OWL2.Thing.getURI(), OWL2.Class);
         return m;
     }
+
+    static OntModel createClassesABCDEFGThing(OntModel m) {
+        m.createResource(NS + "A", OWL2.Class);
+        m.createResource(NS + "B", OWL2.Class);
+        m.createResource(NS + "C", OWL2.Class);
+        m.createResource(NS + "D", OWL2.Class);
+        m.createResource(NS + "E", OWL2.Class);
+        m.createResource(NS + "F", OWL2.Class);
+        m.createResource(NS + "G", OWL2.Class);
+        m.createResource(OWL2.Thing.getURI(), OWL2.Class);
+        return m;
+    }
 }
